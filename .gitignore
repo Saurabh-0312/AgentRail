@@ -1,0 +1,13 @@
+node_modules/
+target/
+dist/
+build/
+.env
+.env.*
+*.log
+.DS_Store
+.anchor/
+test-ledger/
+
+# never commit pre-existing design material
+*.pdf
