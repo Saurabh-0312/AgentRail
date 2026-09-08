@@ -7,14 +7,9 @@ skip-lint = false
 
 [programs.localnet]
 agentrail = "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj"
-spl_delegate = "Hm6VCXAHfrNQzeWJCC2rWtQzH5JQfadp2UjJRf5nRnzA"
-zero_copy_check = "2L1kQbLu3Do86jBKfihqALrh8vwthNRwPyvi4sCqCP8S"
 
 [registry]
 url = "https://api.apr.dev"
-
-[workspace]
-members = ["programs/agentrail", "spikes/spl-delegate", "spikes/zero-copy"]
 
 [provider]
 cluster = "localnet"

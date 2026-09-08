@@ -30,3 +30,9 @@ contracts/broadcast/
 
 # never commit pre-existing design material
 *.pdf
+
+# Phase 0 verification spikes stay local; never part of the submission
+spikes/
+
+# substreams auth writes the Graph Market JWT here
+.substreams.env
