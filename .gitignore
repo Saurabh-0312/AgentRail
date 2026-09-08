@@ -1,13 +1,32 @@
+# dependencies / build output
 node_modules/
 target/
 dist/
 build/
-.env
-.env.*
-*.log
-.DS_Store
+.next/
+out/
+
+# anchor / solana
 .anchor/
 test-ledger/
+**/*.rs.bk
+.yarn/
+
+# foundry
+contracts/cache/
+contracts/out/
+contracts/broadcast/
+
+# env / secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*-keypair.json
+
+# os / editor
+.DS_Store
+*.log
 
 # never commit pre-existing design material
 *.pdf
