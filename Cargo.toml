@@ -1,6 +1,8 @@
 [workspace]
 members = [
-    "programs/*"
+    "programs/*",
+    "spikes/spl-delegate",
+    "spikes/zero-copy"
 ]
 resolver = "2"
 
