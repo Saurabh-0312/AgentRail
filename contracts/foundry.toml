@@ -10,3 +10,4 @@ ignored_warnings_from = ["lib/"]
 [rpc_endpoints]
 sepolia = "${SEPOLIA_RPC_URL}"
 hedera_testnet = "${HEDERA_JSON_RPC_URL}"
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
