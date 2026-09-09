@@ -12,6 +12,7 @@ import {IRailResolver} from "./Sepolia.sol";
 ///   rail.agent.hedera          EVM address of the Hedera account that pays and asks the mandate
 ///   rail.agent.hedera.account  the Hedera account id behind it
 ///   rail.agent.base            EVM address used on Base Sepolia
+///   rail.allowed               JSON allow-list of payees per chain (only when RAIL_ALLOWED is set)
 ///
 /// forge script script/PublishAgentRecords.s.sol --rpc-url sepolia --broadcast
 contract PublishAgentRecords is Script {
@@ -27,11 +28,16 @@ contract PublishAgentRecords is Script {
         resolver.setText(node, "rail.agent.hedera", hederaEvm);
         resolver.setText(node, "rail.agent.hedera.account", hederaAccount);
         resolver.setText(node, "rail.agent.base", baseEvm);
+        string memory allowed = vm.envOr("RAIL_ALLOWED", string(""));
+        if (bytes(allowed).length != 0) {
+            resolver.setText(node, "rail.allowed", allowed);
+        }
         vm.stopBroadcast();
 
         console2.log("rail.agent.solana        ", resolver.text(node, "rail.agent.solana"));
         console2.log("rail.agent.hedera        ", resolver.text(node, "rail.agent.hedera"));
         console2.log("rail.agent.hedera.account", resolver.text(node, "rail.agent.hedera.account"));
         console2.log("rail.agent.base          ", resolver.text(node, "rail.agent.base"));
+        console2.log("rail.allowed             ", resolver.text(node, "rail.allowed"));
     }
 }
