@@ -76,7 +76,7 @@ export class HederaAdapter implements PaymentAdapter {
 
   async settle(authorization: Authorization): Promise<Settlement> {
     if (!authorization.paymentHeader) throw new Error("hedera settle: missing payment header");
-    const { body, settlement } = await payAndFetch(this.fetchImpl, authorization.quote.service.url, authorization.paymentHeader);
+    const { body, settlement } = await payAndFetch(this.fetchImpl, authorization.quote.service, authorization.paymentHeader);
     const transactionId =
       settlement.transaction ?? ((body?.payment as { transactionId?: string } | undefined)?.transactionId ?? "");
     const dash = transactionId.replace("@", "-").replace(/\.(\d+)$/, "-$1");

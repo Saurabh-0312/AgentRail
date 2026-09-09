@@ -237,3 +237,31 @@ describe("authorize refuses over-cap before any network call", () => {
     expect(() => solanaLocalGate(m, 1_800_000_000n, AGENT_SOL, SHOP_ATA, 2_000_001n)).toThrow(/PerTxLimitExceeded/);
   });
 });
+
+describe("x402 v2 transport details", () => {
+  it("reads a challenge carried only in the PAYMENT-REQUIRED header, POSTs the service body, and sends PAYMENT-SIGNATURE", async () => {
+    const requirements = requirementsFor("eip155:84532", "42", "0x301672eEf23F0e5f165cfba26762702F20A74430", "0x036CbD53842c5426634e7929541eC2318f3dCF7e");
+    const calls: { url: string; init?: any }[] = [];
+    const fetchImpl = vi.fn(async (url: string, init?: any) => {
+      calls.push({ url, init });
+      if (!init?.headers?.["PAYMENT-SIGNATURE"]) {
+        // The Graph's gateway: empty body, challenge in the header.
+        return new Response("", { status: 402, headers: { "PAYMENT-REQUIRED": Buffer.from(JSON.stringify({ x402Version: 2, accepts: [requirements] })).toString("base64") } });
+      }
+      return new Response(JSON.stringify({ data: { _meta: { block: { number: 1 } } } }), { status: 200, headers: { "PAYMENT-RESPONSE": Buffer.from(JSON.stringify({ success: true, transaction: "0xfeed" })).toString("base64") } });
+    });
+    const adapter = new BaseAdapter({ mandateContract: MANDATE, agent: AGENT_EVM, client: fakeEvmClient(), signer: fakeSigner(), fetch: fetchImpl });
+    const body = JSON.stringify({ query: "{ _meta { block { number } } }" });
+    const quote = await adapter.quote({ chain: "eip155:84532", url: "https://gateway/x402/subgraphs/id/abc", request: { method: "POST", headers: { "Content-Type": "application/json" }, body } });
+    expect(quote.amount).toBe(42n);
+    expect(calls[0].init.method).toBe("POST");
+    expect(calls[0].init.body).toBe(body);
+    const auth = await adapter.authorize({ chain: "eip155:84532", id: MANDATE_ID }, quote);
+    const done = await adapter.settle(auth);
+    expect(done.transactionId).toBe("0xfeed");
+    expect(calls[1].init.method).toBe("POST");
+    expect(calls[1].init.headers["PAYMENT-SIGNATURE"]).toBe(auth.paymentHeader);
+    expect(calls[1].init.headers["X-PAYMENT"]).toBe(auth.paymentHeader);
+    expect((done.response as any).data._meta.block.number).toBe(1);
+  });
+});

@@ -43,7 +43,14 @@ export function createEvmClients(chain: Chain, rpcUrl: string, privateKey: Hex):
   return { publicClient, walletClient, account, gate };
 }
 
-/** Owner-side helper: create the mandate and its first permission in two transactions. */
+/**
+ * Owner-side helper: (re)issue the mandate and its first permission.
+ *
+ * Decisions are made on receipts, not on reads: some relays (Hedera's) answer `eth_call` and
+ * `eth_estimateGas` from a mirror node that lags consensus, so a read can say "inactive" while
+ * the chain says otherwise. Every write carries an explicit gas limit, so nothing is simulated
+ * against stale state, and a reverted `createMandate` is answered with a revoke and one retry.
+ */
 export async function issueEvmMandate(
   owner: EvmClients,
   mandateContract: Address,
@@ -59,22 +66,30 @@ export async function issueEvmMandate(
     args: [owner.account.address, agent],
   })) as Hex;
   const txs: Hex[] = [];
-  const [, , , , active] = (await owner.publicClient.readContract({
-    address: mandateContract,
-    abi: EVM_MANDATE_ABI,
-    functionName: "getMandate",
-    args: [mandateId],
-  })) as readonly [Address, Address, Hex, bigint, boolean, bigint];
-  if (active) {
-    const h = await owner.walletClient.writeContract({ address: mandateContract, abi: EVM_MANDATE_ABI, functionName: "revokeMandate", args: [mandateId], account: owner.account, chain: owner.walletClient.chain });
-    await owner.publicClient.waitForTransactionReceipt({ hash: h });
-    txs.push(h);
+  const send = async (functionName: "createMandate" | "revokeMandate" | "addPermission", args: readonly unknown[]) => {
+    const hash = await owner.walletClient.writeContract({
+      address: mandateContract,
+      abi: EVM_MANDATE_ABI,
+      functionName,
+      args: args as any,
+      account: owner.account,
+      chain: owner.walletClient.chain,
+      gas: 400_000n,
+    } as any);
+    const receipt = await owner.publicClient.waitForTransactionReceipt({ hash });
+    txs.push(hash);
+    return receipt.status;
+  };
+
+  let status = await send("createMandate", [agent, ensNode, expiry]);
+  if (status !== "success") {
+    // A previous mandate for this (owner, agent) is live: retire it, then issue the new one.
+    const revoked = await send("revokeMandate", [mandateId]);
+    if (revoked !== "success") throw new Error(`revokeMandate reverted on ${owner.walletClient.chain?.name} (${txs.at(-1)})`);
+    status = await send("createMandate", [agent, ensNode, expiry]);
+    if (status !== "success") throw new Error(`createMandate reverted twice on ${owner.walletClient.chain?.name} (${txs.at(-1)})`);
   }
-  const h1 = await owner.walletClient.writeContract({ address: mandateContract, abi: EVM_MANDATE_ABI, functionName: "createMandate", args: [agent, ensNode, expiry], account: owner.account, chain: owner.walletClient.chain });
-  await owner.publicClient.waitForTransactionReceipt({ hash: h1 });
-  txs.push(h1);
-  const h2 = await owner.walletClient.writeContract({ address: mandateContract, abi: EVM_MANDATE_ABI, functionName: "addPermission", args: [mandateId, permission.destination, permission.spendLimit, permission.perTxLimit], account: owner.account, chain: owner.walletClient.chain });
-  await owner.publicClient.waitForTransactionReceipt({ hash: h2 });
-  txs.push(h2);
+  const added = await send("addPermission", [mandateId, permission.destination, permission.spendLimit, permission.perTxLimit]);
+  if (added !== "success") throw new Error(`addPermission reverted on ${owner.walletClient.chain?.name} (${txs.at(-1)})`);
   return { mandateId, txs };
 }

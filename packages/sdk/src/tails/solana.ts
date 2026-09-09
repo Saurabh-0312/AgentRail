@@ -90,7 +90,7 @@ export class SolanaAdapter implements PaymentAdapter {
       const header = Buffer.from(
         JSON.stringify({ x402Version: 2, scheme: "exact", network: authorization.quote.requirements.network, accepted: authorization.quote.requirements, payload: { transaction: signature } }),
       ).toString("base64");
-      response = await payAndFetch(this.fetchImpl, authorization.quote.service.url, header).then((r) => r.body).catch((e) => ({ error: String(e) }));
+      response = await payAndFetch(this.fetchImpl, authorization.quote.service, header).then((r) => r.body).catch((e) => ({ error: String(e) }));
     }
     return {
       chain: this.chain,

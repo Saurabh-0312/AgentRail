@@ -25,11 +25,19 @@ export const X402_NETWORK: Record<ChainId, string> = {
   "eip155:84532": "eip155:84532",
 };
 
-/** A paid resource, as discovered (ENS in Phase 3, config today). */
+/** How to call the paid resource. GET with no body unless the service says otherwise. */
+export interface ServiceRequest {
+  method?: "GET" | "POST";
+  body?: string;
+  headers?: Record<string, string>;
+}
+
+/** A paid resource, as discovered from ENS (`rail.endpoint`) plus how to call it. */
 export interface ServiceRef {
   chain: ChainId;
   /** Full URL of the paid resource, e.g. https://feed/price/SOL,HBAR */
   url: string;
+  request?: ServiceRequest;
 }
 
 /** The mandate that must approve the spend. Which fields apply depends on the chain. */
@@ -92,4 +100,4 @@ export interface PaymentAdapter {
 }
 
 /** Minimal fetch surface so tests can prove no network call happened. */
-export type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string> }) => Promise<Response>;
+export type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; body?: string }) => Promise<Response>;
