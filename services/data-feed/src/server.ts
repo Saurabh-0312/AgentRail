@@ -1,0 +1,45 @@
+/**
+ * Boot the data feed against the Blocky402 facilitator on Hedera testnet.
+ *
+ * Env (from ../../.env): HEDERA_SELLER_ACCOUNT_ID (payTo; must differ from any buyer),
+ * BLOCKY402_URL, FEED_ASSET (HTS USDC 0.0.429274 by default, 0.0.0 for HBAR),
+ * FEED_UNIT_PRICE (smallest units per symbol), FEED_PUBLIC_URL, PORT.
+ */
+import { serve } from "@hono/node-server";
+
+import { createApp } from "./app.ts";
+import { HBAR_ASSET, HEDERA_TESTNET, HTS_USDC_TESTNET, httpFacilitator } from "./x402.ts";
+
+const facilitatorUrl = process.env.BLOCKY402_URL ?? "https://api.testnet.blocky402.com";
+const payTo = process.env.HEDERA_SELLER_ACCOUNT_ID;
+if (!payTo) {
+  console.error("HEDERA_SELLER_ACCOUNT_ID missing (payTo must be a different account from the buyer)");
+  process.exit(2);
+}
+const asset = process.env.FEED_ASSET ?? HTS_USDC_TESTNET;
+const isHbar = asset === HBAR_ASSET;
+const unitPrice = BigInt(process.env.FEED_UNIT_PRICE ?? (isHbar ? "10000000" : "10000")); // 0.1 HBAR or 0.01 USDC
+const port = Number(process.env.PORT ?? 4021);
+const resourceBase = (process.env.FEED_PUBLIC_URL ?? `http://localhost:${port}`).replace(/\/$/, "");
+
+const facilitator = httpFacilitator(facilitatorUrl);
+const feePayer = await facilitator.feePayer(HEDERA_TESTNET);
+
+const app = createApp({
+  network: HEDERA_TESTNET,
+  asset,
+  assetSymbol: isHbar ? "HBAR" : "USDC",
+  assetDecimals: isHbar ? 8 : 6,
+  unitPrice,
+  maxSymbols: Number(process.env.FEED_MAX_SYMBOLS ?? 5),
+  payTo,
+  feePayer,
+  resourceBase,
+  facilitator,
+});
+
+serve({ fetch: app.fetch, port }, () => {
+  console.log(`agentrail data-feed on ${resourceBase}`);
+  console.log(`  network=${HEDERA_TESTNET} asset=${asset} unitPrice=${unitPrice} payTo=${payTo} feePayer=${feePayer}`);
+  console.log(`  facilitator=${facilitatorUrl}`);
+});

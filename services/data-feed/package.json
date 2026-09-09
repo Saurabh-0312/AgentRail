@@ -1,5 +1,15 @@
 {
   "name": "@agentrail/data-feed",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "x402-gated market data feed on Hedera testnet, settled through the Blocky402 facilitator. Pay-per-call, priced by query.",
+  "scripts": {
+    "start": "node --env-file=../../.env src/server.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1",
+    "hono": "^4.13"
+  }
 }
