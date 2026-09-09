@@ -5,10 +5,14 @@
  *   2. resolve feed.agentrail.eth  -> rail.chain selects HederaAdapter -> allow-list -> mandate -> pay
  *   3. resolve graph.agentrail.eth -> rail.chain selects BaseAdapter   -> allow-list -> mandate -> pay
  *   4. a discovered service that is NOT on rail.allowed is refused before any payment step
- *   5. the Base mandate's lifetime cap refuses the next query before any money moves
+ *   5. the owner issues a tighter Base mandate (two queries' worth); its lifetime cap refuses the
+ *      next query before any money moves
  *
  * One mandate name governs two shops on two chains. Every refusal happens before a facilitator is
- * contacted. Output: scripts/out/discovery.json (gitignored).
+ * contacted. `rail.allowed` is the ceiling the owner published; the mandates are issued from it
+ * and may be tighter. When a facilitator fails to land a settlement, the spend `authorize`
+ * recorded is not refunded (documented); every such attempt is printed and counted.
+ * Output: scripts/out/discovery.json (gitignored).
  *
  * Env: SEPOLIA_RPC_URL, HEDERA_JSON_RPC_URL, BASE_SEPOLIA_RPC_URL, DEPLOYER_PRIVATE_KEY (owner),
  * HEDERA_ACCOUNT_ID + HEDERA_PRIVATE_KEY (Hedera agent), AGENT_EVM_PRIVATE_KEY (Base agent),
@@ -54,9 +58,12 @@ const AGENT_NAME = process.env.AGENT_ENS_NAME ?? "databot.agentrail.eth";
 const SERVICES = (process.env.SERVICE_ENS_NAMES ?? "feed.agentrail.eth,graph.agentrail.eth").split(",");
 const ENS_NODE = env("RAIL_NODE") as Hex;
 
-const out: Record<string, unknown> = { agent: AGENT_NAME, services: {}, payments: [], refusals: [] };
+const out: Record<string, unknown> = { agent: AGENT_NAME, services: {}, payments: [], refusals: [], consumedWithoutSettlement: [] };
 const payments = out.payments as unknown[];
 const refusals = out.refusals as unknown[];
+/** Budget `EvmMandate.authorize` recorded for attempts the facilitator then failed to settle. */
+const consumed = out.consumedWithoutSettlement as { service: string; chain: string; units: string; gateTx: string; facilitator: unknown }[];
+const discovered = new Map<string, DiscoveredService>();
 
 // Every outbound call is counted, so a refusal can prove that nothing was sent after it.
 let paidRequests = 0;
@@ -148,6 +155,7 @@ async function main() {
   /** discover -> allow-list -> quote -> authorize (gate) -> settle. Returns false when refused. */
   async function buy(name: string, expectRefusal?: string) {
     const service = await discoverService(name, readText);
+    discovered.set(name, service);
     show(`${name} (discovered)`, service.records);
     (out.services as Record<string, unknown>)[name] = service.records;
     const adapter: PaymentAdapter = registry.select(service.chain);
@@ -161,7 +169,17 @@ async function main() {
       const auth = await adapter.authorize(mandates[service.chain], quote);
       const gate = auth.gate.kind === "evm-authorize" ? auth.gate.txHash : "";
       console.log(`   gate  EvmMandate.authorize ${explorerFor(service.chain, gate)}`);
-      const done = await adapter.settle(auth);
+      let done;
+      try {
+        done = await adapter.settle(auth);
+      } catch (e) {
+        if (e instanceof SettlementFailed) {
+          // The gate already recorded this spend; the facilitator did not land it. Say so, every time.
+          console.log(`   retry consumed ${quote.amount} units, no settlement (authorize ${gate} recorded the spend; facilitator said ${JSON.stringify(e.body)})`);
+          consumed.push({ service: name, chain: service.chain, units: quote.amount.toString(), gateTx: gate, facilitator: e.body });
+        }
+        throw e;
+      }
       const body = done.response as Record<string, unknown>;
       const data = (body?.data ?? body) as unknown;
       console.log(`   paid  ${done.transactionId}  ${done.explorer}`);
@@ -190,7 +208,7 @@ async function main() {
         return await buy(name, expectRefusal);
       } catch (e) {
         if (e instanceof SettlementFailed && i < attempts) {
-          console.log(`   settlement failed at the facilitator (${JSON.stringify((e as SettlementFailed).body)}); retrying in 8s`);
+          console.log(`   retrying in 8s (attempt ${i + 1} of ${attempts}; a fresh gate and a fresh signature)`);
           await new Promise((r) => setTimeout(r, 8000));
           continue;
         }
@@ -208,8 +226,18 @@ async function main() {
   const rogueName = process.env.ROGUE_ENS_NAME ?? "rogue.agentrail.eth";
   await buyWithRetry(rogueName, "NotOnAllowList");
 
-  // ---- 5. the cap: keep buying from The Graph until the Base mandate says stop -----------------
+  // ---- 5. the cap: a tighter mandate, then keep buying from The Graph until it says stop --------
+  // rail.allowed carries the ceiling (500 units: headroom for facilitator retries, each of which
+  // consumes budget). To show the cap without eleven queries, the owner re-issues the Base mandate
+  // with exactly two queries' worth (2 x rail.price) and the same per-tx cap. Same name, same
+  // contract, same gate; a mandate may always be tighter than the allow-list.
   const graphName = SERVICES.find((n) => n.startsWith("graph")) ?? SERVICES[1];
+  const graph = discovered.get(graphName)!;
+  const tight = { destination: baseEntry.target as Address, spendLimit: 2n * graph.price, perTxLimit: capsFor(CHAINS.BASE_SEPOLIA, baseEntry.target).perTxLimit };
+  const capMandate = await issueEvmMandate(ownerBase, env("EVM_MANDATE_BASE_SEPOLIA") as Address, agentBase.account.address, ENS_NODE, expiry, tight);
+  mandates[CHAINS.BASE_SEPOLIA] = { chain: CHAINS.BASE_SEPOLIA, id: capMandate.mandateId };
+  console.log(`\ncap run: Base mandate re-issued with total ${tight.spendLimit} = 2 x rail.price ${graph.price}, perTx ${tight.perTxLimit} (${capMandate.mandateId})`);
+  (out.mandates as Record<string, unknown>).baseCapRun = { ...capMandate, spendLimit: tight.spendLimit.toString(), perTxLimit: tight.perTxLimit.toString() };
   for (let i = 0; i < 5; i++) {
     const ok = await buyWithRetry(graphName, undefined).catch((e) => {
       if (e instanceof MandateRefused) return false;
@@ -222,10 +250,12 @@ async function main() {
     throw new Error("the Base mandate never refused; check rail.allowed caps");
   }
 
-  out.summary = { payments: payments.length, refusals: refusals.length, paidRequestsTotal: paidRequests, apiKeysUsed: 0 };
+  const consumedUnits = consumed.reduce((s, c) => s + BigInt(c.units), 0n);
+  out.summary = { payments: payments.length, refusals: refusals.length, paidRequestsTotal: paidRequests, unsettledAttempts: consumed.length, unitsConsumedWithoutSettlement: consumedUnits.toString(), apiKeysUsed: 0 };
   fs.mkdirSync("scripts/out", { recursive: true });
   fs.writeFileSync("scripts/out/discovery.json", JSON.stringify(out, (_, v) => (typeof v === "bigint" ? v.toString() : v), 2));
-  console.log(`\n${payments.length} payments on ${new Set(payments.map((p: any) => p.chain)).size} chains, ${refusals.length} refusals, 0 API keys. wrote scripts/out/discovery.json`);
+  console.log(`\n${payments.length} payments on ${new Set(payments.map((p: any) => p.chain)).size} chains, ${refusals.length} refusals, 0 API keys.`);
+  console.log(`budget consumed without settlement: ${consumedUnits} units over ${consumed.length} facilitator failure${consumed.length === 1 ? "" : "s"}. wrote scripts/out/discovery.json`);
 }
 
 main().catch((e) => {
