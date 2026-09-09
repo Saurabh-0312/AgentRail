@@ -59,4 +59,9 @@ pub mod agentrail {
     pub fn verify(ctx: Context<Verify>, target_ix_index: u8, declared_amount: u64) -> Result<()> {
         instructions::verify::handle_verify(ctx, target_ix_index, declared_amount)
     }
+
+    /// The gate: agent asks to pay `amount` to `destination`; the mandate PDA signs as SPL delegate.
+    pub fn execute_payment(ctx: Context<ExecutePayment>, amount: u64) -> Result<()> {
+        instructions::execute_payment::handle_execute_payment(ctx, amount)
+    }
 }

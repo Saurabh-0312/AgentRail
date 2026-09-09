@@ -34,4 +34,8 @@ pub enum AgentRailError {
     Overflow,
     #[msg("target instruction is out of range or is AgentRail itself")]
     InvalidTargetInstruction,
+    #[msg("destination is not on the mandate's allowed list")]
+    DestinationNotAllowed,
+    #[msg("token account is not owned by the mandate owner")]
+    TokenAccountNotOwned,
 }

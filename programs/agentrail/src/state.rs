@@ -20,7 +20,8 @@ pub const MANDATE_ACCOUNT_SIZE: usize = ANCHOR_DISCRIMINATOR + core::mem::size_o
 /// One authorized program and the instructions the agent may call on it. Exactly 128 bytes.
 #[zero_copy]
 pub struct Permission {
-    /// Target program the agent may call.
+    /// Entry key. For `verify` this is the program id of the sibling instruction; for
+    /// `execute_payment` it is the destination token account, with this entry's caps applying to it.
     pub program_id: [u8; 32],
     /// Lifetime spend cap in base units. 0 = unlimited.
     pub spend_limit: u64,
