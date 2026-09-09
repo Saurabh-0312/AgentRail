@@ -6,6 +6,16 @@
  *   agent  -> execute_payment over per-tx cap ..... lands on chain and REVERTS
  *   agent  -> execute_payment over lifetime cap ... lands on chain and REVERTS
  *
+ * Then the part nothing else on Solana can do — INSTRUCTION-LEVEL gating.
+ * One permission on the SPL Token program allows exactly one instruction:
+ *
+ *   agent  -> Transfer     + verify ............... lands   (Transfer is on the list)
+ *   agent  -> SetAuthority + verify ............... REVERTS InstructionNotAllowed
+ *
+ * Same program. Same signer. Same mandate. Different button.
+ * `verify` never trusts the caller: it reads the sibling instruction out of the instructions
+ * sysvar, so the program id and discriminator are the ones that will actually execute.
+ *
  * The rejects are sent with skipPreflight so the chain itself records the failure.
  * Output: scripts/out/devnet.json (gitignored) with every signature and address.
  *
@@ -15,12 +25,22 @@ import * as anchor from "@coral-xyz/anchor";
 import { BN, Program } from "@coral-xyz/anchor";
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
+  AuthorityType,
   TOKEN_PROGRAM_ID,
   approve,
+  createSetAuthorityInstruction,
+  createTransferInstruction,
   getAccount,
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -141,9 +161,83 @@ async function main() {
   txs.payThird = await pay(1.5 * USDC, "pay 1.5 USDC", true);
   txs.payOverLifetime = await pay(1 * USDC, "pay 1.0 USDC (>lifetime)", false);
 
+  // ---------------------------------------------------------------------------
+  // Instruction-level gating. Everything above is a spend limit; this is the part
+  // no other Solana protocol can express: one program, one allowed instruction.
+  // ---------------------------------------------------------------------------
+  console.log("\n--- instruction-level gating (verify) ---");
+
+  // A discriminator slot is 8 bytes wide; only the first `size` bytes are compared.
+  // Matches `disc` in tests/helpers.ts: a narrow tag, zero-padded to the 8-byte slot.
+  const disc = (...prefix: number[]) => Array.from(Buffer.alloc(8).fill(0).map((_, i) => prefix[i] ?? 0));
+  const SPL_TRANSFER = disc(3); // SPL Token tag 3 = Transfer
+  const SPL_SETAUTHORITY_TAG = 6; // tag 6 = SetAuthority — deliberately NOT listed
+
+  // Permission #1 is keyed by the SPL Token program and lists exactly one instruction.
+  txs.addTokenPermission = await program.methods
+    .addPermission(TOKEN_PROGRAM_ID, [SPL_TRANSFER], 1, new BN(2 * USDC), new BN(1 * USDC))
+    .accountsStrict({ mandate, owner: owner.publicKey })
+    .rpc();
+  console.log("add_permission(SPL Token: Transfer only)", explorer(txs.addTokenPermission));
+
+  const verifyIx = (targetIndex: number, amount: number) =>
+    program.methods
+      .verify(targetIndex, new BN(amount))
+      .accountsStrict({ mandate, agent: agent.publicKey, instructionsSysvar: SYSVAR_INSTRUCTIONS_PUBKEY })
+      .instruction();
+
+  // Same send-and-report path as `pay`: skipPreflight so the chain records the rejection.
+  const land = async (ixs: TransactionInstruction[], label: string, expectOk: boolean) => {
+    const tx = new Transaction().add(...ixs);
+    const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = owner.publicKey;
+    tx.sign(owner, agent);
+    const sig = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
+    await conn.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed").catch(() => undefined);
+    let detail = null;
+    for (let i = 0; i < 30 && !detail; i++) {
+      detail = await conn.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+      if (!detail) await new Promise((r) => setTimeout(r, 1000));
+    }
+    if (!detail) throw new Error(`${label}: transaction ${sig} never landed`);
+    const failed = detail.meta?.err != null;
+    const errLine = detail?.meta?.logMessages?.find((l) => l.includes("Error Code")) ?? "";
+    console.log(`${label.padEnd(34)} ${failed ? "REVERTED" : "landed  "} ${explorer(sig)}`);
+    if (errLine) console.log(" ".repeat(35) + errLine.replace("Program log: ", ""));
+    if (failed === expectOk) throw new Error(`${label}: expected ${expectOk ? "success" : "revert"}`);
+    return sig;
+  };
+
+  // ALLOWED: Transfer is on the list. [target, verify] — the index can point backwards.
+  txs.verifyTransferAllowed = await land(
+    [
+      createTransferInstruction(from.address, shopAta.address, owner.publicKey, 0.5 * USDC),
+      await verifyIx(0, 0.5 * USDC),
+    ],
+    "Transfer      + verify",
+    true,
+  );
+
+  // DENIED: the agent tries to seize the owner's token account. Same program, same signer,
+  // same mandate — but SetAuthority is not on the list. `verify` runs first so the sibling
+  // never executes; a revert would unwind it anyway, since Solana transactions are atomic.
+  txs.verifySetAuthorityDenied = await land(
+    [
+      await verifyIx(1, 0),
+      createSetAuthorityInstruction(from.address, owner.publicKey, AuthorityType.AccountOwner, agent.publicKey),
+    ],
+    "SetAuthority  + verify",
+    false,
+  );
+  console.log(`(SPL Token tag ${SPL_SETAUTHORITY_TAG} is absent from the mandate — the discriminator gate rejects it)`);
+
   const m = await program.account.mandateAccount.fetch(mandate);
   const p = m.permissions[0];
-  console.log("\nshop USDC", await bal(shopAta.address), " spend_total", Number(p.spendTotal) / USDC, " call_count", p.callCount);
+  const t = m.permissions[1];
+  console.log("\nshop USDC", await bal(shopAta.address));
+  console.log("  payments  (destination-keyed) spend_total", Number(p.spendTotal) / USDC, " call_count", p.callCount);
+  console.log("  SPL Token (instruction-keyed) spend_total", Number(t.spendTotal) / USDC, " call_count", t.callCount);
 
   const out = {
     cluster: "devnet",
