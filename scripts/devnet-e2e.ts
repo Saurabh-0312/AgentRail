@@ -2,9 +2,11 @@
  * AgentRail end-to-end on Solana devnet.
  *
  *   owner  -> create_mandate + add_permission(shop, caps) + spl approve(mandate PDA)
- *   agent  -> execute_payment within caps  ........ lands, USDC moves
- *   agent  -> execute_payment over per-tx cap ..... lands on chain and REVERTS
- *   agent  -> execute_payment over lifetime cap ... lands on chain and REVERTS
+ *   agent  -> pay through the SDK's SolanaAdapter (quote -> authorize -> settle)
+ *             within caps ................................ lands, USDC moves
+ *             over per-tx cap ............................ REFUSED by the adapter's local gate,
+ *                                                          then the chain refuses it too (6007)
+ *             over lifetime cap .......................... same, on chain 6008
  *
  * Then the part nothing else on Solana can do — INSTRUCTION-LEVEL gating.
  * One permission on the SPL Token program allows exactly one instruction:
@@ -16,13 +18,15 @@
  * `verify` never trusts the caller: it reads the sibling instruction out of the instructions
  * sysvar, so the program id and discriminator are the ones that will actually execute.
  *
- * The rejects are sent with skipPreflight so the chain itself records the failure.
+ * Payments go through `SolanaAdapter` from @agentrail/sdk, the same interface the agent uses on
+ * Hedera and Base. When the adapter refuses, the demo also sends the raw transaction so the chain's
+ * own rejection is recorded: two independent gates, same verdict. The verify steps are not
+ * payments and stay direct. Rejections are sent with skipPreflight so the chain records them.
  * Output: scripts/out/devnet.json (gitignored) with every signature and address.
  *
  * Run: yarn demo:devnet   (reads SOLANA_RPC_URL and ANCHOR_WALLET from .env)
  */
-import * as anchor from "@coral-xyz/anchor";
-import { BN, Program } from "@coral-xyz/anchor";
+import anchor from "@coral-xyz/anchor";
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
   AuthorityType,
@@ -44,8 +48,12 @@ import {
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { Agentrail } from "../target/types/agentrail";
-import idl from "../target/idl/agentrail.json";
+
+import { AdapterRegistry, CHAINS, MandateRefused, SolanaAdapter, directQuote } from "../packages/sdk/src/index.ts";
+import { createAnchorGateClient } from "../packages/sdk/src/solana/anchorClient.ts";
+import idl from "../packages/sdk/src/solana/agentrail.idl.json" with { type: "json" };
+
+const { BN, Program, AnchorProvider, Wallet } = anchor;
 
 const DEVNET_USDC = new PublicKey(process.env.DEVNET_USDC_MINT ?? "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
 const USDC = 1_000_000; // 6 decimals
@@ -78,11 +86,25 @@ function namehash(name: string): Buffer {
   return node;
 }
 
+/** Fetch a landed transaction and report whether the chain rejected it. */
+async function landed(conn: Connection, sig: string) {
+  let detail = null;
+  for (let i = 0; i < 30 && !detail; i++) {
+    detail = await conn.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+    if (!detail) await new Promise((r) => setTimeout(r, 1000));
+  }
+  if (!detail) throw new Error(`transaction ${sig} never landed`);
+  const errLine = detail.meta?.logMessages?.find((l) => l.includes("Error Code")) ?? "";
+  return { failed: detail.meta?.err != null, errLine: errLine.replace("Program log: ", "") };
+}
+
 async function main() {
   const conn = new Connection(process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com", "confirmed");
   const owner = loadKeypair(expand(process.env.ANCHOR_WALLET ?? "~/.config/solana/id.json"));
-  const provider = new anchor.AnchorProvider(conn, new anchor.Wallet(owner), { commitment: "confirmed" });
-  const program = new Program(idl as Agentrail, provider);
+  const provider = new AnchorProvider(conn, new Wallet(owner), { commitment: "confirmed" });
+  const program = new Program(idl as anchor.Idl, provider);
+  const methods = program.methods as any;
+  const accounts = program.account as any;
 
   const agent = loadOrCreate("scripts/keys/agent-keypair.json");
   const shop = loadOrCreate("scripts/keys/shop-keypair.json");
@@ -104,20 +126,20 @@ async function main() {
   const txs: Record<string, string> = {};
 
   // Idempotent: a previous run's mandate is revoked so the demo starts from a clean slate.
-  if (await program.account.mandateAccount.fetchNullable(mandate)) {
-    txs.revokePrevious = await program.methods.revokeMandate().accountsStrict({ mandate, owner: owner.publicKey }).rpc();
+  if (await accounts.mandateAccount.fetchNullable(mandate)) {
+    txs.revokePrevious = await methods.revokeMandate().accountsStrict({ mandate, owner: owner.publicKey }).rpc();
     console.log("revoked previous mandate", explorer(txs.revokePrevious));
   }
 
   const ensNode = Array.from(namehash(ENS_NAME));
   const expiry = new BN(Math.floor(Date.now() / 1000) + MANDATE_HOURS * 3600);
-  txs.createMandate = await program.methods
+  txs.createMandate = await methods
     .createMandate(ensNode, expiry)
     .accountsStrict({ mandate, owner: owner.publicKey, agent: agent.publicKey, systemProgram: anchor.web3.SystemProgram.programId })
     .rpc();
   console.log("create_mandate  ", explorer(txs.createMandate));
 
-  txs.addPermission = await program.methods
+  txs.addPermission = await methods
     .addPermission(shopAta.address, [], 1, new BN(SPEND_LIMIT), new BN(PER_TX_LIMIT))
     .accountsStrict({ mandate, owner: owner.publicKey })
     .rpc();
@@ -128,31 +150,38 @@ async function main() {
   txs.approve = await approve(conn, owner, from.address, mandate, owner, 100 * USDC);
   console.log("spl approve     ", explorer(txs.approve));
 
+  // ---------------------------------------------------------------------------
+  // Payments through the SDK: the same PaymentAdapter interface as Hedera and Base.
+  // ---------------------------------------------------------------------------
+  const gateClient = createAnchorGateClient({ connection: conn, agent, feePayer: owner, ownerTokenAccount: from.address });
+  const registry = new AdapterRegistry().register(CHAINS.SOLANA_DEVNET, () => new SolanaAdapter({ agent: agent.publicKey.toBase58(), client: gateClient }));
+  const adapter = registry.select("solana:devnet"); // the string ENS rail.chain will carry
+  const mandateRef = { chain: CHAINS.SOLANA_DEVNET, id: mandate.toBase58() };
+  console.log("\n--- payments via SolanaAdapter (", adapter.chain, ") ---");
+
   const pay = async (amount: number, label: string, expectOk: boolean) => {
-    const tx = await program.methods
-      .executePayment(new BN(amount))
-      .accountsStrict({ mandate, agent: agent.publicKey, from: from.address, destination: shopAta.address, tokenProgram: TOKEN_PROGRAM_ID })
-      .transaction();
-    const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = owner.publicKey;
-    tx.sign(owner, agent);
-    // skipPreflight: let the chain record the rejection instead of the RPC simulating it away.
-    const sig = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
-    // web3.js rejects the confirmation when the transaction errored; the chain record is the verdict.
-    await conn.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed").catch(() => undefined);
-    let detail = null;
-    for (let i = 0; i < 30 && !detail; i++) {
-      detail = await conn.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
-      if (!detail) await new Promise((r) => setTimeout(r, 1000));
+    const quote = directQuote({ chain: CHAINS.SOLANA_DEVNET, resource: "agentrail://shop/devnet-demo", amount: BigInt(amount), asset: DEVNET_USDC.toBase58(), payTo: shop.publicKey.toBase58() });
+    try {
+      const auth = await adapter.authorize(mandateRef, quote);
+      const done = await adapter.settle(auth);
+      console.log(`${label.padEnd(24)} landed   ${done.explorer}`);
+      if (!expectOk) throw new Error(`${label}: expected a refusal`);
+      return done.transactionId;
+    } catch (e) {
+      if (!(e instanceof MandateRefused)) throw e;
+      console.log(`${label.padEnd(24)} REFUSED by SolanaAdapter: ${e.reason} (no transaction built)`);
+      if (expectOk) throw new Error(`${label}: expected success`);
+      // Second gate, same verdict: send the raw transaction anyway so the chain's own rejection is on record.
+      const raw = await gateClient.buildExecutePayment(mandate.toBase58(), shopAta.address.toBase58(), BigInt(amount));
+      const sig = await conn.sendRawTransaction(raw, { skipPreflight: true });
+      const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
+      await conn.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed").catch(() => undefined);
+      const r = await landed(conn, sig);
+      console.log(`${"".padEnd(24)} ${r.failed ? "REVERTED" : "landed  "} on chain ${explorer(sig)}`);
+      if (r.errLine) console.log(" ".repeat(25) + r.errLine);
+      if (!r.failed) throw new Error(`${label}: chain accepted what the adapter refused`);
+      return sig;
     }
-    if (!detail) throw new Error(`${label}: transaction ${sig} never landed`);
-    const failed = detail.meta?.err != null;
-    const errLine = detail?.meta?.logMessages?.find((l) => l.includes("Error Code")) ?? "";
-    console.log(`${label.padEnd(22)} ${failed ? "REVERTED" : "landed  "} ${explorer(sig)}`);
-    if (errLine) console.log(" ".repeat(23) + errLine.replace("Program log: ", ""));
-    if (failed === expectOk) throw new Error(`${label}: expected ${expectOk ? "success" : "revert"}`);
-    return sig;
   };
 
   txs.payWithinCap = await pay(1.5 * USDC, "pay 1.5 USDC", true);
@@ -174,19 +203,19 @@ async function main() {
   const SPL_SETAUTHORITY_TAG = 6; // tag 6 = SetAuthority — deliberately NOT listed
 
   // Permission #1 is keyed by the SPL Token program and lists exactly one instruction.
-  txs.addTokenPermission = await program.methods
+  txs.addTokenPermission = await methods
     .addPermission(TOKEN_PROGRAM_ID, [SPL_TRANSFER], 1, new BN(2 * USDC), new BN(1 * USDC))
     .accountsStrict({ mandate, owner: owner.publicKey })
     .rpc();
   console.log("add_permission(SPL Token: Transfer only)", explorer(txs.addTokenPermission));
 
   const verifyIx = (targetIndex: number, amount: number) =>
-    program.methods
+    methods
       .verify(targetIndex, new BN(amount))
       .accountsStrict({ mandate, agent: agent.publicKey, instructionsSysvar: SYSVAR_INSTRUCTIONS_PUBKEY })
       .instruction();
 
-  // Same send-and-report path as `pay`: skipPreflight so the chain records the rejection.
+  // Same send-and-report path as before: skipPreflight so the chain records the rejection.
   const land = async (ixs: TransactionInstruction[], label: string, expectOk: boolean) => {
     const tx = new Transaction().add(...ixs);
     const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
@@ -195,17 +224,10 @@ async function main() {
     tx.sign(owner, agent);
     const sig = await conn.sendRawTransaction(tx.serialize(), { skipPreflight: true });
     await conn.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed").catch(() => undefined);
-    let detail = null;
-    for (let i = 0; i < 30 && !detail; i++) {
-      detail = await conn.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
-      if (!detail) await new Promise((r) => setTimeout(r, 1000));
-    }
-    if (!detail) throw new Error(`${label}: transaction ${sig} never landed`);
-    const failed = detail.meta?.err != null;
-    const errLine = detail?.meta?.logMessages?.find((l) => l.includes("Error Code")) ?? "";
-    console.log(`${label.padEnd(34)} ${failed ? "REVERTED" : "landed  "} ${explorer(sig)}`);
-    if (errLine) console.log(" ".repeat(35) + errLine.replace("Program log: ", ""));
-    if (failed === expectOk) throw new Error(`${label}: expected ${expectOk ? "success" : "revert"}`);
+    const r = await landed(conn, sig);
+    console.log(`${label.padEnd(34)} ${r.failed ? "REVERTED" : "landed  "} ${explorer(sig)}`);
+    if (r.errLine) console.log(" ".repeat(35) + r.errLine);
+    if (r.failed === expectOk) throw new Error(`${label}: expected ${expectOk ? "success" : "revert"}`);
     return sig;
   };
 
@@ -232,7 +254,7 @@ async function main() {
   );
   console.log(`(SPL Token tag ${SPL_SETAUTHORITY_TAG} is absent from the mandate — the discriminator gate rejects it)`);
 
-  const m = await program.account.mandateAccount.fetch(mandate);
+  const m = await accounts.mandateAccount.fetch(mandate);
   const p = m.permissions[0];
   const t = m.permissions[1];
   console.log("\nshop USDC", await bal(shopAta.address));
@@ -251,6 +273,7 @@ async function main() {
     ensNode: "0x" + Buffer.from(ensNode).toString("hex"),
     expiry: expiry.toNumber(),
     caps: { spendLimit: SPEND_LIMIT, perTxLimit: PER_TX_LIMIT },
+    paymentsVia: "@agentrail/sdk SolanaAdapter",
     txs,
     explorer: Object.fromEntries(Object.entries(txs).map(([k, v]) => [k, explorer(v)])),
   };

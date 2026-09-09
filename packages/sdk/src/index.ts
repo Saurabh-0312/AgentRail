@@ -14,3 +14,4 @@ export {
   type SolanaPermission,
 } from "./tails/solana.ts";
 export { fetchQuote, payAndFetch, encodePaymentHeader } from "./x402.ts";
+export { directQuote, type DirectQuoteInput } from "./quote.ts";
