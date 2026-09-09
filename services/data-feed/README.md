@@ -54,6 +54,8 @@ the buyer from [Circle's faucet](https://faucet.circle.com) (Hedera Testnet, 20 
 
 ## Hosting
 
+**Live:** https://agentrail-data-feed.onrender.com (`/health`, `/pricing`, `/price/SOL,HBAR`).
+
 The repo carries a Render blueprint (`render.yaml` at the root) and a Railway config
 (`railway.json`). Both run `yarn workspace @agentrail/data-feed start:hosted`, which needs no
 `.env`: the feed holds no secrets, only the public seller account and the facilitator URL. The
