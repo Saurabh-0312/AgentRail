@@ -67,6 +67,21 @@ service that resolves correctly but whose payee is not in the agent's `rail.allo
 refused with `NotOnAllowList` before the mandate, the facilitator, or any signature is touched.
 The only address in the package is ENS's own UniversalResolver.
 
+## Field notes (what is actually live)
+
+- **The Graph testnet gateway.** The documented host `testnet.gateway.thegraph.com` has no DNS
+  record; the live one is `https://gateway.testnet.thegraph.com/api/x402/subgraphs/id/{id}`
+  (mainnet: `gateway.thegraph.com`, `eip155:8453`). Its 402 arrives in the `PAYMENT-REQUIRED`
+  header with an empty body, 42 USDC units per query on `eip155:84532`, and the payment must be
+  sent as `Payment-Signature`; `fetchQuote` reads body or header and `payAndFetch` sends both
+  header spellings. Its facilitator intermittently fails to land a settlement
+  (`invalid_exact_evm_transaction_failed`); because `EvmMandate.authorize` records spend first,
+  a retried purchase consumes budget twice. Size caps accordingly.
+- **Hedera mirror lag is a rule.** `eth_call` / `eth_estimateGas` on `testnet.hashio.io` can be
+  answered by a node a minute or more behind consensus. Anything that acts on Hedera state must
+  decide on receipts, never branch on a read: `issueEvmMandate` sends with an explicit gas limit,
+  treats a reverted `createMandate` receipt as "a mandate exists", revokes, and retries once.
+
 ## Tests
 
 `yarn test`: every tail satisfies the same contract; every refusal reason on every tail is thrown
