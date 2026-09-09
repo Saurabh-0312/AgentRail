@@ -22,6 +22,12 @@ The user's tokens never leave their wallet. The agent can *ask* to spend. Only A
 
 Built with **ENS**, **Solana**, **Hedera**, and **The Graph**.
 
+## Limitations
+
+- **Scope of enforcement.** AgentRail enforces for funds under its delegation (SPL `approve` on Solana, ERC-20 allowance on the EVM). It does not stop an agent that independently holds its own keys to other funds — the same trust model as SPL `approve`.
+- **Spend is recorded before settlement.** On the EVM, `EvmMandate.authorize` records the spend when the gate passes, before the x402 facilitator settles. A settlement that later fails still consumes budget. This is the conservative choice: the mandate can under-spend, never over-spend.
+- **Single asset per mandate.** Caps are in base units of the token the mandate is delegated on; a mandate does not convert between assets.
+
 ## Status
 
 Under active development.
