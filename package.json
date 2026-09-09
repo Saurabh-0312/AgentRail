@@ -14,7 +14,8 @@
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "demo:devnet": "node --env-file=.env scripts/devnet-e2e.ts",
-    "demo:hedera": "node --env-file=.env scripts/hedera-e2e.ts"
+    "demo:hedera": "node --env-file=.env scripts/hedera-e2e.ts",
+    "demo:discovery": "node --env-file=.env scripts/discovery-e2e.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.0",

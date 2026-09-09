@@ -43,6 +43,30 @@ const done = await hedera.settle(auth);                                         
 On Hedera the same ECDSA key is the mandate's agent and the x402 payer, so one identity both asks
 and pays. `createAnchorGateClient` gives the Solana tail a real client over the deployed program.
 
+## Discovery (Phase 3)
+
+The agent starts with an ENS name and nothing else:
+
+```ts
+import { discoverService, parseAllowed, assertAllowed, AdapterRegistry } from "@agentrail/sdk";
+import { sepoliaEnsReader } from "@agentrail/sdk/src/ens.ts";
+
+const readText = sepoliaEnsReader(SEPOLIA_RPC_URL);              // ENSv2 UniversalResolver, Sepolia
+const allowed  = parseAllowed(await readText("databot.agentrail.eth", "rail.allowed"), "databot.agentrail.eth");
+const service  = await discoverService("feed.agentrail.eth", readText); // rail.endpoint / chain / price / token / scheme
+const adapter  = registry.select(service.chain);                  // rail.chain picks the tail
+const quote    = await adapter.quote(service);
+assertAllowed(allowed, service, quote.payTo);                     // discovery is not authorization
+const auth     = await adapter.authorize(mandate, quote);         // the mandate decides
+const done     = await adapter.settle(auth);
+```
+
+Service names carry five records (`rail.endpoint`, `rail.chain`, `rail.price`, `rail.token`,
+`rail.scheme`); a missing or malformed record throws `DiscoveryError`, never a default URL. A
+service that resolves correctly but whose payee is not in the agent's `rail.allowed` record is
+refused with `NotOnAllowList` before the mandate, the facilitator, or any signature is touched.
+The only address in the package is ENS's own UniversalResolver.
+
 ## Tests
 
 `yarn test`: every tail satisfies the same contract; every refusal reason on every tail is thrown

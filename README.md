@@ -20,6 +20,8 @@ A mandate that states exactly what an agent may do — which programs, which ins
 
 The user's tokens never leave their wallet. The agent can *ask* to spend. Only AgentRail can *sign*.
 
+Services get ENS names too. The agent starts with a name, resolves what exists to buy (`rail.endpoint`, `rail.chain`, `rail.price`), checks it against its own mandate, and pays through x402. No URL and no API key appear anywhere in the demo.
+
 Built with **ENS**, **Solana**, **Hedera**, and **The Graph**.
 
 ## Limitations
