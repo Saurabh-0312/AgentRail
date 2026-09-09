@@ -1,0 +1,25 @@
+# Render blueprint: the x402-gated data feed (services/data-feed) as a public web service.
+# The feed holds no secrets: payTo is a public account id, and settlement is done by the
+# Blocky402 facilitator. Everything it needs is set here. Render injects PORT and RENDER_EXTERNAL_URL.
+services:
+  - type: web
+    name: agentrail-data-feed
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: yarn install --frozen-lockfile --ignore-engines
+    startCommand: yarn workspace @agentrail/data-feed start:hosted
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: HEDERA_SELLER_ACCOUNT_ID
+        value: "0.0.10440535"
+      - key: BLOCKY402_URL
+        value: https://api.testnet.blocky402.com
+      - key: FEED_ASSET
+        value: "0.0.429274"
+      - key: FEED_UNIT_PRICE
+        value: "10000"
+      - key: FEED_MAX_SYMBOLS
+        value: "5"

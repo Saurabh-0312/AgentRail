@@ -1,9 +1,10 @@
 /**
  * Boot the data feed against the Blocky402 facilitator on Hedera testnet.
  *
- * Env (from ../../.env): HEDERA_SELLER_ACCOUNT_ID (payTo; must differ from any buyer),
- * BLOCKY402_URL, FEED_ASSET (HTS USDC 0.0.429274 by default, 0.0.0 for HBAR),
- * FEED_UNIT_PRICE (smallest units per symbol), FEED_PUBLIC_URL, PORT.
+ * Env (from ../../.env locally, from the host's dashboard when deployed): HEDERA_SELLER_ACCOUNT_ID
+ * (payTo; must differ from any buyer), BLOCKY402_URL, FEED_ASSET (HTS USDC 0.0.429274 by default,
+ * 0.0.0 for HBAR), FEED_UNIT_PRICE (smallest units per symbol), FEED_PUBLIC_URL (falls back to
+ * RENDER_EXTERNAL_URL / RAILWAY_PUBLIC_DOMAIN), PORT. No secrets: the facilitator settles.
  */
 import { serve } from "@hono/node-server";
 
@@ -20,7 +21,12 @@ const asset = process.env.FEED_ASSET ?? HTS_USDC_TESTNET;
 const isHbar = asset === HBAR_ASSET;
 const unitPrice = BigInt(process.env.FEED_UNIT_PRICE ?? (isHbar ? "10000000" : "10000")); // 0.1 HBAR or 0.01 USDC
 const port = Number(process.env.PORT ?? 4021);
-const resourceBase = (process.env.FEED_PUBLIC_URL ?? `http://localhost:${port}`).replace(/\/$/, "");
+// Public base URL for the 402 `resource`: explicit, else what the host tells us, else local.
+const hostedUrl =
+  process.env.FEED_PUBLIC_URL ??
+  process.env.RENDER_EXTERNAL_URL ??
+  (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : undefined);
+const resourceBase = (hostedUrl ?? `http://localhost:${port}`).replace(/\/$/, "");
 
 const facilitator = httpFacilitator(facilitatorUrl);
 const feePayer = await facilitator.feePayer(HEDERA_TESTNET);

@@ -52,6 +52,14 @@ One-time Hedera setup (associates the buyer with USDC, creates a seller with unl
 token associations): `node --env-file=.env scripts/hedera-setup.ts` from the repo root, then fund
 the buyer from [Circle's faucet](https://faucet.circle.com) (Hedera Testnet, 20 USDC / 2 h).
 
+## Hosting
+
+The repo carries a Render blueprint (`render.yaml` at the root) and a Railway config
+(`railway.json`). Both run `yarn workspace @agentrail/data-feed start:hosted`, which needs no
+`.env`: the feed holds no secrets, only the public seller account and the facilitator URL. The
+402 `resource` uses `FEED_PUBLIC_URL`, falling back to `RENDER_EXTERNAL_URL` or
+`RAILWAY_PUBLIC_DOMAIN`. On Render: New → Blueprint → pick the repo → apply.
+
 ## Tests
 
 `yarn test` runs the vitest suite against an injected facilitator: the 402 challenge, per-query
