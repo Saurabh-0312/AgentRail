@@ -30,3 +30,4 @@ jobs:
           node-version: 20
           cache: yarn
       - run: yarn install --frozen-lockfile
+      - run: yarn workspace @agentrail/data-feed test
