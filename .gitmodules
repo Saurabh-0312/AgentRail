@@ -1,0 +1,6 @@
+[submodule "contracts/lib/ens-contracts-v2"]
+	path = contracts/lib/ens-contracts-v2
+	url = https://github.com/ensdomains/contracts-v2
+[submodule "contracts/lib/openzeppelin-contracts"]
+	path = contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
