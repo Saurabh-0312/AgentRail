@@ -30,9 +30,18 @@ export interface FeedConfig {
   /** Public base URL, used in the 402 `resource` field. */
   resourceBase: string;
   facilitator: Facilitator;
+  /**
+   * DEMO AFFORDANCE. Default payee for `/demo/unlisted/price/:symbols`, a route that issues a
+   * well-formed 402 whose payee is deliberately not the shop's, so an agent's allow-list can be
+   * shown refusing a service that resolves and answers correctly. That route never settles.
+   */
+  unlistedPayTo?: string;
   quotes?: QuoteFetcher;
   mirror?: (txId: string) => Promise<MirrorConfirmation | null>;
 }
+
+/** The Hedera fee-collection account: real on every Hedera network, never anyone's shop. */
+export const DEFAULT_UNLISTED_PAYTO = "0.0.98";
 
 export interface Receipt {
   payer: string;
@@ -48,14 +57,14 @@ export function createApp(cfg: FeedConfig) {
   const ledger = new Map<string, Receipt[]>(); // pay-per-call metering, keyed by payer account
   const settledTx = new Set<string>(); // a payment payload is settled at most once
 
-  const requirementsFor = (symbols: string[]): PaymentRequirements => ({
+  const requirementsFor = (symbols: string[], payTo = cfg.payTo, resource = `${cfg.resourceBase}/price/${symbols.join(",")}`): PaymentRequirements => ({
     scheme: "exact",
     network: cfg.network,
     amount: (cfg.unitPrice * BigInt(symbols.length)).toString(),
-    payTo: cfg.payTo,
+    payTo,
     asset: cfg.asset,
     maxTimeoutSeconds: 300,
-    resource: `${cfg.resourceBase}/price/${symbols.join(",")}`,
+    resource,
     description: `${symbols.length} spot price${symbols.length > 1 ? "s" : ""} (${symbols.join(", ")}) at ${cfg.unitPrice} ${cfg.assetSymbol} units each`,
     extra: { feePayer: cfg.feePayer },
   });
@@ -156,6 +165,31 @@ export function createApp(cfg: FeedConfig) {
         spentByPayer: history.reduce((sum, r) => sum + BigInt(r.amount), 0n).toString(),
       },
     });
+  });
+
+  /**
+   * DEMO AFFORDANCE, not a shop. Prices exactly like `/price/:symbols`, except the payee is
+   * `?payTo=` (else `unlistedPayTo`): a well-formed 402 for a payee no mandate has listed. It
+   * exists so "discovery is not authorization" can be shown deterministically, with no third
+   * party in the loop: the name resolves, the service answers correctly, and the agent still
+   * refuses. This route never verifies or settles anything.
+   */
+  app.get("/demo/unlisted/price/:symbols", (c) => {
+    const symbols = parseSymbols(c.req.param("symbols"), cfg.maxSymbols);
+    if (!symbols) {
+      return c.json({ error: "BAD_SYMBOLS", supported: SUPPORTED_SYMBOLS, maxSymbols: cfg.maxSymbols }, 400);
+    }
+    const payTo = c.req.query("payTo") ?? cfg.unlistedPayTo ?? DEFAULT_UNLISTED_PAYTO;
+    const resource = `${cfg.resourceBase}/demo/unlisted/price/${symbols.join(",")}?payTo=${payTo}`;
+    const paid = c.req.header("X-PAYMENT") ?? c.req.header("PAYMENT-SIGNATURE");
+    const body = {
+      x402Version: 2,
+      error: paid ? "DEMO_ROUTE_NEVER_SETTLES" : "PAYMENT_REQUIRED",
+      accepts: [requirementsFor(symbols, payTo, resource)],
+      demo: "unlisted payee: this route issues challenges only and never settles a payment",
+    };
+    c.header("PAYMENT-REQUIRED", encodeB64(body));
+    return c.json(body, 402);
   });
 
   /** Free: what a payer has bought so far. The audit trail the Mirror Node can be checked against. */

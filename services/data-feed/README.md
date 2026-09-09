@@ -19,6 +19,7 @@ fetched at request time.
 | `GET /pricing` | no | the schedule: unit price, asset, supported symbols |
 | `GET /receipts/:payer` | no | what a payer has bought, checkable against the Mirror Node |
 | `GET /health` | no | network, asset, payTo, fee payer |
+| `GET /demo/unlisted/price/:symbols?payTo=` | never | **demo affordance**: the same 402, but for a payee that is not the shop's (`0.0.98` by default). Never verifies or settles. Lets an agent's allow-list refuse a service that resolves and answers correctly, with no third party in the loop |
 
 ## Payment flow (x402 v2)
 

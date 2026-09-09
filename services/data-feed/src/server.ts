@@ -4,11 +4,12 @@
  * Env (from ../../.env locally, from the host's dashboard when deployed): HEDERA_SELLER_ACCOUNT_ID
  * (payTo; must differ from any buyer), BLOCKY402_URL, FEED_ASSET (HTS USDC 0.0.429274 by default,
  * 0.0.0 for HBAR), FEED_UNIT_PRICE (smallest units per symbol), FEED_PUBLIC_URL (falls back to
- * RENDER_EXTERNAL_URL / RAILWAY_PUBLIC_DOMAIN), PORT. No secrets: the facilitator settles.
+ * RENDER_EXTERNAL_URL / RAILWAY_PUBLIC_DOMAIN), PORT, FEED_UNLISTED_PAYTO (demo affordance: the
+ * payee `/demo/unlisted/...` challenges name; 0.0.98 by default). No secrets: the facilitator settles.
  */
 import { serve } from "@hono/node-server";
 
-import { createApp } from "./app.ts";
+import { DEFAULT_UNLISTED_PAYTO, createApp } from "./app.ts";
 import { HBAR_ASSET, HEDERA_TESTNET, HTS_USDC_TESTNET, httpFacilitator } from "./x402.ts";
 
 const facilitatorUrl = process.env.BLOCKY402_URL ?? "https://api.testnet.blocky402.com";
@@ -42,6 +43,7 @@ const app = createApp({
   feePayer,
   resourceBase,
   facilitator,
+  unlistedPayTo: process.env.FEED_UNLISTED_PAYTO ?? DEFAULT_UNLISTED_PAYTO,
 });
 
 serve({ fetch: app.fetch, port }, () => {
