@@ -36,3 +36,5 @@ spikes/
 
 # substreams auth writes the Graph Market JWT here
 .substreams.env
+scripts/out/
+scripts/keys/

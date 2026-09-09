@@ -12,7 +12,8 @@
   "scripts": {
     "test:anchor": "ts-mocha -p ./tsconfig.json -t 1000000 \"tests/**/*.ts\"",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w"
+    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
+    "demo:devnet": "node --env-file=.env -r ts-node/register/transpile-only scripts/devnet-e2e.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.0"
