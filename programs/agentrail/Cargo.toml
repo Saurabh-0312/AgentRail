@@ -1,7 +1,7 @@
 [package]
 name = "agentrail"
 version = "0.1.0"
-description = "Created with Anchor"
+description = "AgentRail: instruction-level authorization for AI agents on Solana"
 edition = "2021"
 
 [lib]
@@ -19,10 +19,11 @@ anchor-debug = []
 custom-heap = []
 custom-panic = []
 
-
 [dependencies]
 anchor-lang = "0.32.0"
-
+# Required as a direct dependency: #[account(zero_copy)] expands to bytemuck derives,
+# and [Permission; 16] needs min_const_generics for the Pod array impl.
+bytemuck = { version = "1", features = ["derive", "min_const_generics"] }
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
