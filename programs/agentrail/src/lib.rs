@@ -54,4 +54,9 @@ pub mod agentrail {
     pub fn revoke_mandate(ctx: Context<RevokeMandate>) -> Result<()> {
         instructions::revoke_mandate::handle_revoke_mandate(ctx)
     }
+
+    /// Agent-signed check of the sibling instruction at `target_ix_index`. Records the spend on success.
+    pub fn verify(ctx: Context<Verify>, target_ix_index: u8, declared_amount: u64) -> Result<()> {
+        instructions::verify::handle_verify(ctx, target_ix_index, declared_amount)
+    }
 }

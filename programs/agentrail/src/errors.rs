@@ -32,4 +32,6 @@ pub enum AgentRailError {
     InvalidExpiry,
     #[msg("arithmetic overflow")]
     Overflow,
+    #[msg("target instruction is out of range or is AgentRail itself")]
+    InvalidTargetInstruction,
 }

@@ -6,8 +6,10 @@ pub mod add_permission;
 pub mod create_mandate;
 pub mod remove_permission;
 pub mod revoke_mandate;
+pub mod verify;
 
 pub use add_permission::*;
 pub use create_mandate::*;
 pub use remove_permission::*;
 pub use revoke_mandate::*;
+pub use verify::*;
