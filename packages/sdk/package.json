@@ -1,5 +1,21 @@
 {
   "name": "@agentrail/sdk",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AgentRail payment adapter: one interface, three tails (Solana, Hedera, Base). The mandate check runs before any facilitator is contacted.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.32.0",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.98.0",
+    "@x402/evm": "~2.25",
+    "@x402/hedera": "^2.25",
+    "viem": "^2.48.11"
+  }
 }

@@ -1,0 +1,599 @@
+{
+  "address": "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj",
+  "metadata": {
+    "name": "agentrail",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "AgentRail: instruction-level authorization for AI agents on Solana"
+  },
+  "instructions": [
+    {
+      "name": "add_permission",
+      "docs": [
+        "Owner allows `program_id` with the given instruction discriminators and spend caps."
+      ],
+      "discriminator": [
+        144,
+        66,
+        124,
+        76,
+        232,
+        97,
+        99,
+        77
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "program_id",
+          "type": "pubkey"
+        },
+        {
+          "name": "discriminators",
+          "type": {
+            "vec": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          }
+        },
+        {
+          "name": "discriminator_size",
+          "type": "u8"
+        },
+        {
+          "name": "spend_limit",
+          "type": "u64"
+        },
+        {
+          "name": "per_tx_limit",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_mandate",
+      "docs": [
+        "Owner issues a mandate for `agent`. PDA: `[\"mandate\", owner, agent]`."
+      ],
+      "discriminator": [
+        230,
+        170,
+        158,
+        68,
+        33,
+        169,
+        16,
+        158
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  110,
+                  100,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "agent"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "agent"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "ens_node",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "expiry",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "execute_payment",
+      "docs": [
+        "The gate: agent asks to pay `amount` to `destination`; the mandate PDA signs as SPL delegate."
+      ],
+      "discriminator": [
+        86,
+        4,
+        7,
+        7,
+        120,
+        139,
+        232,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true
+        },
+        {
+          "name": "agent",
+          "signer": true
+        },
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "remove_permission",
+      "docs": [
+        "Owner removes the permission entry for `program_id`."
+      ],
+      "discriminator": [
+        122,
+        51,
+        186,
+        238,
+        78,
+        104,
+        205,
+        204
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "program_id",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "revoke_mandate",
+      "docs": [
+        "Owner kills the mandate: data zeroed, then the account is closed and rent returned."
+      ],
+      "discriminator": [
+        252,
+        97,
+        140,
+        119,
+        67,
+        43,
+        177,
+        108
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "verify",
+      "docs": [
+        "Agent-signed check of the sibling instruction at `target_ix_index`. Records the spend on success."
+      ],
+      "discriminator": [
+        133,
+        161,
+        141,
+        48,
+        120,
+        198,
+        88,
+        150
+      ],
+      "accounts": [
+        {
+          "name": "mandate",
+          "writable": true
+        },
+        {
+          "name": "agent",
+          "signer": true
+        },
+        {
+          "name": "instructions_sysvar",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "target_ix_index",
+          "type": "u8"
+        },
+        {
+          "name": "declared_amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "MandateAccount",
+      "discriminator": [
+        93,
+        50,
+        242,
+        30,
+        106,
+        198,
+        146,
+        213
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NotActive",
+      "msg": "mandate is not active"
+    },
+    {
+      "code": 6001,
+      "name": "Expired",
+      "msg": "mandate has expired"
+    },
+    {
+      "code": 6002,
+      "name": "PermissionsFull",
+      "msg": "permission list is full (max 16)"
+    },
+    {
+      "code": 6003,
+      "name": "PermissionNotFound",
+      "msg": "no permission entry for this program"
+    },
+    {
+      "code": 6004,
+      "name": "DuplicatePermission",
+      "msg": "program already has a permission entry"
+    },
+    {
+      "code": 6005,
+      "name": "ProgramNotAllowed",
+      "msg": "program is not permitted by the mandate"
+    },
+    {
+      "code": 6006,
+      "name": "InstructionNotAllowed",
+      "msg": "instruction is not permitted by the mandate"
+    },
+    {
+      "code": 6007,
+      "name": "PerTxLimitExceeded",
+      "msg": "amount exceeds the per-transaction limit"
+    },
+    {
+      "code": 6008,
+      "name": "SpendLimitExceeded",
+      "msg": "amount exceeds the lifetime spend limit"
+    },
+    {
+      "code": 6009,
+      "name": "Unauthorized",
+      "msg": "signer is not the mandate owner"
+    },
+    {
+      "code": 6010,
+      "name": "NotTheAgent",
+      "msg": "signer is not the mandated agent"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidDiscriminatorSize",
+      "msg": "discriminator size must be 1, 4 or 8"
+    },
+    {
+      "code": 6012,
+      "name": "TooManyDiscriminators",
+      "msg": "too many discriminators (max 8)"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidExpiry",
+      "msg": "expiry must be in the future"
+    },
+    {
+      "code": 6014,
+      "name": "Overflow",
+      "msg": "arithmetic overflow"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidTargetInstruction",
+      "msg": "target instruction is out of range or is AgentRail itself"
+    },
+    {
+      "code": 6016,
+      "name": "DestinationNotAllowed",
+      "msg": "destination is not on the mandate's allowed list"
+    },
+    {
+      "code": 6017,
+      "name": "TokenAccountNotOwned",
+      "msg": "token account is not owned by the mandate owner"
+    }
+  ],
+  "types": [
+    {
+      "name": "MandateAccount",
+      "docs": [
+        "The mandate: what one agent may do on behalf of one owner. 120 bytes of fields; Anchor prepends an",
+        "8-byte discriminator, giving the 128-byte header in SPEC §8.2."
+      ],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "active",
+            "docs": [
+              "1 = active, 0 = revoked. Read first on the hot path: cheapest possible rejection."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Canonical PDA bump, stored so the hot path never calls `find_program_address` (SPEC §9 flaw 4)."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "_pad",
+            "type": {
+              "array": [
+                "u8",
+                6
+              ]
+            }
+          },
+          {
+            "name": "owner",
+            "docs": [
+              "The human who issued the mandate. Only this key may add/remove permissions or revoke."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "agent",
+            "docs": [
+              "The agent this mandate authorizes. It can request payments; it can never sign them."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "ens_node",
+            "docs": [
+              "ENS namehash of the agent's subname. Join key across chains (SPEC §10.5)."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "expiry",
+            "docs": [
+              "Unix timestamp after which the mandate is dead. Kept short and renewed (SPEC §10.2)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "permissions_len",
+            "docs": [
+              "How many entries of `permissions` are in use (0..=16)."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "_pad2",
+            "type": {
+              "array": [
+                "u8",
+                6
+              ]
+            }
+          },
+          {
+            "name": "permissions",
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "Permission"
+                  }
+                },
+                16
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Permission",
+      "docs": [
+        "One authorized program and the instructions the agent may call on it. Exactly 128 bytes."
+      ],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "program_id",
+            "docs": [
+              "Target program the agent may call."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "spend_limit",
+            "docs": [
+              "Lifetime spend cap in base units. 0 = unlimited."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "per_tx_limit",
+            "docs": [
+              "Per-transaction spend cap in base units. 0 = unlimited."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "spend_total",
+            "docs": [
+              "Cumulative spend through this permission."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "call_count",
+            "docs": [
+              "Number of successful calls through this permission."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "discriminators_len",
+            "docs": [
+              "How many entries of `discriminators` are in use (0..=8)."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "discriminator_size",
+            "docs": [
+              "Width of each discriminator in bytes: 1 (SPL Token tag), 4 (System Program u32 LE) or 8 (Anchor).",
+              "SPEC §9 flaw 2: matching a fixed 8 bytes against a 1-byte-tag program would compare argument data."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "_pad",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "discriminators",
+            "docs": [
+              "Allowed instruction discriminators, left-aligned in each 8-byte slot."
+            ],
+            "type": {
+              "array": [
+                {
+                  "array": [
+                    "u8",
+                    8
+                  ]
+                },
+                8
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
