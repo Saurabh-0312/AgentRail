@@ -50,3 +50,5 @@ indexer/substreams/out/
 # solana sink cache (rebuilt from the provider)
 indexer/query/out/
 indexer/substreams-token-activity/*.spkg
+# local-only notes
+agent/README.md
