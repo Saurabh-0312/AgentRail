@@ -17,7 +17,18 @@ import type { FeedRow } from "@/lib/history";
  * The unified feed. Successes are quiet; refusals are loud: a red left border, a red badge with the
  * error code, and the reason in words. Blocked is one click away and is never hidden to tidy the list.
  */
-export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; initialMode?: FeedMode }) {
+export function ActivityFeed({
+  rows,
+  initialMode = "all",
+  dense = false,
+  sticky = false,
+}: {
+  rows: FeedRow[];
+  initialMode?: FeedMode;
+  dense?: boolean;
+  /** Pin the header to the page while the table scrolls (laptop widths and up). */
+  sticky?: boolean;
+}) {
   const [mode, setMode] = useState<FeedMode>(initialMode);
   const counts = countRows(rows);
   const shown = filterRows(rows, mode);
@@ -29,27 +40,31 @@ export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; i
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="verdict filter">
-        {modes.map((m) => (
-          <button
-            key={m.key}
-            type="button"
-            role="tab"
-            aria-selected={mode === m.key}
-            onClick={() => setMode(m.key)}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm tnum",
-              mode === m.key ? (m.key === "blocked" ? "border-blocked bg-blocked text-ink-inverse" : "border-ink bg-ink text-ink-inverse") : "border-border bg-surface text-ink hover:bg-muted-soft",
-            )}
-          >
-            {m.label}
-            <span className={cn("rounded px-1.5 text-xs", mode === m.key ? "bg-ink-inverse/20" : m.key === "blocked" ? "bg-blocked-soft text-blocked" : "bg-muted-soft text-muted")}>{counts[m.key]}</span>
-          </button>
-        ))}
+        {modes.map((m) => {
+          const active = mode === m.key;
+          const isBlocked = m.key === "blocked";
+          return (
+            <button
+              key={m.key}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setMode(m.key)}
+              className={cn(
+                "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm tnum shadow-1",
+                isBlocked && "font-semibold",
+                active ? (isBlocked ? "border-blocked bg-blocked text-ink-inverse shadow-2" : "border-ink bg-ink text-ink-inverse") : isBlocked ? "border-blocked/50 bg-blocked-soft text-blocked hover:border-blocked hover:shadow-2" : "border-border bg-surface text-ink hover:border-border-strong hover:bg-muted-soft",
+              )}
+            >
+              {m.label}<span className={cn("rounded px-1.5 text-xs", active ? "bg-ink-inverse/20" : isBlocked ? "bg-blocked/15 text-blocked" : "bg-muted-soft text-muted")}>{counts[m.key]}</span>
+            </button>
+          );
+        })}
       </div>
 
-      <Table>
-        <THead>
-          <TR>
+      <Table dense={dense} stickyHeader={sticky}>
+        <THead sticky={sticky}>
+          <TR className="hover:bg-transparent">
             <TH>time</TH>
             <TH>chain</TH>
             <TH>action</TH>
@@ -73,7 +88,7 @@ export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; i
             const ts = Number(r.timestamp);
             const blocked = !r.allowed;
             return (
-              <TR key={r.id} data-verdict={blocked ? "blocked" : "allowed"} className={cn(blocked && "border-l-4 border-l-blocked bg-blocked-soft/50")}>
+              <TR key={r.id} data-verdict={blocked ? "blocked" : "allowed"} className={cn(blocked && "border-l-4 border-l-blocked bg-blocked-soft/50 hover:bg-blocked-soft/70")}>
                 <TD className="whitespace-nowrap tnum">
                   <div>{timeAgo(ts)}</div>
                   <div className="text-[11px] text-muted">{isoDate(ts)}</div>
@@ -85,7 +100,7 @@ export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; i
                 <TD>
                   {blocked ? (
                     <div className="space-y-0.5">
-                      <Badge variant="blocked">{`BLOCKED${r.errorCode ? ` ${r.errorCode}` : ""}`}</Badge>
+                      <Badge variant="blocked" className="font-semibold">{`BLOCKED${r.errorCode ? ` ${r.errorCode}` : ""}`}</Badge>
                       <div className="text-xs text-blocked">
                         {errorName(r.errorCode) ?? r.blockReason ?? "refused"}
                         {errorReason(r.errorCode) ? <span className="text-muted"> · {errorReason(r.errorCode)}</span> : null}

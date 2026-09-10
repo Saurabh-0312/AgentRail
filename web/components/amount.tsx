@@ -39,8 +39,8 @@ export function Figure({ f, secondary = "inline", className }: { f: FormattedUni
   }
   return (
     <span className={cn("tnum", secondary === "below" ? "inline-flex flex-col leading-tight" : "inline-flex flex-wrap items-baseline gap-x-1.5", className)} title={raw}>
-      <span>{f.human}</span>
-      <span className="text-[11px] text-muted">{f.raw} units</span>
+      <span className="whitespace-nowrap">{f.human}</span>
+      <span className="whitespace-nowrap text-[11px] text-muted">{f.raw} units</span>
     </span>
   );
 }
