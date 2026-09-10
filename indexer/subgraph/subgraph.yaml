@@ -1,0 +1,127 @@
+# FOR MATCHSTICK ONLY. The test runner reads a file named `subgraph.yaml` to learn the data sources
+# and ABIs the handlers use, so this is the union of the two deployable manifests. Every source is
+# labelled `sepolia` because the loader rejects mixed networks and unit tests never touch one; the
+# EvmMandate source really lives on base-sepolia. Never deploy this file: deploy
+# `subgraph.sepolia.yaml` and `subgraph.base.yaml`.
+specVersion: 1.3.0
+description: matchstick manifest - union of subgraph.sepolia.yaml and subgraph.base.yaml, not deployable
+schema:
+  file: ../schema.graphql
+dataSources:
+  - kind: ethereum
+    name: AgentRailRegistry
+    network: sepolia
+    source:
+      address: "0x68822ce9109D9d71e99b07703cF6c851D0229AA9"
+      abi: AgentRailRegistry
+      startBlock: 11667466
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Mandate
+        - Name
+        - Token
+        - Service
+      abis:
+        - name: AgentRailRegistry
+          file: ../abis/AgentRailRegistry.json
+      eventHandlers:
+        - event: LabelRegistered(indexed uint256,indexed bytes32,string,address,uint64,indexed address)
+          handler: handleLabelRegistered
+        - event: MandateIssued(indexed uint256,string,indexed address,uint64,address)
+          handler: handleMandateIssued
+        - event: LabelUnregistered(indexed uint256,indexed address)
+          handler: handleLabelUnregistered
+        - event: ExpiryUpdated(indexed uint256,indexed uint64,indexed address)
+          handler: handleExpiryUpdated
+        - event: ResolverUpdated(indexed uint256,indexed address,indexed address)
+          handler: handleResolverUpdated
+        - event: TokenRegenerated(indexed uint256,indexed uint256)
+          handler: handleTokenRegenerated
+      file: ./src/sepolia/registry.ts
+  - kind: ethereum
+    name: Resolver
+    network: sepolia
+    source:
+      address: "0xbfce4e394832c879fd2d95dae4F02259AFd23C16"
+      abi: Resolver
+      startBlock: 11667466
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Mandate
+        - MandateRecord
+        - Permission
+        - Service
+        - Name
+      abis:
+        - name: Resolver
+          file: ../abis/Resolver.json
+      eventHandlers:
+        - event: TextChanged(indexed bytes32,indexed string,string,string)
+          handler: handleTextChanged
+      file: ./src/sepolia/resolver.ts
+  - kind: ethereum
+    name: IdentityRegistry
+    network: sepolia
+    source:
+      address: "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      abi: IdentityRegistry
+      startBlock: 11668605
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Agent
+        - AgentMetadata
+      abis:
+        - name: IdentityRegistry
+          file: ../abis/IdentityRegistry.json
+      eventHandlers:
+        - event: Registered(indexed uint256,string,indexed address)
+          handler: handleRegistered
+        - event: MetadataSet(indexed uint256,indexed string,string,bytes)
+          handler: handleMetadataSet
+        - event: URIUpdated(indexed uint256,string,indexed address)
+          handler: handleURIUpdated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/sepolia/identity.ts
+  - kind: ethereum
+    name: EvmMandate
+    network: sepolia # base-sepolia in subgraph.base.yaml; see the header
+    source:
+      address: "0x68822ce9109D9d71e99b07703cF6c851D0229AA9"
+      abi: EvmMandate
+      startBlock: 46598029
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Mandate
+        - MandateKey
+        - Permission
+        - Action
+      abis:
+        - name: EvmMandate
+          file: ../abis/EvmMandate.json
+      eventHandlers:
+        - event: MandateCreated(indexed bytes32,indexed address,indexed address,bytes32,uint64)
+          handler: handleMandateCreated
+        - event: PermissionAdded(indexed bytes32,indexed address,uint256,uint256)
+          handler: handlePermissionAdded
+        - event: PermissionRemoved(indexed bytes32,indexed address)
+          handler: handlePermissionRemoved
+        - event: MandateRevoked(indexed bytes32)
+          handler: handleMandateRevoked
+        - event: SpendAuthorized(indexed bytes32,indexed address,uint256,uint256,bytes32)
+          handler: handleSpendAuthorized
+        - event: PaymentExecuted(indexed bytes32,indexed address,indexed address,uint256,uint256)
+          handler: handlePaymentExecuted
+      file: ./src/base/mandate.ts

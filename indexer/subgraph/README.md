@@ -10,6 +10,9 @@ Two subgraphs, one schema (`../schema.graphql`), two networks.
 > ⚠️ `0x68822ce9…` is `AgentRailRegistry` on Sepolia and `EvmMandate` on Base Sepolia. Each manifest
 > loads its own ABI; see `../EVENTS.md`.
 
+`subgraph.yaml` is for matchstick only: the test runner reads that file name to learn the data
+sources, so it is the union of the two deployable manifests and mixes networks. Never deploy it.
+
 ## Layout
 
 ```
