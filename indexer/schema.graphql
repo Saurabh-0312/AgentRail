@@ -1,0 +1,150 @@
+# AgentRail shared schema — one shape, three sources (SPEC §8.4).
+#
+#   Subgraph   (Sepolia)        mandate lifecycle from ENSv2 + the ERC-8004 identity
+#   Subgraph   (Base Sepolia)   EvmMandate: permissions and every authorized spend
+#   Substreams (Solana devnet)  execute_payment / verify, successes AND reverts
+#
+# The join key is `ensNode`: the ENS namehash the owner writes into the ENS registry, the Solana
+# mandate account (offset 80) and the EVM mandate. `Mandate.id = <ensNode>:<chain>`, so
+#
+#   { mandates(where: { ensNode: "0x320d…" }) { chain actions { allowed blockReason amount } } }
+#
+# is the same query on every source and its rows merge without translation.
+#
+# `Agent` and `AgentMetadata` follow the Agent0 / ERC-8004 subgraph entity shape (id
+# "chainId:agentId") so an AgentRail mandate is a first-class extension of the standardized agent
+# record rather than a parallel identity. Fields marked "extension" are additions to the SPEC
+# §8.4 entities; the SPEC fields themselves are verbatim.
+
+# ---- ERC-8004 identity (Agent0 shape, Sepolia IdentityRegistry) -------------------------------
+
+type Agent @entity(immutable: false) {
+  id: ID!                    # "chainId:agentId", e.g. "11155111:10190"
+  chainId: BigInt!
+  agentId: BigInt!
+  agentURI: String
+  agentURIType: String       # "ipfs" | "https" | "http" | "data" | "unknown"
+  owner: Bytes!
+  operators: [Bytes!]!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  metadata: [AgentMetadata!]! @derivedFrom(field: "agent")
+  # extension: the mandates that name this agent through rail.erc8004
+  mandates: [Mandate!]! @derivedFrom(field: "agentIdentity")
+}
+
+type AgentMetadata @entity(immutable: false) {
+  id: ID!                    # "chainId:agentId:key"
+  agent: Agent!
+  key: String!
+  value: Bytes!
+  updatedAt: BigInt!
+}
+
+# ---- The mandate (SPEC §8.4) -------------------------------------------------------------------
+
+type Mandate @entity(immutable: false) {
+  id: ID!               # <ens_node namehash>:<chain>   <-- THE JOIN KEY
+  ensNode: Bytes!       # same 32 bytes on every chain; this is what makes one query span them
+  chain: String!        # "sepolia" | "solana" | "base"
+  owner: Bytes!
+  agent: Bytes!
+  ensName: String
+  expiry: BigInt!
+  active: Boolean!
+  permissions: [Permission!]! @derivedFrom(field: "mandate")
+  actions: [Action!]! @derivedFrom(field: "mandate")
+  # extension
+  agentIdentity: Agent                                     # from rail.erc8004 (Sepolia only)
+  records: [MandateRecord!]! @derivedFrom(field: "mandate") # the rail.* text records (Sepolia only)
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  txHash: Bytes!                                           # creation tx / signature
+}
+
+type Permission @entity(immutable: false) {
+  id: ID!
+  mandate: Mandate!
+  target: Bytes!        # payee: 20-byte address (EVM), 32-byte pubkey (Solana), UTF-8 account id (Hedera)
+  instructions: [Bytes!]!
+  perTxLimit: BigInt!
+  totalLimit: BigInt!
+  spentTotal: BigInt!
+  # extension
+  source: String!       # "onchain" (Base / Solana caps) | "allowlist" (the rail.allowed mirror on Sepolia)
+  targetChain: String   # for allow-list rows: which chain the payee lives on
+  updatedAt: BigInt!
+}
+
+type Action @entity(immutable: true) {
+  id: ID!
+  mandate: Mandate!
+  chain: String!
+  timestamp: BigInt!
+  target: Bytes!
+  amount: BigInt!
+  allowed: Boolean!      # <-- the important field
+  blockReason: String    # "OVER_BUDGET" | "NOT_PERMITTED" | "EXPIRED" | "REVOKED" | "FAILED"; null when allowed
+  txHash: Bytes!
+  # extension
+  kind: String!          # "execute_payment" | "verify" (Solana) · "authorize" | "payment" (Base)
+  errorCode: Int         # the raw program error, e.g. 6007
+  ref: Bytes             # SpendAuthorized.ref: hash of the paid resource
+  agent: Bytes!          # who asked
+}
+
+# ---- Extensions: the ENS side of the mandate ---------------------------------------------------
+
+type MandateRecord @entity(immutable: false) {
+  id: ID!               # <ensNode>:<key>
+  mandate: Mandate!
+  key: String!
+  value: String!
+  updatedAt: BigInt!
+  txHash: Bytes!
+}
+
+# ---- Internal lookups (Sepolia): ENSv2 events key by tokenId, records key by node -------------
+
+type Name @entity(immutable: false) {
+  id: ID!               # ensNode
+  tokenId: BigInt!
+  labelHash: Bytes!
+  label: String!
+  ensName: String!
+  owner: Bytes!
+  expiry: BigInt!
+  resolver: Bytes
+  isMandate: Boolean!
+  allowlistIds: [String!]!   # Permission ids parsed from the last rail.allowed, replaced on rewrite
+}
+
+type Token @entity(immutable: false) {
+  id: ID!               # tokenId as decimal string
+  node: Bytes!
+}
+
+# Internal lookup (Base): EvmMandate events key by mandateId; only MandateCreated carries ensNode.
+type MandateKey @entity(immutable: false) {
+  id: ID!               # mandateId (bytes32 hex)
+  node: Bytes!
+  agent: Bytes!
+}
+
+# Services get names too: a subname under agentrail.eth that carries the five discovery records.
+# What an agent resolves before it pays. Discovery is not authorization: a Service is not a Permission.
+type Service @entity(immutable: false) {
+  id: ID!               # ensNode
+  ensNode: Bytes!
+  ensName: String!
+  owner: Bytes!
+  expiry: BigInt!
+  active: Boolean!
+  endpoint: String
+  chain: String
+  price: BigInt
+  token: String
+  scheme: String
+  description: String
+  updatedAt: BigInt!
+}

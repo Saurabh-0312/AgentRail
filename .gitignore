@@ -38,3 +38,15 @@ spikes/
 .substreams.env
 scripts/out/
 scripts/keys/
+
+# subgraph codegen / build output and matchstick binaries
+indexer/subgraph/generated/
+indexer/subgraph/build/
+indexer/subgraph/tests/.bin/
+indexer/subgraph/tests/.latest.json
+# substreams build output
+indexer/substreams/*.spkg
+indexer/substreams/out/
+# solana sink cache (rebuilt from the provider)
+indexer/query/out/
+indexer/substreams-token-activity/*.spkg
