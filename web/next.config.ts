@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
   // Chain SDKs stay as ordinary Node requires on the server instead of being bundled.
   serverExternalPackages: ["@coral-xyz/anchor", "@solana/web3.js", "@solana/spl-token", "@x402/hedera", "@x402/evm", "@hiero-ledger/sdk", "viem"],
   typescript: { ignoreBuildErrors: false },
+  // Next 16 writes AGENTS.md / CLAUDE.md into the app on first run; nothing generated belongs in this repo.
+  agentRules: false,
 };
 
 export default nextConfig;
