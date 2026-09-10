@@ -1,0 +1,38 @@
+specVersion: v0.1.0
+package:
+  name: agentrail_token_activity
+  version: v0.1.0
+  url: https://github.com/Saurabh-0312/AgentRail
+  description: SPL Token activity on one delegated token account on Solana devnet - every Transfer / TransferChecked / Approve / Revoke where the account is the source, attributed to the signing authority, flagged when the AgentRail mandate PDA signed. Built from a single prompt with the Substreams SKILLs.
+
+protobuf:
+  files:
+    - agentrail/token/v1/token.proto
+  importPaths:
+    - ./proto
+  excludePaths:
+    - google
+    - sf/solana
+    - sf/firehose
+    - sf/substreams
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/agentrail_token_activity.wasm
+
+network: solana-devnet
+
+modules:
+  - name: map_token_activity
+    kind: map
+    initialBlock: 495587900
+    inputs:
+      - params: string
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:agentrail.token.v1.TokenActivity
+
+# account:<token account to watch>;mandate:<authority to flag as the mandate>
+params:
+  map_token_activity: account:AzbPCoBsT4PckeqYMgukhd1u5hhbe48UxBvczVAqdeU9;mandate:7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a

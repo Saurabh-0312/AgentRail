@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package agentrail.token.v1;
+
+// One block's SPL Token activity on the watched account. One message per instruction.
+message TokenActivity {
+  repeated Transfer transfers = 1;
+  repeated TransferChecked transfer_checkeds = 2;
+  repeated Approve approves = 3;
+  repeated Revoke revokes = 4;
+}
+
+// SPL Token `Transfer` (discriminator 3): accounts [source, destination, authority]
+message Transfer {
+  uint64 slot = 1;
+  string signature = 2;
+  string source = 3;
+  string destination = 4;
+  uint64 amount = 5;
+  string authority = 6;
+  bool via_mandate = 7;   // authority == the mandate PDA (the delegate signed through the program)
+  bool inner = 8;         // reached through CPI (the way execute_payment moves tokens)
+}
+
+// SPL Token `TransferChecked` (discriminator 12): accounts [source, mint, destination, authority]
+message TransferChecked {
+  uint64 slot = 1;
+  string signature = 2;
+  string source = 3;
+  string mint = 4;
+  string destination = 5;
+  uint64 amount = 6;
+  uint32 decimals = 7;
+  string authority = 8;
+  bool via_mandate = 9;
+  bool inner = 10;
+}
+
+// SPL Token `Approve` (discriminator 4): accounts [source, delegate, owner]
+message Approve {
+  uint64 slot = 1;
+  string signature = 2;
+  string source = 3;
+  string delegate = 4;
+  string owner = 5;
+  uint64 amount = 6;
+  bool delegate_is_mandate = 7;
+}
+
+// SPL Token `Revoke` (discriminator 5): accounts [source, owner]
+message Revoke {
+  uint64 slot = 1;
+  string signature = 2;
+  string source = 3;
+  string owner = 4;
+}
