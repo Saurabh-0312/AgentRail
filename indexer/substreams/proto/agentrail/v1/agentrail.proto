@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package agentrail.v1;
+
+// One block's worth of AgentRail activity on Solana, in the shape of the shared schema
+// (indexer/schema.graphql). `ens_node` is the join key shared with the ENS and EVM sources.
+message Activity {
+  repeated Mandate mandates = 1;
+  repeated Permission permissions = 2;
+  repeated Action actions = 3;
+}
+
+message Mandate {
+  string id = 1;          // "<ens_node hex>:solana"
+  string ens_node = 2;    // 0x-prefixed 32 bytes
+  string chain = 3;       // "solana"
+  string owner = 4;       // base58
+  string agent = 5;       // base58
+  int64 expiry = 6;
+  bool active = 7;
+  string tx_hash = 8;     // base58 signature of the create / revoke
+  uint64 slot = 9;
+  int64 timestamp = 10;
+  string pda = 11;        // base58 mandate account
+  string kind = 12;       // "create_mandate" | "revoke_mandate"
+}
+
+message Permission {
+  string id = 1;          // "<mandate id>:<program_id>"
+  string mandate_id = 2;
+  string ens_node = 3;
+  string target = 4;      // base58: destination token account (payments) or program id (verify)
+  repeated string instructions = 5; // hex discriminators, left-aligned in 8 bytes
+  uint32 discriminator_size = 6;
+  uint64 per_tx_limit = 7;
+  uint64 total_limit = 8;
+  string tx_hash = 9;
+  uint64 slot = 10;
+  int64 timestamp = 11;
+  string kind = 12;       // "add_permission" | "remove_permission"
+}
+
+message Action {
+  string id = 1;          // "<signature>:<instruction index>"
+  string mandate_id = 2;  // "<ens_node hex>:solana"
+  string ens_node = 3;
+  string chain = 4;       // "solana"
+  int64 timestamp = 5;
+  string target = 6;      // base58: destination token account (execute_payment) or sibling program id (verify)
+  uint64 amount = 7;
+  bool allowed = 8;       // false when the transaction failed: THE row this index exists for
+  string block_reason = 9;// OVER_BUDGET | NOT_PERMITTED | EXPIRED | REVOKED | FAILED; empty when allowed
+  string tx_hash = 10;    // base58 signature
+  string kind = 11;       // "execute_payment" | "verify"
+  uint32 error_code = 12; // raw Anchor error number (6007 …); 0 when allowed
+  string agent = 13;      // base58 signer
+  uint64 slot = 14;
+  string pda = 15;        // base58 mandate account
+  string error_name = 16; // "PerTxLimitExceeded" …; empty when allowed
+}

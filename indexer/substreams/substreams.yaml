@@ -1,0 +1,88 @@
+specVersion: v0.1.0
+package:
+  name: agentrail_mandates
+  version: v0.1.0
+  url: https://github.com/Saurabh-0312/AgentRail
+  description: AgentRail agent-mandate activity on Solana - mandates, permissions and every execute_payment / verify attempt, including the ones the mandate refused, decoded from instruction data and transaction meta into the AgentRail shared schema
+
+imports:
+  entity: https://github.com/streamingfast/substreams-sink-entity-changes/releases/download/v2.0.0/substreams-entity-change-v2.0.0.spkg
+
+protobuf:
+  files:
+    - agentrail/v1/agentrail.proto
+  importPaths:
+    - ./proto
+  excludePaths:
+    - google
+    - sf/solana
+    - sf/firehose
+    - sf/substreams/v1
+    - sf/substreams/rpc
+    - sf/substreams/index
+    - sf/substreams/sink/service
+    - sf/substreams/sink/sql
+    - sf/substreams/solana
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/agentrail_substreams.wasm
+
+network: solana-devnet
+
+modules:
+  # 1. Every AgentRail instruction in the block, successful or reverted, decoded from instruction
+  #    data and transaction meta. Payments carry the mandate PDA; the ENS node is filled in by
+  #    map_activity from the store (or from a `mandate:<pda>=<node>` hint in the params).
+  #
+  #    Deliberately NO blockFilter. solana-common's `program_ids_without_votes` index is built from
+  #    successful transactions, so a block whose only AgentRail transaction reverted is skipped by
+  #    the filter and the refusal never reaches the module (verified live on devnet, 2026-09-10).
+  #    The reverts are the product; raw blocks it is.
+  - name: map_instructions
+    kind: map
+    initialBlock: 495587900
+    inputs:
+      - params: string
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:agentrail.v1.Activity
+
+  # 2. mandate PDA (base58) -> ens_node (hex), learned from create_mandate. The join key lives in
+  #    the mandate account at offset 80, which a block stream cannot read; the create instruction
+  #    carries it as an argument, so the store remembers it.
+  - name: store_mandates
+    kind: store
+    initialBlock: 495587900
+    updatePolicy: set
+    valueType: string
+    inputs:
+      - map: map_instructions
+
+  # 3. The shared-schema rows: every action and permission joined to its ensNode.
+  - name: map_activity
+    kind: map
+    initialBlock: 495587900
+    inputs:
+      - params: string
+      - map: map_instructions
+      - store: store_mandates
+    output:
+      type: proto:agentrail.v1.Activity
+
+  # 4. The same rows as entity changes for a Substreams-powered subgraph (indexer/schema.graphql).
+  - name: graph_out
+    kind: map
+    initialBlock: 495587900
+    inputs:
+      - map: map_activity
+    output:
+      type: proto:sf.substreams.sink.entity.v1.EntityChanges
+
+# `program:<id>` selects the program to decode; `mandate:<pda>=<ens_node>` pre-seeds the join for
+# mandates created before the streamed range (the node is public on the ENS name, so this is data
+# the operator already has). Separate entries with ';'.
+params:
+  map_instructions: program:GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj
+  map_activity: mandate:7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a=0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae
