@@ -1,0 +1,1778 @@
+{
+ "syncedAt": "2026-09-10T14:01:11.356Z",
+ "endpoint": "devnet.sol.streamingfast.io:443",
+ "initialBlock": 495587900,
+ "nextBlock": 496178133,
+ "rowCount": 95,
+ "rows": [
+  {
+   "entity": "Mandate",
+   "block": 495588901,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789037213",
+    "active": true,
+    "txHash": "2ADHPjJXad8T5MHsLZ6gNxjuYfCBFm1edZkPHrmT25K9KzQJTjb5jZJjPCoveSF7uuQaB6yKZcu53oebtbu66Z58",
+    "slot": "495588901",
+    "timestamp": "1788950813",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495588910,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "3BwYbWL27MVWrp9FKnhkEAppUVRCo3aWEYiGCZJeUeLwXUt62Se6sMUQmJ6k2PNT9CG427um5f7YYdpismkBdo7R",
+    "slot": "495588910",
+    "timestamp": "1788950814",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495588920,
+   "data": {
+    "id": "3ktGR8QCDfzpCXiTCtg8e2wrGS89hx9C61Qtn3uSWHpXb2Je9Vdat4tWLVySfLJRMv4heina7fDCsNRnec39N6Xz:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950816",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "3ktGR8QCDfzpCXiTCtg8e2wrGS89hx9C61Qtn3uSWHpXb2Je9Vdat4tWLVySfLJRMv4heina7fDCsNRnec39N6Xz",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495588920",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495588928,
+   "data": {
+    "id": "a6WrJkXKhp6Aa4LpXatNfvy95U5YeZwwiTBE5Adhn2pLCW7nQvoEwFEiA2GYWQQZ8qnPcifBmGujNjai2kgG4FF:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950817",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "a6WrJkXKhp6Aa4LpXatNfvy95U5YeZwwiTBE5Adhn2pLCW7nQvoEwFEiA2GYWQQZ8qnPcifBmGujNjai2kgG4FF",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495588928",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495589144,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "41Eg2E6jJyGBC6GyB9G1sw9pcNnTk7aXUkVfvyGKEV1z8z9WrgvvpWeFmgEAG6Ek7jnX7xGtj4z85xdJgTFmhDaQ",
+    "slot": "495589144",
+    "timestamp": "1788950853",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495589153,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789037255",
+    "active": true,
+    "txHash": "2GEmD1FAF68P1TF7QrUxVbhipms84ipkA1KNiTnsYZ4RWameo8n5H3mzessXez4jdgcc7MLYGzXMY84JRnh9XN3q",
+    "slot": "495589153",
+    "timestamp": "1788950854",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495589159,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "4DnRMALEBTrNqkj8n5TE6wSLUWH9jYNAUT1EHULkfKNsXqsfiaRvqwjxuQ9hXjrFQbSzFMq1u82nKeyQAbb4CSFi",
+    "slot": "495589159",
+    "timestamp": "1788950855",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495589178,
+   "data": {
+    "id": "Smn9kZw7v9aSak57CCG5ryaCUhZMYaKPt2EyCX2PgxLso4XwQWguHG151X1AnpQtjMwp6cDEjgSX83peK8u68H5:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950858",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "Smn9kZw7v9aSak57CCG5ryaCUhZMYaKPt2EyCX2PgxLso4XwQWguHG151X1AnpQtjMwp6cDEjgSX83peK8u68H5",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495589178",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495589192,
+   "data": {
+    "id": "3ERKutFSUki6a69VewH2ejY4AB2BbUmkbTmXLmdeMHAYSux68pCTfonX88YgWHBq4kFvsNe8KhLRxdAU7smkKS15:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950861",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "3ERKutFSUki6a69VewH2ejY4AB2BbUmkbTmXLmdeMHAYSux68pCTfonX88YgWHBq4kFvsNe8KhLRxdAU7smkKS15",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495589192",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495589200,
+   "data": {
+    "id": "2WL2daPCBR7i4UxRiENzyoPZB4rWLtyREftZFn7HvKVgGeJHjTfZHZAFnztpik7BvwgrL3FTewDwA6SBz7JiQUGE:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950862",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "2WL2daPCBR7i4UxRiENzyoPZB4rWLtyREftZFn7HvKVgGeJHjTfZHZAFnztpik7BvwgrL3FTewDwA6SBz7JiQUGE",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495589200",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495589210,
+   "data": {
+    "id": "5g7aci6gKKzvhjSUHRvLFrkQSwpQU7MxkWmHtnxVBY68anZXyTtyUjmjWyPeaW79mZyYXtxCpW6Y5Qp54WYqGjHE:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950864",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "5g7aci6gKKzvhjSUHRvLFrkQSwpQU7MxkWmHtnxVBY68anZXyTtyUjmjWyPeaW79mZyYXtxCpW6Y5Qp54WYqGjHE",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495589210",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495589219,
+   "data": {
+    "id": "4q7CHVcyUgRmBAN5w6mo8oPLtEixgsGfDdfAh5kQppmpfNCzm3URrSD5stVPMsSztW4znVMJRnkhnEa16HJgw38r:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788950865",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "4q7CHVcyUgRmBAN5w6mo8oPLtEixgsGfDdfAh5kQppmpfNCzm3URrSD5stVPMsSztW4znVMJRnkhnEa16HJgw38r",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495589219",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495599865,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "59fjstNrHLeSpSrfnN1QJ2VUdth17SRXF1Sh5KTKbMYyaeXR5mzbomdUjUoPjFML2kPyF7pUDn4oqvCKTF823WWY",
+    "slot": "495599865",
+    "timestamp": "1788952631",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495599871,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789039032",
+    "active": true,
+    "txHash": "4KzifF3mjd3z7A1Q3EwHTD5EMBsXPDyQRVQJhPyaZ8FPu3CnyZJPN1NuMdNTmYySoMXhKf2T42VFCwG5QQadPvP9",
+    "slot": "495599871",
+    "timestamp": "1788952632",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495599875,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "3PtzmR7nbJjvQmckoQJk7ze6db3VKURmeBKToEZBaE9HEe8HdCaF9XeBuqGdnBtVGUPU2kfjuqe1EwAmiPQJu7xr",
+    "slot": "495599875",
+    "timestamp": "1788952632",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599884,
+   "data": {
+    "id": "5rCFtQCtzxd8aF24bdB9YhmMeBsG6L9m2rcXWXtDauJSQsrMUTTnVNzrQHk3CAs7x7QNreggqKxu1csk8Dizh2Nk:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952634",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "5rCFtQCtzxd8aF24bdB9YhmMeBsG6L9m2rcXWXtDauJSQsrMUTTnVNzrQHk3CAs7x7QNreggqKxu1csk8Dizh2Nk",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599884",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599889,
+   "data": {
+    "id": "5nMfsQKon35LFaW2TR2vSzW1UNq2oUzUkJ2QSTA293CTRTDcYwad7Nzu8LU8koFRDu4wBmx9a7fRJbD7jSKjiHw4:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952635",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "5nMfsQKon35LFaW2TR2vSzW1UNq2oUzUkJ2QSTA293CTRTDcYwad7Nzu8LU8koFRDu4wBmx9a7fRJbD7jSKjiHw4",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599889",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599894,
+   "data": {
+    "id": "3XYB2v4kNv3FWrRhfqfcS2uxAh2myfxnh5ppUPq7WSUvTW6sf7NiqLhwp7BnDsys8oguRpGw2ueMKrchL6M4awHx:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952635",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "3XYB2v4kNv3FWrRhfqfcS2uxAh2myfxnh5ppUPq7WSUvTW6sf7NiqLhwp7BnDsys8oguRpGw2ueMKrchL6M4awHx",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599894",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599899,
+   "data": {
+    "id": "5thQqgxRq5mbYTHEaQPbC5UA8xC7cCrGSjLkKAdqheqj9PkdKZNfNaPVHuTGyiu8ZZ7ASXUSMwDeGdC3Hs6RMVXG:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952636",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "5thQqgxRq5mbYTHEaQPbC5UA8xC7cCrGSjLkKAdqheqj9PkdKZNfNaPVHuTGyiu8ZZ7ASXUSMwDeGdC3Hs6RMVXG",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599899",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599931,
+   "data": {
+    "id": "62CGPHZiwSMpaNXzZmzwiAz9PNaARMZF5PShebcjLGXgCDqrRMoo4gwpSjNq7uqskHNa8J9wtkHZxHii1YAw3dkm:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952641",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "62CGPHZiwSMpaNXzZmzwiAz9PNaARMZF5PShebcjLGXgCDqrRMoo4gwpSjNq7uqskHNa8J9wtkHZxHii1YAw3dkm",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599931",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495599939,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "4tdawGczRDjnqk4phH4DEBUNSM9NsTkSuiz32TZaaAkaNUTpQcx6ymmtd7QcSer7R6FUkjhbbne8psxPU6QDKkKw",
+    "slot": "495599939",
+    "timestamp": "1788952643",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599944,
+   "data": {
+    "id": "4Yq1XexENucm2J4MqnHX6fSccazkTn8KMQxAwJvQ6AZyg5qLGe926DSpzCRHtMG9ekKZLRrhkgoBSKpCX49rjv1w:1",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952644",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "amount": "500000",
+    "allowed": true,
+    "txHash": "4Yq1XexENucm2J4MqnHX6fSccazkTn8KMQxAwJvQ6AZyg5qLGe926DSpzCRHtMG9ekKZLRrhkgoBSKpCX49rjv1w",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599944",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495599949,
+   "data": {
+    "id": "CxiAWzYGKCxSNohiQfhcnpo91BSV3CMRXFPxetBEJ5hL1P632osisz86CqUw2Aha8J6UUhLW8oPrn8ZHN22XcR6:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788952644",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "CxiAWzYGKCxSNohiQfhcnpo91BSV3CMRXFPxetBEJ5hL1P632osisz86CqUw2Aha8J6UUhLW8oPrn8ZHN22XcR6",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495599949",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495702884,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "4QPfszsAsm3cKk6oGTm4HNBHgFMhchqtoEetQqMsjK9xtb4VjqCqZT4rfivGHRo3jnzCPyDnu6FkrsnWYf14KweK",
+    "slot": "495702884",
+    "timestamp": "1788969702",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495702888,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789056104",
+    "active": true,
+    "txHash": "2Y6SbpRq3rjqK5i6r9BEWr66wv25z1Czo386oXprrBVJEDRTBb55YjQH9yRYdCoSVH1KPSCCnFsYuTSY3Toyw6YV",
+    "slot": "495702888",
+    "timestamp": "1788969703",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495702893,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "3rTE523rxBf9rcJSsHTBNMCm1uwAYSKxKbc7hAQhPR4z9RdMMTg8MoKUr3EdB4rrvA6iKVpoHhP7WBT7Ci1xatsr",
+    "slot": "495702893",
+    "timestamp": "1788969703",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495702908,
+   "data": {
+    "id": "C8bJFit4zzu3pxeREuv7P3Ydi2YaeA59THaaYPRjRCq1Kz7HZyNwoQYSSypmya2uPCcQuy9WeG3C6o61Qwxyc2s:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969706",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "C8bJFit4zzu3pxeREuv7P3Ydi2YaeA59THaaYPRjRCq1Kz7HZyNwoQYSSypmya2uPCcQuy9WeG3C6o61Qwxyc2s",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495702908",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495702916,
+   "data": {
+    "id": "3PiL37AiHV3NNLCJgtFd2GH3dMcLQokipAwk59A5w7eiegivHaPVwC5bouNRBH5VVaQ75cwDxBq7VSjZG7yNNTfs:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969707",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "3PiL37AiHV3NNLCJgtFd2GH3dMcLQokipAwk59A5w7eiegivHaPVwC5bouNRBH5VVaQ75cwDxBq7VSjZG7yNNTfs",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495702916",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495702951,
+   "data": {
+    "id": "2ZaJJQP217RUQz25rCQ7cdLB8TqFiUqX84rHRaVeV9NwNQPRwEuaEMxDqJAYupQrXnRNf8VVicyZRkJBQe3wqrFW:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969713",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "2ZaJJQP217RUQz25rCQ7cdLB8TqFiUqX84rHRaVeV9NwNQPRwEuaEMxDqJAYupQrXnRNf8VVicyZRkJBQe3wqrFW",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495702951",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495702963,
+   "data": {
+    "id": "rvit68kq1RtniStTNewNat8tcX9sguQQ2763KN4R2Ypi53LMmia1QmWrd4FDWPRREDacwDv51HfL4GVA5EX5M5i:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969715",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "rvit68kq1RtniStTNewNat8tcX9sguQQ2763KN4R2Ypi53LMmia1QmWrd4FDWPRREDacwDv51HfL4GVA5EX5M5i",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495702963",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495702980,
+   "data": {
+    "id": "4couLiPsytsF1VGzukToo5JYDtvv4ZfFSjPQ2ix6NDwXdmoH7WBTodWXeKqi4DNMxnxRj5tt9wPThqdGrvJB8m4M:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969718",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "4couLiPsytsF1VGzukToo5JYDtvv4ZfFSjPQ2ix6NDwXdmoH7WBTodWXeKqi4DNMxnxRj5tt9wPThqdGrvJB8m4M",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495702980",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495702995,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "2EkG1x16szVyKxVxeRrKv4uuEHcvyyFVfv2JzoTM7fK5jcJomeK8EJgrzFeWR9bPYnRxu2UXRKt2jrSmPPrDCPBK",
+    "slot": "495702995",
+    "timestamp": "1788969720",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495703000,
+   "data": {
+    "id": "52gt1ibQ5zmbnddErYN8k6m4k85p41TMDHg4GiZ5j9x8mUP1qXbv53VEJdeP91bAtxXdGvyMaof2ZdP3VMq4p1VZ:1",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969721",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "amount": "500000",
+    "allowed": true,
+    "txHash": "52gt1ibQ5zmbnddErYN8k6m4k85p41TMDHg4GiZ5j9x8mUP1qXbv53VEJdeP91bAtxXdGvyMaof2ZdP3VMq4p1VZ",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495703000",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495703005,
+   "data": {
+    "id": "ufh1ebLGBZ3TrsFaGG6FGcsrvYSxunrXDyHjfPhdkaKWXxqMm5rwZeW4qGoYpypszg9pjDSZ75WFzooej57bPbK:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788969722",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "ufh1ebLGBZ3TrsFaGG6FGcsrvYSxunrXDyHjfPhdkaKWXxqMm5rwZeW4qGoYpypszg9pjDSZ75WFzooej57bPbK",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495703005",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495733777,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "ou5TBtv1v5J5MXaw9kYQkzf8HCRFqnRPjTiQwCS7nQGxP8nQwneiTfJrrkgtJFfeAu1REFYLVgomXUMtQJvrxLf",
+    "slot": "495733777",
+    "timestamp": "1788974828",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495733788,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789061231",
+    "active": true,
+    "txHash": "2f2CGemw32F8Sf3H7tehtMmW6bvQu19WjaAST2ug67bSn7ZUda7Z3Y9mfnJEqPhaung6ibQSwybhx9xFc9ZFs98c",
+    "slot": "495733788",
+    "timestamp": "1788974829",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495733792,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "51qeMMw2Eyv9bJHdpknouHvrtbn7qD4Gi4x6hw5BEGHCLdCJRcCYZebxjQA7PuzTxA39H53jEvLotYM23aNSqifv",
+    "slot": "495733792",
+    "timestamp": "1788974830",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733802,
+   "data": {
+    "id": "4ZMaepNmVL4g7FKFsRSiKiM5hsNTjmERxcMGD3buyrFX9JgpUJe8hssR3i87z1gVcAgNprDttrijse4UyHgTbPMR:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974832",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "4ZMaepNmVL4g7FKFsRSiKiM5hsNTjmERxcMGD3buyrFX9JgpUJe8hssR3i87z1gVcAgNprDttrijse4UyHgTbPMR",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733802",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733809,
+   "data": {
+    "id": "2AQ8m3wbPhCChknr6jeDh6fhhFswRyh9Zbdtw2sahtaQT9eDLwv8kcgVryTzUShDmEmm1hoSEAw1TY4uvNgBpTde:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974833",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "2AQ8m3wbPhCChknr6jeDh6fhhFswRyh9Zbdtw2sahtaQT9eDLwv8kcgVryTzUShDmEmm1hoSEAw1TY4uvNgBpTde",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733809",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733844,
+   "data": {
+    "id": "4yaM48JGiWtREpQbtSzopaHfxxwzu6mkT8aXQVBKQ8dVgfSTuDycSMymvRchEvSDKb3TwExMBaawosRMyoCtCiJX:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974839",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "4yaM48JGiWtREpQbtSzopaHfxxwzu6mkT8aXQVBKQ8dVgfSTuDycSMymvRchEvSDKb3TwExMBaawosRMyoCtCiJX",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733844",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733860,
+   "data": {
+    "id": "4fdC4GDXTyGH8vWUHzUpyq5JXDRKFLwDcDx2tVoDJ2EjHHuvnTh7T7hkLAi1pAr76SqApVNYhGFVcPzYgVCuHVux:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974841",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "4fdC4GDXTyGH8vWUHzUpyq5JXDRKFLwDcDx2tVoDJ2EjHHuvnTh7T7hkLAi1pAr76SqApVNYhGFVcPzYgVCuHVux",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733860",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733895,
+   "data": {
+    "id": "Q8jgK6JmmDbW7RESLLBgqWijBrpGcrgVkHPwoC6Cs5THyiK7iXSLpN6JS5PPvMjUWgUDTaDFV4J5yVeyrUGJTji:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974847",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "Q8jgK6JmmDbW7RESLLBgqWijBrpGcrgVkHPwoC6Cs5THyiK7iXSLpN6JS5PPvMjUWgUDTaDFV4J5yVeyrUGJTji",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733895",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495733901,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "4cfGLbgoXA3uC9nPXSHJy7XThUGvgidwAzoVLMTBsaYhnrita5Tu4de6n57VZRJKc4gMxRtb8rTdf4UbMs54nhKc",
+    "slot": "495733901",
+    "timestamp": "1788974848",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733905,
+   "data": {
+    "id": "3ziNV19LMVuE46qzLgvzjwb5kWeF7ganoMFdBdBbncFcebtQnoHGTjVxKj91A8AUXcEjvpiZ5DA4EjAzuGk9qfh2:1",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974849",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "amount": "500000",
+    "allowed": true,
+    "txHash": "3ziNV19LMVuE46qzLgvzjwb5kWeF7ganoMFdBdBbncFcebtQnoHGTjVxKj91A8AUXcEjvpiZ5DA4EjAzuGk9qfh2",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733905",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495733910,
+   "data": {
+    "id": "4CdTDxx4aKcNddvSbCjjW5M4kEUjdrB7eZkHxP315XgHDnquNQLzVimhXsz9mDsdTq7S47Ftc1pP7rCuFoynGCDZ:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788974850",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "4CdTDxx4aKcNddvSbCjjW5M4kEUjdrB7eZkHxP315XgHDnquNQLzVimhXsz9mDsdTq7S47Ftc1pP7rCuFoynGCDZ",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495733910",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495753245,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "22L2uzVeDKaWYtYuB9Pw8UhvfDumhjX5osCeDc1wAL857cEhJtn7DVpkTu7cfW1MwN3BGQyWKojU6n9ebB2D7qa5",
+    "slot": "495753245",
+    "timestamp": "1788978056",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 495753253,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789064459",
+    "active": true,
+    "txHash": "4F5o6FqyV8uA7G4bQ8Vy1RGhVrKRLNqJ6rvh8CPc8JLD1N8LhUe79ug9WGaaYCDneGqwS58aMG3wcR3zDPsxPuzn",
+    "slot": "495753253",
+    "timestamp": "1788978058",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495753258,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "4wMsRUHSYjLJgkpd6VjuG5NDu8acxFvgB9MF9YnHBDKTGfGu65d5iAQgmtp2DX96yr6MjrSFyUjAa1P2Lpiuha5V",
+    "slot": "495753258",
+    "timestamp": "1788978058",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753288,
+   "data": {
+    "id": "5G6AwSxBMP6GhgLQJFbbvFRyy2kP3HBXstZVcQZx1fDHMCfaFifoLeiGMk1Xfx7taVtvwWjkqmLsexSquQkCpHrD:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978063",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "5G6AwSxBMP6GhgLQJFbbvFRyy2kP3HBXstZVcQZx1fDHMCfaFifoLeiGMk1Xfx7taVtvwWjkqmLsexSquQkCpHrD",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753288",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753299,
+   "data": {
+    "id": "26MbYySwyhPn5fDNpYXzTGYcjBQgtEgVzccaMSz4WzXBRxQS49v2hS98atLxk9v1Ss4FvcdTudtANqRCuR1uoq4k:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978065",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "26MbYySwyhPn5fDNpYXzTGYcjBQgtEgVzccaMSz4WzXBRxQS49v2hS98atLxk9v1Ss4FvcdTudtANqRCuR1uoq4k",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753299",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753353,
+   "data": {
+    "id": "3AKG2aHmYVaf4D3zkwSc4ikR75Cyxiy5FsDkZMLy1ov7B5Q1ZLdnvPF54QiP7Sn1sEeBhxf8ndxPxdbaEtz61F4s:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978074",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "3AKG2aHmYVaf4D3zkwSc4ikR75Cyxiy5FsDkZMLy1ov7B5Q1ZLdnvPF54QiP7Sn1sEeBhxf8ndxPxdbaEtz61F4s",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753353",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753412,
+   "data": {
+    "id": "21emoSyYXRbgX6HqQRk83EVUTwSQeTcTRh4Ya2wgqtrjQkTdYxmDLmcBsMoz6N2XAL4kx4pNWCcL1tHZp1xNmuS1:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978084",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "21emoSyYXRbgX6HqQRk83EVUTwSQeTcTRh4Ya2wgqtrjQkTdYxmDLmcBsMoz6N2XAL4kx4pNWCcL1tHZp1xNmuS1",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753412",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753422,
+   "data": {
+    "id": "rirCCxsuHrZ4SbzuorFs9xtZZHKKxVwkVaiyNSQonMst6R8LcFQWB8h9HFPheuVHpryRoYx4EQEnBV64MV84sch:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978086",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "rirCCxsuHrZ4SbzuorFs9xtZZHKKxVwkVaiyNSQonMst6R8LcFQWB8h9HFPheuVHpryRoYx4EQEnBV64MV84sch",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753422",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 495753432,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "2Yx8H4bkTaDhmkoAnAzQAo3rUq4AVNgccCLzfcHQmkTrEJ9jHMEq1BniUrNYxK7PtYZaqpCXfhnG7v9Eo5QeNe4m",
+    "slot": "495753432",
+    "timestamp": "1788978087",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753437,
+   "data": {
+    "id": "2NU83VM4Uk3x95P2tsFSLzBWX92V9UxdEgyuas61ENPiWfojTBCXFnUhgoMKvK9cTStEaTPmG5yZAonmiwbogUTe:1",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978088",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "amount": "500000",
+    "allowed": true,
+    "txHash": "2NU83VM4Uk3x95P2tsFSLzBWX92V9UxdEgyuas61ENPiWfojTBCXFnUhgoMKvK9cTStEaTPmG5yZAonmiwbogUTe",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753437",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 495753444,
+   "data": {
+    "id": "2448msSAaND6ahE5w7d9f55fh9nWUueFo4DdQq7fhP4ccG77DesBJa1NUCfpJC6hbQBKWFowVUTSm1NDVNYzBCfb:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1788978089",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "2448msSAaND6ahE5w7d9f55fh9nWUueFo4DdQq7fhP4ccG77DesBJa1NUCfpJC6hbQBKWFowVUTSm1NDVNYzBCfb",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "495753444",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496056082,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "3cVmJ2kgztS7dwocfh4fD5joG9SSqAPHKy7eVps1C8bjps8scxX3dQohkFCWVh2afrJj8r2pBo62D2sHEpFSCVSh",
+    "slot": "496056082",
+    "timestamp": "1789028243",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496056087,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789114645",
+    "active": true,
+    "txHash": "5VXMjRYTENHqPTe9vBjLyRtYua1P4aDr1BAYxiShMhXBngceJRP8c5ejsk9eNUWXdnL5ajMXAUbgLF5bFsDCUF69",
+    "slot": "496056087",
+    "timestamp": "1789028243",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496056091,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "emWw63o1K9jijKovosyvHecT8U2jnDqhurvZg24CT1AsAzxU8DqA5xGCDvTNmS8FemJKNaPTJtnS6RssEEwQpcf",
+    "slot": "496056091",
+    "timestamp": "1789028244",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056100,
+   "data": {
+    "id": "2LFBiZgdKZ5H4LQkE4VxRBozxjWAso5HvKGaMfpKe6Wksxj9jx9kxrjw1bRWeoW3ek1rYx79GtLhavMUE27CfGST:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028246",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "2LFBiZgdKZ5H4LQkE4VxRBozxjWAso5HvKGaMfpKe6Wksxj9jx9kxrjw1bRWeoW3ek1rYx79GtLhavMUE27CfGST",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056100",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056108,
+   "data": {
+    "id": "HsUMfEGJkCzt1KQyMyFZp7H7uGQPfRJRPoErzecFHAunHcvoAg6vPcCQoXChj7r4vpaUE5oeevmiQRRpi3PYZQT:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028247",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "2500000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "HsUMfEGJkCzt1KQyMyFZp7H7uGQPfRJRPoErzecFHAunHcvoAg6vPcCQoXChj7r4vpaUE5oeevmiQRRpi3PYZQT",
+    "kind": "execute_payment",
+    "errorCode": 6007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056108",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "PerTxLimitExceeded"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056154,
+   "data": {
+    "id": "37o2PxcCqx5KdsBhpUtbQyNG87a8p1BckaJShdYQyCTUNjt5jRwWgsKiUeg4zFhBzLVcGmpvUoUPxusfvrwnwFwG:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028255",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "37o2PxcCqx5KdsBhpUtbQyNG87a8p1BckaJShdYQyCTUNjt5jRwWgsKiUeg4zFhBzLVcGmpvUoUPxusfvrwnwFwG",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056154",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056166,
+   "data": {
+    "id": "8WngjknB29xULpWv3qjaQboReu2v6MdBZ5KY9VUzS1zh6bjqdg9tfD97XD38eYcAxz3ZX3yKdKCjmw5MBYNLTYj:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028257",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1500000",
+    "allowed": true,
+    "txHash": "8WngjknB29xULpWv3qjaQboReu2v6MdBZ5KY9VUzS1zh6bjqdg9tfD97XD38eYcAxz3ZX3yKdKCjmw5MBYNLTYj",
+    "kind": "execute_payment",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056166",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056184,
+   "data": {
+    "id": "2K7L8ZoiSDkcZUAnXqAKygLvbF14Nf5o7uHLxVNMFdgsR3zX65nmeCM51uZixsbYMGDQSEhqAyL8JPrKP8d2ScJ6:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028259",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "1000000",
+    "blockReason": "OVER_BUDGET",
+    "txHash": "2K7L8ZoiSDkcZUAnXqAKygLvbF14Nf5o7uHLxVNMFdgsR3zX65nmeCM51uZixsbYMGDQSEhqAyL8JPrKP8d2ScJ6",
+    "kind": "execute_payment",
+    "errorCode": 6008,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056184",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "SpendLimitExceeded"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496056199,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "2jw6vx7ZuGySu3trgGAXaEfG1NjBaV61zGkmCWzco3wt3rDqvnTJFLAC7rQS4cdX7BxvyfeccFZKp7q6o5sSj2j8",
+    "slot": "496056199",
+    "timestamp": "1789028262",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056211,
+   "data": {
+    "id": "2M6kJAfcoJgv8zVq8pAkA1xkCHpwAtCGqWNBBUzYqx8M7184FuH29zLN4jepdswy7vVcMxiVH38oLhGoo5eSQL1J:1",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028264",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "amount": "500000",
+    "allowed": true,
+    "txHash": "2M6kJAfcoJgv8zVq8pAkA1xkCHpwAtCGqWNBBUzYqx8M7184FuH29zLN4jepdswy7vVcMxiVH38oLhGoo5eSQL1J",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056211",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496056218,
+   "data": {
+    "id": "5VsGooxJ9PPL6GztVKfwsm4QY7iftbVTwjtjsWkQwRM6WrhEejHYdpivugYjbvWeTsBCnfiACt79sDEaS4TVfi1Q:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789028265",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "5VsGooxJ9PPL6GztVKfwsm4QY7iftbVTwjtjsWkQwRM6WrhEejHYdpivugYjbvWeTsBCnfiACt79sDEaS4TVfi1Q",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496056218",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496085708,
+   "data": {
+    "id": "u3jd3CmygPCWSNcNtDcSQM567rB1aCs4ysEYjesWSQPA2xWaGiiN9G4oJB64c9FYmNbHQ3QhyELNTPRw3PykSJs:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789033156",
+    "target": "5K3tmjKHJcLujL7SLZcEjutEZnrzMruUXTzQV6z5cQT6",
+    "amount": "2000000",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "u3jd3CmygPCWSNcNtDcSQM567rB1aCs4ysEYjesWSQPA2xWaGiiN9G4oJB64c9FYmNbHQ3QhyELNTPRw3PykSJs",
+    "kind": "execute_payment",
+    "errorCode": 6016,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496085708",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "DestinationNotAllowed"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496085728,
+   "data": {
+    "id": "3zqJcfmoSZYKzLJgxxqUNPNqixfYVZKc4EKbNgJcfEDSxgpG1mtfZEpYLourhgRq27L1j9FmfMk97PPiY8kaAh4U:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789033160",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "3zqJcfmoSZYKzLJgxxqUNPNqixfYVZKc4EKbNgJcfEDSxgpG1mtfZEpYLourhgRq27L1j9FmfMk97PPiY8kaAh4U",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496085728",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496086940,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "adLnZNULC2zAMSGbCbgNE7os9PHRv2mWHVgbEZMZWG5BPFfabJtgBcDZZTV2dxBWL1CYF6wGcRxVUWCTcor7qk8",
+    "slot": "496086940",
+    "timestamp": "1789033359",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496087574,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789119866",
+    "active": true,
+    "txHash": "2sMCUgD86tBYMPNuXaFBYhmjBXALrGinE8JFgc41Xqr4qiAzUthiFGgQsqRr1ZLnw9jdSZg6TnJN1tKKgmF6SJPv",
+    "slot": "496087574",
+    "timestamp": "1789033464",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496087581,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "4NVFFeNWZQyDQrArVmY2FMmvds7AzjVrkHUgSr4TitiwtNt5krRnyoA1txkdbPwjeY1oQL87SKegQgyS2Dh4cWHk",
+    "slot": "496087581",
+    "timestamp": "1789033465",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496087593,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "3gyBsa87qzHcCugXp3hCjj6M6ptrrBzWqTZzK5eqei8DS7cgpv5hUscPVAKbyruvQycteReLqVPXory2CtHR4cDm",
+    "slot": "496087593",
+    "timestamp": "1789033467",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496098400,
+   "data": {
+    "id": "5TV8UjnJvJGuydMwqikHXchTkvpSJggfnR6Ld9T5bNy2qriCNzvSTjh8qDYXgcAZKLiBPPT9zNbubHSrpVd2iYF1:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789035255",
+    "target": "5K3tmjKHJcLujL7SLZcEjutEZnrzMruUXTzQV6z5cQT6",
+    "amount": "1000000",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "5TV8UjnJvJGuydMwqikHXchTkvpSJggfnR6Ld9T5bNy2qriCNzvSTjh8qDYXgcAZKLiBPPT9zNbubHSrpVd2iYF1",
+    "kind": "execute_payment",
+    "errorCode": 6016,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496098400",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "DestinationNotAllowed"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496098685,
+   "data": {
+    "id": "2PUh4u5sKE9Cjq7QzpY1weRwheWaCqUvi8vWhCDJsyiKxR29zwiPv1Maj6R3mirEYu5D5ZwuNnwCdqbtzNpsHnT9:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789035302",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "2PUh4u5sKE9Cjq7QzpY1weRwheWaCqUvi8vWhCDJsyiKxR29zwiPv1Maj6R3mirEYu5D5ZwuNnwCdqbtzNpsHnT9",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496098685",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496098779,
+   "data": {
+    "id": "4reXr3AaXMZ2W2QJqASSLiqbe5pMfyCAgMArCV33nGPShW4WLZyrNbTMj6jqx1WYSDm9TaNyZDGsMRAXcxKX8HUv:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789035317",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "blockReason": "NOT_PERMITTED",
+    "txHash": "4reXr3AaXMZ2W2QJqASSLiqbe5pMfyCAgMArCV33nGPShW4WLZyrNbTMj6jqx1WYSDm9TaNyZDGsMRAXcxKX8HUv",
+    "kind": "verify",
+    "errorCode": 6006,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496098779",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "errorName": "InstructionNotAllowed"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496099069,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "txHash": "5NUrNSybR39hmGtuGHWKipPvCQZT8X5y9c1JEYBDwbYystiVLsCSiBufyEyHLocG87KgZBqdzteFdi3WmHWSFTLw",
+    "slot": "496099069",
+    "timestamp": "1789035366",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "revoke_mandate"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496099404,
+   "data": {
+    "id": "2Ly96koweTcCDBTfRXF9D4fxH4uEqnAgQXC9cokuWLYER9vyxDbnbpA3yU6hnrXNH2UME7t564pDFK3JTikBr28:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789035421",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "amount": "500000",
+    "blockReason": "FAILED",
+    "txHash": "2Ly96koweTcCDBTfRXF9D4fxH4uEqnAgQXC9cokuWLYER9vyxDbnbpA3yU6hnrXNH2UME7t564pDFK3JTikBr28",
+    "kind": "execute_payment",
+    "errorCode": 3007,
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496099404",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Mandate",
+   "block": 496099606,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "owner": "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "expiry": "1789121857",
+    "active": true,
+    "txHash": "2FFiXpgjt18nzhtTBNqbsuNKDv2R3SiX3oRY1itDwbygBFiFwSTcPbr7sUBWKX4qu4qWkv6CVkhJDvAjfQ8nxNj9",
+    "slot": "496099606",
+    "timestamp": "1789035455",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+    "kind": "create_mandate"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496099612,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+    "discriminatorSize": 1,
+    "perTxLimit": "2000000",
+    "totalLimit": "5000000",
+    "txHash": "pu8scFZgv1hQy1uuTZYwASRHBiF4Em8yBpetpeb35LNfDjFeuHUeKwSejkqZRA2U7W4p25YMX9x7oAQzuWVTZzu",
+    "slot": "496099612",
+    "timestamp": "1789035456",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496099620,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "2rETfPRDT7Y9bdkJ47DgaX5rmZHqqZapt7UsoLxFyLEeSigC1utrrWCDQs19iuB2VHYgHGhnPA6sqPi5nhXzk7tR",
+    "slot": "496099620",
+    "timestamp": "1789035457",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496102690,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "58HmbA5gJ2g8XhJwMpCCRsWmjNfDZncGem7zGmtR6meX76Vgaj1a78v6NRNWfKHi8UtZXqZNimGfuHSxtRmf1BUT",
+    "slot": "496102690",
+    "timestamp": "1789035967",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496102712,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000",
+     "0x0500000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "4ma6RXi81AibBYktbEYksdYpeHpeSe5h5CtjSMcxt7yXUr7VS7RCeY7HLCWjv7UGYLVsMhbsrn8qhMruyWC5TU8t",
+    "slot": "496102712",
+    "timestamp": "1789035970",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496102760,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "5J9xXioyjLgyjFtW5T7Zan3Y9FappPSCNwffZPs2Ac3z9RYBqNBD66z9tWNq4ALotMCuoiCQQvcSGno4htR8nDmi",
+    "slot": "496102760",
+    "timestamp": "1789035978",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496102767,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "76wWC5UkdVWDxZx1xxa4QuoDuoXuUx1yv1jvTLSr33XgLNad5vVgSsZKBM8XnkqzMsFCngAitdGGm6Nduc7Z5rX",
+    "slot": "496102767",
+    "timestamp": "1789035979",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496105855,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "3GLkTbk9CUPRpBBTRB3fukWKQgfddBJG6kSnm3XQfe98qrC6z3Fvjph5a73UBsB6iiWVtekRrHjaVuW5AijYSvtg",
+    "slot": "496105855",
+    "timestamp": "1789036490",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496105865,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000",
+     "0x0500000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "4q3s812dT4XHLhyVtF84xwuDSngjywwSgU9n2NCC9cgs3MUCi77HFvbTawJZWSLEJSxDJkh62msvpu8zseXseUBK",
+    "slot": "496105865",
+    "timestamp": "1789036492",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496105903,
+   "data": {
+    "id": "3x2Y8wuT2yqwLyTYizDhojimd2TZtzhtcGz8NWyQwLFjdPCXrjtpgdGi975CYdw8xJaX6f7hEwqpjPsrkAVmF4LP:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789036498",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "allowed": true,
+    "txHash": "3x2Y8wuT2yqwLyTYizDhojimd2TZtzhtcGz8NWyQwLFjdPCXrjtpgdGi975CYdw8xJaX6f7hEwqpjPsrkAVmF4LP",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496105903",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496105941,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "3sHhePKqYCESnBTTRgKbo4pDe4eRWcre2AWS16RXjBBtjc95ifoJr4tFdkP8he1YEtNnwZdX6bXt9DvqueXc1mWQ",
+    "slot": "496105941",
+    "timestamp": "1789036504",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496105952,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "5juk3NYYpxjFxfnqyngLZ6Nr3CMV8rEVM3vDE7smNMMwHEGbKm4KFfMhqmi7zok4FisXTiR1NdtGrhiqzJjHUHj5",
+    "slot": "496105952",
+    "timestamp": "1789036506",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496111516,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "4Md4JCrELxU5cHyX5u5ymNj68ewXYGwxWKbLvsDQF2t4ETjnCSr3d8Yrr53YDbjjoZu8fPTxrVNrSu3Qifqt8ThB",
+    "slot": "496111516",
+    "timestamp": "1789037429",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496111522,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000",
+     "0x0500000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "3oZkMaWqS47A5smFrzAqy364kZXHTp9vFHMTNRFQEvwFQWVtrhksXhHnELbdcA2cYwQvHWd3gnUYK3UgRnXU3NYH",
+    "slot": "496111522",
+    "timestamp": "1789037430",
+    "kind": "add_permission"
+   }
+  },
+  {
+   "entity": "Action",
+   "block": 496111552,
+   "data": {
+    "id": "3biXLGY27GEf5M2jpdcfneTp1wW7XwtGFwKZQzLF1kUncBYXEND4pA5HWio68X5vvTEFcrCxQ8K6P3Vrs7Kuc2VJ:0",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "chain": "solana",
+    "timestamp": "1789037435",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "allowed": true,
+    "txHash": "3biXLGY27GEf5M2jpdcfneTp1wW7XwtGFwKZQzLF1kUncBYXEND4pA5HWio68X5vvTEFcrCxQ8K6P3Vrs7Kuc2VJ",
+    "kind": "verify",
+    "agent": "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+    "slot": "496111552",
+    "pda": "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496111563,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "txHash": "5X7ktn5yrZPe1mTpwjBaJA5Bq2PuJN3rzcMT9SjqJVbYqsad2Hv75zuwB2EfoE94nKTBYeJ6kJq3QvoEQSwqfksw",
+    "slot": "496111563",
+    "timestamp": "1789037436",
+    "kind": "remove_permission"
+   }
+  },
+  {
+   "entity": "Permission",
+   "block": 496111568,
+   "data": {
+    "id": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mandateId": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae:solana",
+    "ensNode": "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae",
+    "target": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "instructions": [
+     "0x0300000000000000"
+    ],
+    "discriminatorSize": 1,
+    "perTxLimit": "1000000",
+    "totalLimit": "2000000",
+    "txHash": "3yFdjsN4QRAq7egM17L39PYgigeJEjWEwATn1PDnBGnQe2YniAXunBHMi1biAaUNPLbuianV8WqMo4D1NCjBxHTi",
+    "slot": "496111568",
+    "timestamp": "1789037437",
+    "kind": "add_permission"
+   }
+  }
+ ]
+}

@@ -23,7 +23,9 @@ export interface AnchorGateClientConfig {
 }
 
 export function createAnchorGateClient(cfg: AnchorGateClientConfig): SolanaGateClient {
-  const provider = new AnchorProvider(cfg.connection, new Wallet(cfg.agent), { commitment: "confirmed" });
+  // Anchor pins its own copy of @solana/web3.js; the classes are identical at runtime but TypeScript
+  // sees two declarations of the same private fields, so the handles are passed through `as never`.
+  const provider = new AnchorProvider(cfg.connection as never, new Wallet(cfg.agent as never), { commitment: "confirmed" });
   const program = new Program(idl as anchor.Idl, provider);
   const feePayer = cfg.feePayer ?? cfg.agent;
   const signers = () => (feePayer.publicKey.equals(cfg.agent.publicKey) ? [cfg.agent] : [feePayer, cfg.agent]);
