@@ -6,6 +6,7 @@
     "packages/*",
     "services/*",
     "indexer/subgraph",
+    "indexer/query",
     "agent",
     "web"
   ],
@@ -15,7 +16,9 @@
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "demo:devnet": "node --env-file=.env scripts/devnet-e2e.ts",
     "demo:hedera": "node --env-file=.env scripts/hedera-e2e.ts",
-    "demo:discovery": "node --env-file=.env scripts/discovery-e2e.ts"
+    "demo:discovery": "node --env-file=.env scripts/discovery-e2e.ts",
+    "history": "yarn workspace @agentrail/query history",
+    "sink:solana": "yarn workspace @agentrail/query sink"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.0",

@@ -1,0 +1,24 @@
+{
+  "name": "@agentrail/query",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "One query, three chains: the shared AgentRail schema served over Sepolia (Studio), Base Sepolia (Studio) and Solana devnet (Substreams via The Graph Market).",
+  "scripts": {
+    "sink": "node --env-file=../../.env src/solana-sink.ts",
+    "history": "node --env-file=../../.env src/history.ts",
+    "serve": "node --env-file=../../.env src/server.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1",
+    "graphql": "^16.11",
+    "hono": "^4.13"
+  },
+  "devDependencies": {
+    "vitest": "^4"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}
