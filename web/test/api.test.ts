@@ -141,7 +141,9 @@ describe("formatting", () => {
     expect(usdc("1500000")).toBe("1.5 USDC");
     expect(usdc("18446744073709551615")).toMatch(/USDC$/);
     expect(amountFor("solana", "2500000")).toBe("2.5 USDC");
-    expect(amountFor("base", "42")).toBe("42 units");
+    expect(amountFor("base", "42")).toBe("0.000042 USDC");
+    expect(amountFor("hedera", "30000")).toBe("0.03 USDC");
+    expect(amountFor("sepolia", "7")).toBe("7");
     expect(truncate("5TV8UjnJvJGuydMwqikHXchTkvpSJggfnR6Ld9T5bNy2qriCNzvSTjh8qDYXgcAZKLiBPPT9zNbubHSrpVd2iYF1")).toBe("5TV8Uj…iYF1");
     expect(headroom("4500000", "5000000")).toBeCloseTo(0.1, 5);
     expect(headroom("1", "0")).toBeNull();

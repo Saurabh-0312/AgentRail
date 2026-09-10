@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Addr } from "@/components/addr";
+import { Amount } from "@/components/amount";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -95,7 +96,14 @@ export default function AttackPage() {
                     <div className="font-medium">{a.title}</div>
                     <div className="text-xs text-muted">{a.toldTo}</div>
                   </TD>
-                  <TD className="text-xs">{a.modelDid}</TD>
+                  <TD className="text-xs">
+                    {a.modelDid}
+                    {"amount" in a && a.amount && (
+                      <div className="mt-1 text-sm">
+                        <Amount chain="solana" units={a.amount} />
+                      </div>
+                    )}
+                  </TD>
                   <TD className="mono text-xs">{a.gate}</TD>
                   <TD>
                     <Badge variant="blocked">{`REVERTED ${a.code}`}</Badge>
@@ -138,6 +146,11 @@ export default function AttackPage() {
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     {s.slot && <span className="mono text-xs text-muted tnum">slot {s.slot}</span>}
                     <span>{s.what}</span>
+                    {"amount" in s && s.amount && (
+                      <span className="text-xs text-muted">
+                        delegated <Amount chain="solana" units={s.amount} />
+                      </span>
+                    )}
                   </div>
                   <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
                     {s.tx && (<span className="inline-flex items-center gap-1">tx <Addr value={s.tx} href={sol.tx(s.tx)} head={8} tail={6} /> <Indexed tx={s.tx} outside={"outsideIndex" in s ? (s as { outsideIndex?: string }).outsideIndex : undefined} /></span>)}

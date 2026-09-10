@@ -1,18 +1,12 @@
 import Link from "next/link";
 
 import { Addr } from "@/components/addr";
+import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CHAINS, ENS_APP_URL, chainFromCaip } from "@/lib/chains";
-import { usdc } from "@/lib/format";
 import type { ServiceEntry } from "@/lib/services";
-
-function price(chainKey: string | null, units: string): string {
-  if (chainKey === "base") return `${units} units per query`;
-  if (chainKey === "hedera" || chainKey === "solana") return `${usdc(units)} per unit`;
-  return units;
-}
 
 /** A service as the agent discovers it: five records, read from ENS, nothing configured. */
 export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: string }) {
@@ -37,7 +31,9 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
           <dt className="text-muted">rail.chain</dt>
           <dd className="mono text-xs">{r["rail.chain"]}</dd>
           <dt className="text-muted">rail.price</dt>
-          <dd className="tnum">{price(chainKey, r["rail.price"] ?? "")} <span className="text-xs text-muted">({r["rail.price"]} base units)</span></dd>
+          <dd className="tnum">
+            {chainKey ? <Amount chain={chainKey} units={r["rail.price"]} /> : r["rail.price"]} <span className="text-xs text-muted">{chainKey === "base" ? "per query" : "per symbol"}</span>
+          </dd>
           <dt className="text-muted">rail.token</dt>
           <dd>{meta && r["rail.token"] ? <Addr value={r["rail.token"]} href={chainKey === "hedera" ? `https://hashscan.io/testnet/token/${r["rail.token"]}` : meta.address(r["rail.token"])} /> : <span className="mono text-xs">{r["rail.token"]}</span>}</dd>
           <dt className="text-muted">rail.scheme</dt>
@@ -67,7 +63,11 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
                   : {s.allowedOnChain.map((a) => (
                     <span key={a.target} className="inline-flex items-center gap-1">
                       <Addr value={a.target} href={meta ? meta.address(a.target) : undefined} />
-                      {a.perTx && a.total && <span className="text-muted tnum">({chainKey === "base" ? `${a.perTx} / ${a.total} units` : `${usdc(a.perTx)} / ${usdc(a.total)}`})</span>}
+                      {a.perTx && a.total && chainKey && (
+                        <span className="text-muted tnum">
+                          (<Amount chain={chainKey} units={a.perTx} secondary="tooltip" /> per tx, <Amount chain={chainKey} units={a.total} secondary="tooltip" /> lifetime)
+                        </span>
+                      )}
                     </span>
                   ))}
                 </>

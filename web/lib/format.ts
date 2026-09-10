@@ -1,29 +1,23 @@
 /** Display helpers. Amounts always carry their unit; long values truncate in the middle. */
+import { formatChainAmount, formatUnits } from "./units";
 
 export function truncate(value: string, head = 6, tail = 4): string {
   if (!value || value.length <= head + tail + 1) return value;
   return `${value.slice(0, head)}…${value.slice(-tail)}`;
 }
 
-/** Base units of a 6-decimal token (USDC on Solana devnet and Hedera) to a human string. */
+/** Base units of a 6-decimal token to a human string: "1.5 USDC". One path for every amount: `formatUnits`. */
 export function usdc(units: string | bigint | number, decimals = 6): string {
-  const v = BigInt(units);
-  const scale = 10n ** BigInt(decimals);
-  const whole = v / scale;
-  const frac = (v % scale).toString().padStart(decimals, "0").replace(/0+$/, "");
-  return frac ? `${whole}.${frac} USDC` : `${whole} USDC`;
+  return formatUnits(units, decimals, "USDC").human;
 }
 
 /**
- * The index stores amounts in the chain's own base units. Solana rows are devnet USDC (6 dp);
- * Base rows are The Graph's per-query "units" of USDC (42 per query); Sepolia rows are lifecycle
- * events with no amount.
+ * The index stores amounts in the chain's own base units; every enforced chain settles in USDC
+ * (6 decimals), so 42 on Base is 0.000042 USDC. Sepolia rows are lifecycle events with no amount.
  */
 export function amountFor(chain: string, amount: string): string {
   if (!amount || amount === "0") return "0";
-  if (chain === "solana") return usdc(amount);
-  if (chain === "base") return `${Number(amount).toLocaleString()} units`;
-  return amount;
+  return formatChainAmount(chain, amount)?.human ?? amount;
 }
 
 export function timeAgo(unixSeconds: number, now = Date.now() / 1000): string {

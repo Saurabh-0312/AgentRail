@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { CHAINS } from "@/lib/chains";
 import { CREATE_DEFAULTS, type OwnerGate } from "@/lib/owner";
+import { ASSETS, CHAIN_ASSET, tryFormatUnits } from "@/lib/units";
 
 export type EvmChain = "hedera" | "base";
 
@@ -68,6 +69,22 @@ export function OwnerControls({
   const [form, setForm] = useState<CreateForm>({ chain: "base", agent: "", ensName: defaultEnsName, destination: "", perTx: CREATE_DEFAULTS.perTx, total: CREATE_DEFAULTS.total, days: CREATE_DEFAULTS.days });
   const set = <K extends keyof CreateForm>(k: K, v: CreateForm[K]) => setForm((f) => ({ ...f, [k]: v }));
   const disabled = !gate.enabled || !!busy;
+  const asset = ASSETS[CHAIN_ASSET[form.chain] ?? "usdc-base"];
+  /** The live conversion under each cap field: what the base units the contract stores mean. */
+  const Conversion = ({ units }: { units: string }) => {
+    const f = tryFormatUnits(units, asset.decimals, asset.symbol);
+    return (
+      <span className="mt-1 block text-xs tnum" data-testid="conversion">
+        {f ? (
+          <>
+            = <span className="font-medium text-ink">{f.human}</span> <span className="text-muted">({f.raw} base units, {asset.decimals} decimals)</span>
+          </>
+        ) : (
+          <span className="text-blocked">whole base units only</span>
+        )}
+      </span>
+    );
+  };
 
   return (
     <div className="space-y-4" data-gate={gate.state}>
@@ -155,12 +172,14 @@ export function OwnerControls({
               <Input className="mt-1 mono" value={form.destination} onChange={(e) => set("destination", e.target.value)} placeholder="0x…" disabled={disabled} spellCheck={false} />
             </label>
             <label className="text-xs text-muted">
-              per-transaction cap (base units)
+              per-transaction cap, in base units of {asset.symbol} ({asset.label})
               <Input className="mt-1 tnum" value={form.perTx} onChange={(e) => set("perTx", e.target.value)} inputMode="numeric" disabled={disabled} />
+              <Conversion units={form.perTx} />
             </label>
             <label className="text-xs text-muted">
-              lifetime cap (base units)
+              lifetime cap, in base units of {asset.symbol}
               <Input className="mt-1 tnum" value={form.total} onChange={(e) => set("total", e.target.value)} inputMode="numeric" disabled={disabled} />
+              <Conversion units={form.total} />
             </label>
             <label className="text-xs text-muted">
               expires in (days)

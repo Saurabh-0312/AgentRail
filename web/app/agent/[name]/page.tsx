@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Addr } from "@/components/addr";
+import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
 import { Countdown } from "@/components/countdown";
 import { OwnerActions } from "@/components/owner-actions";
@@ -13,7 +14,8 @@ import { ServiceCard } from "@/components/service-card";
 import { getMandatePayload, solanaLifecycle, type MandatePayload } from "@/lib/agent-data";
 import { CHAINS, ENS_APP_URL, type ChainKey } from "@/lib/chains";
 import { PUBLIC } from "@/lib/env";
-import { isoDate, usdc } from "@/lib/format";
+import { isoDate } from "@/lib/format";
+import { chainKeyFromCaip } from "@/lib/units";
 import { history, type HistoryPayload } from "@/lib/history";
 import type { LiveMandate } from "@/lib/mandate-live";
 import { getService } from "@/lib/services";
@@ -23,12 +25,6 @@ export const dynamic = "force-dynamic";
 
 /** The chains a mandate is enforced on; Sepolia holds the name, not a spend gate. */
 const LIVE_CHAINS = ["solana", "hedera", "base"] as const;
-
-const fmt: Record<string, (u: string) => string> = {
-  solana: (u) => usdc(u),
-  hedera: (u) => usdc(u),
-  base: (u) => `${Number(u).toLocaleString()} units`,
-};
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -108,11 +104,11 @@ function PermissionCard({ chain, m }: { chain: ChainKey; m: LiveMandate | undefi
               <div className="grid grid-cols-2 gap-3 text-xs tnum sm:grid-cols-3">
                 <div>
                   <div className="text-muted">per transaction</div>
-                  <div className="font-medium">{p.perTx === "0" ? "no cap" : fmt[chain](p.perTx)}</div>
+                  <div className="font-medium">{p.perTx === "0" ? "no cap" : <Amount chain={chain} units={p.perTx} />}</div>
                 </div>
                 <div>
                   <div className="text-muted">lifetime</div>
-                  <div className="font-medium">{p.total === "0" ? "no cap" : fmt[chain](p.total)}</div>
+                  <div className="font-medium">{p.total === "0" ? "no cap" : <Amount chain={chain} units={p.total} />}</div>
                 </div>
                 {p.callCount !== null && (
                   <div>
@@ -121,7 +117,7 @@ function PermissionCard({ chain, m }: { chain: ChainKey; m: LiveMandate | undefi
                   </div>
                 )}
               </div>
-              <SpendBar spent={p.spent} cap={p.total} format={fmt[chain]} />
+              <SpendBar spent={p.spent} cap={p.total} chain={chain} />
             </div>
           );
         })}
@@ -140,7 +136,7 @@ function DelegationRow({ d }: { d: { account: string; balance: string; delegate:
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-muted">Alice&apos;s USDC account</span>
         <Addr value={d.account} href={CHAINS.solana.address(d.account)} />
-        <span className="tnum">{usdc(d.balance)}</span>
+        <Amount chain="solana" units={d.balance} secondary="tooltip" />
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-muted">delegate</span>
@@ -294,14 +290,13 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
             </THead>
             <TBody>
               {payload.allowed.map((a, i) => {
-                const chain = a.chain === "solana:devnet" ? "solana" : a.chain === "hedera:testnet" ? "hedera" : a.chain === "eip155:84532" ? "base" : null;
-                const f = chain ? fmt[chain] : (u: string) => u;
+                const chain = chainKeyFromCaip(a.chain);
                 return (
                   <TR key={i}>
                     <TD>{chain ? <ChainBadge chain={chain} /> : a.chain}</TD>
                     <TD><Addr value={a.target} href={chain ? CHAINS[chain].address(a.target) : undefined} /></TD>
-                    <TD className="text-right tnum">{a.perTx ? f(a.perTx) : "—"}</TD>
-                    <TD className="text-right tnum">{a.total ? f(a.total) : "—"}</TD>
+                    <TD className="text-right tnum">{a.perTx && chain ? <Amount chain={chain} units={a.perTx} secondary="below" className="items-end" /> : (a.perTx ?? "—")}</TD>
+                    <TD className="text-right tnum">{a.total && chain ? <Amount chain={chain} units={a.total} secondary="below" className="items-end" /> : (a.total ?? "—")}</TD>
                     <TD className="text-xs">{a.instructions?.length ? a.instructions.join(", ") : <span className="text-muted">payments only</span>}</TD>
                   </TR>
                 );

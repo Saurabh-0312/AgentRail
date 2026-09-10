@@ -3,13 +3,14 @@
 import { useState } from "react";
 
 import { Addr } from "@/components/addr";
+import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
 import { Badge } from "@/components/ui/badge";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { CHAINS, errorName, errorReason, type ChainKey } from "@/lib/chains";
 import { cn } from "@/lib/cn";
 import { actionLabel, countRows, filterRows, type FeedMode } from "@/lib/feed";
-import { amountFor, isoDate, timeAgo } from "@/lib/format";
+import { isoDate, timeAgo } from "@/lib/format";
 import type { FeedRow } from "@/lib/history";
 
 /**
@@ -80,7 +81,7 @@ export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; i
                 <TD>{meta ? <ChainBadge chain={chain} /> : r.chain}</TD>
                 <TD className="mono whitespace-nowrap">{actionLabel(r)}</TD>
                 <TD>{meta && r.target ? <Addr value={r.target} href={meta.address(r.target)} /> : r.target}</TD>
-                <TD className="text-right whitespace-nowrap tnum">{r.amount && r.amount !== "0" ? amountFor(r.chain, r.amount) : "—"}</TD>
+                <TD className="text-right whitespace-nowrap tnum">{r.amount && r.amount !== "0" ? <Amount chain={r.chain} units={r.amount} secondary="below" className="items-end" /> : "—"}</TD>
                 <TD>
                   {blocked ? (
                     <div className="space-y-0.5">
