@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Addr } from "@/components/addr";
 import { ChainBadge } from "@/components/chain-badge";
 import { Countdown } from "@/components/countdown";
+import { OwnerActions } from "@/components/owner-actions";
 import { SpendBar } from "@/components/spend-bar";
 import { StatusPill, statusOf } from "@/components/status-pill";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { ServiceCard } from "@/components/service-card";
@@ -333,15 +333,14 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
       </Section>
 
       <Section title="Owner actions" hint="need the owner's key; a visitor can see them, not press them">
-        <Card accent="blocked">
-          <CardContent className="pt-4 flex flex-wrap items-center gap-4">
-            <Button variant="danger" disabled>REVOKE</Button>
-            <p className="text-sm text-muted">
-              Revokes the mandate on Hedera and Base with the owner&apos;s wallet, and shows the resulting transactions. Wallet connection arrives in a later step; until then this control is disabled for everyone.
-              On Solana the owner revokes with <code className="text-xs">revoke_mandate</code> from the CLI.
-            </p>
-          </CardContent>
-        </Card>
+        <OwnerActions
+          owner={ensMandate?.owner ?? PUBLIC.owner}
+          agentName={payload.name}
+          mandates={{
+            ...(live.hedera && live.hedera.exists ? { hedera: { id: live.hedera.id, active: live.hedera.active, agent: live.hedera.agent } } : {}),
+            ...(live.base && live.base.exists ? { base: { id: live.base.id, active: live.base.active, agent: live.base.agent } } : {}),
+          }}
+        />
       </Section>
     </div>
   );

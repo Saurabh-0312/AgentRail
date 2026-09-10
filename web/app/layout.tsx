@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { WalletProvider } from "@/components/wallet/provider";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -38,7 +40,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </a>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-6xl px-4 py-8 flex-1">{children}</main>
+        <main className="mx-auto w-full max-w-6xl px-4 py-8 flex-1">
+          <WalletProvider>{children}</WalletProvider>
+        </main>
         <footer className="border-t border-border">
           <div className="mx-auto max-w-6xl px-4 py-4 text-xs text-muted flex flex-wrap gap-x-6 gap-y-1 items-center">
             <span className="inline-flex items-center gap-1.5"><i className="inline-block size-2.5 rounded-sm bg-ens" /> ENS</span>
