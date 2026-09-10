@@ -1,5 +1,17 @@
 {
   "name": "@agentrail/agent",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Risk-monitor reference agent. Explores third-party subgraphs through the Subgraph MCP in natural language; reads its own history with a fixed query; can only spend through the on-chain gate.",
+  "scripts": {
+    "explore": "node --env-file=../.env src/explore.ts",
+    "mcp:demo": "node --env-file=../.env src/mcp-demo.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
 }
