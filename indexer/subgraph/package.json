@@ -1,5 +1,22 @@
 {
   "name": "@agentrail/subgraph",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Sepolia and Base Sepolia subgraphs: two sources feeding the shared AgentRail schema (indexer/schema.graphql).",
+  "scripts": {
+    "codegen": "graph codegen subgraph.sepolia.yaml && graph codegen subgraph.base.yaml",
+    "build": "graph build subgraph.sepolia.yaml && graph build subgraph.base.yaml",
+    "build:sepolia": "graph build subgraph.sepolia.yaml",
+    "build:base": "graph build subgraph.base.yaml",
+    "deploy:sepolia": "graph deploy --node https://api.studio.thegraph.com/deploy/ agentrail subgraph.sepolia.yaml",
+    "deploy:base": "graph deploy --node https://api.studio.thegraph.com/deploy/ agentrail-base subgraph.base.yaml",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.97.1",
+    "@graphprotocol/graph-ts": "0.37.0"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.6.0"
+  }
 }
