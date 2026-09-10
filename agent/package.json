@@ -3,15 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Risk-monitor reference agent. Explores third-party subgraphs through the Subgraph MCP in natural language; reads its own history with a fixed query; can only spend through the on-chain gate.",
+  "description": "Risk-monitor reference agent for AgentRail: discovers services by ENS name, explores third-party subgraphs through the Subgraph MCP, reads its own budget with a fixed query, and can only spend or act through the on-chain gate.",
   "scripts": {
     "explore": "node --env-file=../.env src/explore.ts",
-    "mcp:demo": "node --env-file=../.env src/mcp-demo.ts"
+    "mcp:demo": "node --env-file=../.env src/mcp-demo.ts",
+    "monitor": "node --env-file=../.env src/monitor.ts",
+    "attack": "node --env-file=../.env src/attack/run.ts",
+    "demo": "node --env-file=../.env src/demo.ts",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12"
+    "@agentrail/query": "0.1.0",
+    "@agentrail/sdk": "0.1.0",
+    "@hiero-ledger/sdk": "^2.85.0",
+    "@modelcontextprotocol/sdk": "^1.12",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.98.0",
+    "@x402/evm": "~2.25",
+    "@x402/hedera": "^2.25",
+    "viem": "^2.48.11"
   },
   "engines": {
     "node": ">=22.12"
+  },
+  "devDependencies": {
+    "vitest": "^4"
   }
 }

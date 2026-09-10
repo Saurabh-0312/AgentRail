@@ -145,6 +145,14 @@
     "@grpc/proto-loader" "^0.7.13"
     "@js-sdsl/ordered-map" "^4.4.2"
 
+"@grpc/grpc-js@1.12.7":
+  version "1.12.7"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.12.7.tgz#4eb83f7b322ea7eee21382e01f34fb77f4c5fdda"
+  integrity sha512-Tugep4V4GCsN9dSAVkXoBWqJXDoH+NSXd50kFGsm7ZG1tBXFEAnLoxzkGUIksTrDjiaMwlpsbC24oWbESGHpIQ==
+  dependencies:
+    "@grpc/proto-loader" "^0.7.13"
+    "@js-sdsl/ordered-map" "^4.4.2"
+
 "@grpc/proto-loader@^0.7.13":
   version "0.7.15"
   resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.7.15.tgz#4cdfbf35a35461fc843abe8b9e2c0770b5095e60"
@@ -177,6 +185,25 @@
     tweetnacl "1.0.3"
     utf8 "3.0.0"
 
+"@hiero-ledger/cryptography@1.21.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@hiero-ledger/cryptography/-/cryptography-1.21.0.tgz#01b5d578077243e88326897d6cb8a8dfda62b5dc"
+  integrity sha512-q3LR+OgJMDNRund2CTsvFRHab5EKypm81v+0yM/rGWRq0igPRbd/SGzs2X7Q6n/UvZYT+bKI8gnrXzafbN2TCA==
+  dependencies:
+    "@noble/ciphers" "2.2.0"
+    "@noble/curves" "2.2.0"
+    "@noble/hashes" "2.2.0"
+    "@scure/base" "2.2.0"
+    "@scure/bip32" "2.2.0"
+    ansi-regex "6.2.2"
+    ansi-styles "7.0.0"
+    asn1js "3.0.6"
+    bignumber.js "11.1.2"
+    bn.js "5.2.3"
+    debug "4.4.1"
+    forge-light "1.1.4"
+    strip-ansi "7.1.2"
+
 "@hiero-ledger/proto@2.31.0":
   version "2.31.0"
   resolved "https://registry.yarnpkg.com/@hiero-ledger/proto/-/proto-2.31.0.tgz#a485fe3b78c522f61d820e6b3a72dc1aa1f90c93"
@@ -204,6 +231,30 @@
     pino "10.1.0"
     pino-pretty "13.0.0"
     protobufjs "8.2.0"
+    rfc4648 "1.5.3"
+    strip-ansi "7.1.2"
+    utf8 "3.0.0"
+
+"@hiero-ledger/sdk@^2.85.0":
+  version "2.88.0"
+  resolved "https://registry.yarnpkg.com/@hiero-ledger/sdk/-/sdk-2.88.0.tgz#f424fd4f48d1ce210593eccf8f0873de332e70b2"
+  integrity sha512-jFd27eytqGymCpc9QglqMGsDUNVM2PVS59+Sq2JtPirz9AoeJLYyR/h5USPYIS6BgWjeY3etmvve/JiRL/oc9g==
+  dependencies:
+    "@grpc/grpc-js" "1.12.7"
+    "@hiero-ledger/cryptography" "1.21.0"
+    "@hiero-ledger/proto" "2.31.0"
+    ansi-regex "6.2.2"
+    ansi-styles "7.0.0"
+    bignumber.js "11.1.2"
+    bn.js "5.2.3"
+    crypto-js "4.2.0"
+    debug "4.4.1"
+    ethers "6.16.0"
+    js-base64 "3.7.4"
+    long "5.3.1"
+    pino "10.1.0"
+    pino-pretty "13.0.0"
+    protobufjs "8.6.6"
     rfc4648 "1.5.3"
     strip-ansi "7.1.2"
     utf8 "3.0.0"
@@ -526,6 +577,11 @@
     uint8-varint "^3.0.0"
     uint8arrays "^6.1.1"
 
+"@noble/ciphers@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@noble/ciphers/-/ciphers-2.2.0.tgz#84fb45ac9332925d643b80f89ceb0ea2f21dba95"
+  integrity sha512-Z6pjIZ/8IJcCGzb2S/0Px5J81yij85xASuk1teLNeg75bfT07MV3a/O2Mtn1I2se43k3lkVEcFaR10N4cgQcZA==
+
 "@noble/ciphers@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@noble/ciphers/-/ciphers-1.3.0.tgz#f64b8ff886c240e644e5573c097f86e5b43676dc"
@@ -558,6 +614,13 @@
   integrity sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==
   dependencies:
     "@noble/hashes" "1.8.0"
+
+"@noble/curves@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-2.2.0.tgz#981be3aadc3bbfbcdb245e78cc97aa6f759246c2"
+  integrity sha512-T/BoHgFXirb0ENSPBquzX0rcjXeM6Lo892a2jlYJkqk83LqZx0l1Of7DzlKJ6jkpvMrkHSnAcgb5JegL8SeIkQ==
+  dependencies:
+    "@noble/hashes" "2.2.0"
 
 "@noble/curves@^1.4.2", "@noble/curves@^1.9.7", "@noble/curves@~1.9.0":
   version "1.9.7"
@@ -592,6 +655,11 @@
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
   integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
+
+"@noble/hashes@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-2.2.0.tgz#22da1d16a469954fce877055d559900a6c73b63b"
+  integrity sha512-IYqDGiTXab6FniAgnSdZwgWbomxpy9FtYvLKs7wCUs2a8RkITG+DFGO1DM9cr+E3/RgADRpFjrKVaJ1z6sjtEg==
 
 "@noble/hashes@2.4.0", "@noble/hashes@^2.0.1":
   version "2.4.0"
@@ -867,6 +935,11 @@
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz#e3fcee093fbb5ce765e1ad088ff4de2889f6f9be"
   integrity sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==
 
+"@scure/base@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-2.2.0.tgz#1311378ed247df6d58f8eb8941921965e97e5747"
+  integrity sha512-b8XEupJibegiXV+tDUseI8oLQc8ei3d/4Jkb2RpbHh3MfE054ov3uIz2dhFkB3FI8iwYkEh0gGCApkrYggkPNg==
+
 "@scure/base@~1.1.6":
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.9.tgz#e5e142fbbfe251091f9c5f1dd4c834ac04c3dbd1"
@@ -894,6 +967,15 @@
     "@noble/curves" "~1.9.0"
     "@noble/hashes" "~1.8.0"
     "@scure/base" "~1.2.5"
+
+"@scure/bip32@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@scure/bip32/-/bip32-2.2.0.tgz#8b1b470f4079843df36a472f5e103c3bd9c11f7c"
+  integrity sha512-zFr7t2F+a9+5tB7QbarF2HQNYrgjCNaoLAupZdKkrFMYMozJf5zqH2WJCQibMzm1qQ0QogrxVGO3qXfQDYMaQg==
+  dependencies:
+    "@noble/curves" "2.2.0"
+    "@noble/hashes" "2.2.0"
+    "@scure/base" "2.2.0"
 
 "@scure/bip39@1.3.0":
   version "1.3.0"
@@ -1448,6 +1530,11 @@ ansi-styles@6.2.3:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
   integrity sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==
+
+ansi-styles@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-7.0.0.tgz#859089a725560e235a41fecde8999196df6c78c0"
+  integrity sha512-kKvt3m4uwzqL0wlkPd09CmljPJGOZZ4D0fP65sqFSvPkMRKhNi+74MgIJ5QxE6SxqB4t4KyUFGg8+n5zjo6hew==
 
 ansi-styles@^3.2.1:
   version "3.2.1"
@@ -4175,6 +4262,13 @@ protobufjs@8.2.0:
   dependencies:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
+
+protobufjs@8.6.6:
+  version "8.6.6"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-8.6.6.tgz#c606f56d65e1f5f01e35146e648dea1e4fdc2406"
+  integrity sha512-RkLIhE+Tdc2Kpq1F4Uw6OnpAXPca7B+GSDov/GqGCqNBpVyDskQ9yReZfgM+C7xw9AAix873iQZXbBWXj6NzYQ==
+  dependencies:
+    long "^5.3.2"
 
 protobufjs@^7.2.5:
   version "7.6.6"
