@@ -24,7 +24,7 @@ export const HISTORY_QUERY = `query History($ensNode: Bytes!) {
     agent
     expiry
     active
-    permissions(orderBy: updatedAt) { id target perTxLimit totalLimit spentTotal source targetChain }
+    permissions(orderBy: updatedAt) { id target instructions perTxLimit totalLimit spentTotal source targetChain }
     actions(orderBy: timestamp) { id kind timestamp target amount allowed blockReason errorCode txHash }
   }
 }`;
@@ -32,6 +32,8 @@ export const HISTORY_QUERY = `query History($ensNode: Bytes!) {
 export interface Permission {
   id: string;
   target: string;
+  /** Instruction-keyed entries (Solana `verify`): allowed discriminators as hex, left-aligned in 8 bytes. */
+  instructions: string[];
   perTxLimit: string;
   totalLimit: string;
   spentTotal: string;
@@ -128,7 +130,7 @@ export function foldSolana(rows: SolanaRow[], ensNode: string): Mandate[] {
       if (permissionIds.has(`${row.block}:${d.id}`)) continue;
       permissionIds.add(`${row.block}:${d.id}`);
       m.permissions = m.permissions.filter((p) => p.id !== d.id);
-      m.permissions.push({ id: d.id, target: d.target, perTxLimit: String(d.perTxLimit ?? "0"), totalLimit: String(d.totalLimit ?? "0"), spentTotal: "0", source: "onchain", targetChain: "solana:devnet" });
+      m.permissions.push({ id: d.id, target: d.target, instructions: Array.isArray(d.instructions) ? d.instructions.map(String) : [], perTxLimit: String(d.perTxLimit ?? "0"), totalLimit: String(d.totalLimit ?? "0"), spentTotal: "0", source: "onchain", targetChain: "solana:devnet" });
     } else if (row.entity === "Action") {
       if (actionIds.has(d.id)) continue;
       actionIds.add(d.id);

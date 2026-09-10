@@ -6,8 +6,16 @@ export { EVM_MANDATE_ABI, EVM_MANDATE_ERRORS } from "./evm/abi.ts";
 export { HederaAdapter, hederaLongZeroAddress, type HederaAdapterConfig, type HederaPaymentSigner } from "./tails/hedera.ts";
 export { BaseAdapter, type BaseAdapterConfig, type EvmPaymentSigner } from "./tails/base.ts";
 export {
+  SPL_TOKEN_2022_PROGRAM,
+  SPL_TOKEN_PROGRAM,
+  SPL_TOKEN_TAG,
   SolanaAdapter,
+  discriminatorAllowed,
   solanaLocalGate,
+  solanaLocalVerifyGate,
+  splTokenAmount,
+  type LandedTransaction,
+  type SiblingInstruction,
   type SolanaAdapterConfig,
   type SolanaGateClient,
   type SolanaMandateState,
