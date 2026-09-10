@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ActivityFeed } from "@/components/activity-feed";
 import { Addr } from "@/components/addr";
+import { CountUp } from "@/components/count-up";
 import { Card, CardContent } from "@/components/ui/card";
 import { errorName } from "@/lib/chains";
 import { PUBLIC } from "@/lib/env";
@@ -50,8 +51,8 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
         <>
           <Card>
             <CardContent className="pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-              <span className="tnum"><span className="text-xl font-semibold">{payload.summary.actions}</span> actions</span>
-              <span className="tnum text-blocked"><span className="text-xl font-semibold">{payload.summary.blocked}</span> blocked</span>
+              <span className="tnum"><CountUp value={payload.summary.actions} className="text-xl font-semibold" /> actions</span>
+              <span className="tnum text-blocked"><CountUp value={payload.summary.blocked} className="text-xl font-semibold" /> blocked</span>
               <span className="tnum text-muted">across <span className="font-semibold text-ink">{payload.summary.chains}</span> chains</span>
               <span className="flex flex-wrap gap-1.5">
                 {Object.entries(payload.summary.blockedByCode)

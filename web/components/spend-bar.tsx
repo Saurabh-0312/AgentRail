@@ -1,9 +1,13 @@
 import { Figure } from "@/components/amount";
+import { GrowBar } from "@/components/motion";
 import { cn } from "@/lib/cn";
 import { headroom } from "@/lib/format";
 import { formatChainAmount } from "@/lib/units";
 
-/** spent / cap as a bar, coloured by headroom (state), with the figures a judge can read in the chain's asset. */
+/**
+ * spent / cap as a bar, coloured by headroom (state), with the figures a judge can read in the
+ * chain's asset. The bar grows to its value on mount rather than appearing full.
+ */
 export function SpendBar({ spent, cap, chain }: { spent: string; cap: string; chain: string }) {
   const h = headroom(spent, cap);
   const usedPct = h === null ? 0 : Math.round((1 - h) * 100);
@@ -13,7 +17,7 @@ export function SpendBar({ spent, cap, chain }: { spent: string; cap: string; ch
   const fLeft = remaining === null ? null : formatChainAmount(chain, remaining);
   const fCap = formatChainAmount(chain, cap);
   return (
-    <div className="tnum">
+    <div className="tnum" data-spend-bar={usedPct}>
       <div className="flex items-baseline justify-between gap-3 text-xs">
         <span className="text-ink">
           <span className="font-medium">{fSpent ? <Figure f={fSpent} secondary="tooltip" /> : spent}</span> spent
@@ -26,8 +30,8 @@ export function SpendBar({ spent, cap, chain }: { spent: string; cap: string; ch
           )}
         </span>
       </div>
-      <div className="mt-1 h-2 w-full overflow-hidden rounded bg-muted-soft">
-        <div className={cn("h-full transition-[width]", tone)} style={{ width: `${usedPct}%` }} />
+      <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-muted-soft ring-1 ring-inset ring-border/60">
+        <GrowBar pct={usedPct} className={cn("h-full rounded-full", tone)} />
       </div>
     </div>
   );

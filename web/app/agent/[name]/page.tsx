@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Addr } from "@/components/addr";
 import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
+import { CountUp } from "@/components/count-up";
 import { Countdown } from "@/components/countdown";
 import { OwnerActions } from "@/components/owner-actions";
 import { SpendBar } from "@/components/spend-bar";
@@ -273,8 +274,8 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
         <Section title="Activity" hint="from the shared index">
           <Card>
             <CardContent className="pt-4 flex flex-wrap items-center gap-4 text-sm">
-              <span className="tnum"><span className="font-semibold">{hist.summary.actions}</span> actions</span>
-              <span className="tnum text-blocked"><span className="font-semibold">{hist.summary.blocked}</span> blocked</span>
+              <span className="tnum"><CountUp value={hist.summary.actions} className="font-semibold" /> actions</span>
+              <span className="tnum text-blocked"><CountUp value={hist.summary.blocked} className="font-semibold" /> blocked</span>
               <span className="tnum text-muted">across {hist.summary.chains} chains</span>
               <Link href={`/activity?ensNode=${payload.ensNode}`} className="ml-auto text-ens underline">open the feed →</Link>
             </CardContent>

@@ -42,7 +42,7 @@ export function StatusStrip() {
         {entries.map((e) => {
           const s = status ? (e as StatusPayload["feed"]) : null;
           const sleeping = s && "sleeping" in s && s.sleeping;
-          const dot = !status ? "bg-muted animate-pulse" : sleeping ? "bg-warn" : s!.ok ? "bg-allowed" : "bg-blocked";
+          const dot = !status ? "bg-muted animate-pulse" : sleeping ? "bg-warn text-warn" : s!.ok ? "bg-allowed text-allowed dot-live" : "bg-blocked text-blocked";
           const text = !status ? "checking…" : sleeping ? "waking" : s!.ok ? `${s!.latencyMs} ms` : "down";
           return (
             <span key={e.key} className="inline-flex items-center gap-2" title={s ? s.detail : ""}>
