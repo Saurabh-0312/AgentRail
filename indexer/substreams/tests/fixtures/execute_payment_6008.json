@@ -1,0 +1,53 @@
+{
+ "signature": "rirCCxsuHrZ4SbzuorFs9xtZZHKKxVwkVaiyNSQonMst6R8LcFQWB8h9HFPheuVHpryRoYx4EQEnBV64MV84sch",
+ "slot": 495753422,
+ "blockTime": 1788978086,
+ "err": {
+  "InstructionError": [
+   0,
+   {
+    "Custom": 6008
+   }
+  ]
+ },
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: ExecutePayment",
+  "Program log: AnchorError thrown in programs\\agentrail\\src\\checks.rs:40. Error Code: SpendLimitExceeded. Error Number: 6008. Error Message: amount exceeds the lifetime spend limit.",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 4767 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj failed: custom program error: 0x1778"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+  "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "AzbPCoBsT4PckeqYMgukhd1u5hhbe48UxBvczVAqdeU9",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj",
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    3,
+    1,
+    4,
+    2,
+    6
+   ],
+   "data": "Bd42Y6cG3LKQwrRYm6TsZR",
+   "programIdIndex": 5,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 1,
+  "numReadonlyUnsignedAccounts": 2,
+  "numRequiredSignatures": 2
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": []
+}

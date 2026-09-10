@@ -1,0 +1,64 @@
+{
+ "signature": "5G6AwSxBMP6GhgLQJFbbvFRyy2kP3HBXstZVcQZx1fDHMCfaFifoLeiGMk1Xfx7taVtvwWjkqmLsexSquQkCpHrD",
+ "slot": 495753288,
+ "blockTime": 1788978063,
+ "err": null,
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: ExecutePayment",
+  "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]",
+  "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 81 of 195327 compute units",
+  "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 5248 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj success"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+  "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "AzbPCoBsT4PckeqYMgukhd1u5hhbe48UxBvczVAqdeU9",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj",
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    3,
+    1,
+    4,
+    2,
+    6
+   ],
+   "data": "Bd42Y6cG3LKWQPsqtkoKWf",
+   "programIdIndex": 5,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 1,
+  "numReadonlyUnsignedAccounts": 2,
+  "numRequiredSignatures": 2
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": [
+  {
+   "index": 0,
+   "instructions": [
+    {
+     "accounts": [
+      4,
+      2,
+      3
+     ],
+     "data": "3VfVJ4RDQDb5",
+     "programIdIndex": 6,
+     "stackHeight": 2
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "signature": "22L2uzVeDKaWYtYuB9Pw8UhvfDumhjX5osCeDc1wAL857cEhJtn7DVpkTu7cfW1MwN3BGQyWKojU6n9ebB2D7qa5",
+ "slot": 495753245,
+ "blockTime": 1788978056,
+ "err": null,
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: RevokeMandate",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 1399 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj success"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    1,
+    0
+   ],
+   "data": "jDQv4pd7cHH",
+   "programIdIndex": 2,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 0,
+  "numReadonlyUnsignedAccounts": 1,
+  "numRequiredSignatures": 1
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": []
+}

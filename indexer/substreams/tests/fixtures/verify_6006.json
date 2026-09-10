@@ -1,0 +1,60 @@
+{
+ "signature": "2448msSAaND6ahE5w7d9f55fh9nWUueFo4DdQq7fhP4ccG77DesBJa1NUCfpJC6hbQBKWFowVUTSm1NDVNYzBCfb",
+ "slot": 495753444,
+ "blockTime": 1788978089,
+ "err": {
+  "InstructionError": [
+   0,
+   {
+    "Custom": 6006
+   }
+  ]
+ },
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: Verify",
+  "Program log: AnchorError thrown in programs\\agentrail\\src\\instructions\\verify.rs:44. Error Code: InstructionNotAllowed. Error Number: 6006. Error Message: instruction is not permitted by the mandate.",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 4059 of 400000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj failed: custom program error: 0x1776"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "AzbPCoBsT4PckeqYMgukhd1u5hhbe48UxBvczVAqdeU9",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj",
+  "Sysvar1nstructions1111111111111111111111111",
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    2,
+    1,
+    5
+   ],
+   "data": "2FqLo1tNb3zsG67mJTHMVkUw",
+   "programIdIndex": 4,
+   "stackHeight": 1
+  },
+  {
+   "accounts": [
+    3,
+    0
+   ],
+   "data": "bmb1GfkoS79pyKK7RE8tJtePrSDimaSdR4sFCuQT2YR2DLP",
+   "programIdIndex": 6,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 1,
+  "numReadonlyUnsignedAccounts": 3,
+  "numRequiredSignatures": 2
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": []
+}

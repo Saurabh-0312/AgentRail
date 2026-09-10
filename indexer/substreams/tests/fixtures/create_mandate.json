@@ -1,0 +1,59 @@
+{
+ "signature": "4F5o6FqyV8uA7G4bQ8Vy1RGhVrKRLNqJ6rvh8CPc8JLD1N8LhUe79ug9WGaaYCDneGqwS58aMG3wcR3zDPsxPuzn",
+ "slot": 495753253,
+ "blockTime": 1788978058,
+ "err": null,
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: CreateMandate",
+  "Program 11111111111111111111111111111111 invoke [2]",
+  "Program 11111111111111111111111111111111 success",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 9899 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj success"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "11111111111111111111111111111111",
+  "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    1,
+    0,
+    3,
+    2
+   ],
+   "data": "9TmDek7Do5vcqwGGRaqRLzprTkWg7VHjkHpQ68ieZJdNdZXW1XxYqQTRNyu28vMM1Z",
+   "programIdIndex": 4,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 0,
+  "numReadonlyUnsignedAccounts": 3,
+  "numRequiredSignatures": 1
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": [
+  {
+   "index": 0,
+   "instructions": [
+    {
+     "accounts": [
+      0,
+      1
+     ],
+     "data": "111112Gc2LqHbAyBsTyqhgiRpwwSPgxNy2xVARqvMJLDgQvhZBTXpeXa7LBFRsGdRJ4zm7",
+     "programIdIndex": 2,
+     "stackHeight": 2
+    }
+   ]
+  }
+ ]
+}

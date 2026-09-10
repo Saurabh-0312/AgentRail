@@ -1,0 +1,38 @@
+{
+ "signature": "4wMsRUHSYjLJgkpd6VjuG5NDu8acxFvgB9MF9YnHBDKTGfGu65d5iAQgmtp2DX96yr6MjrSFyUjAa1P2Lpiuha5V",
+ "slot": 495753258,
+ "blockTime": 1788978058,
+ "err": null,
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: AddPermission",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 1316 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj success"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    1,
+    0
+   ],
+   "data": "2wqV9LmPnVFXAHC8MfDoE7GTTZd5m9b4V9JU8MwRoQztcvurrAiUiMAqSMaK5AQyJTiEE64b38pWdSefaUdd",
+   "programIdIndex": 2,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 0,
+  "numReadonlyUnsignedAccounts": 1,
+  "numRequiredSignatures": 1
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": []
+}

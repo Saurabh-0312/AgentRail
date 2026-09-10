@@ -1,0 +1,53 @@
+{
+ "signature": "26MbYySwyhPn5fDNpYXzTGYcjBQgtEgVzccaMSz4WzXBRxQS49v2hS98atLxk9v1Ss4FvcdTudtANqRCuR1uoq4k",
+ "slot": 495753299,
+ "blockTime": 1788978065,
+ "err": {
+  "InstructionError": [
+   0,
+   {
+    "Custom": 6007
+   }
+  ]
+ },
+ "logMessages": [
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj invoke [1]",
+  "Program log: Instruction: ExecutePayment",
+  "Program log: AnchorError thrown in programs\\agentrail\\src\\checks.rs:36. Error Code: PerTxLimitExceeded. Error Number: 6007. Error Message: amount exceeds the per-transaction limit.",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj consumed 4756 of 200000 compute units",
+  "Program GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj failed: custom program error: 0x1777"
+ ],
+ "accountKeys": [
+  "55FJao825sA7rR9aKNtUEuGzN2gQNN9nZBw41WCWjvwb",
+  "4XwCs2E3cQcK4vEi5tE2Gi6uCKgXL1XaSyhn8LukQddV",
+  "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a",
+  "7TuT4p76fPgGbxY6PHLVjJiX7aX4QUCiPX7TPYv6L69a",
+  "AzbPCoBsT4PckeqYMgukhd1u5hhbe48UxBvczVAqdeU9",
+  "GcYqRmrRko3WbKNuGarDTbmRF1GcdeHzc3eV37gtM4Bj",
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+ ],
+ "instructions": [
+  {
+   "accounts": [
+    3,
+    1,
+    4,
+    2,
+    6
+   ],
+   "data": "Bd42Y6cG3LKgz5TQJndywM",
+   "programIdIndex": 5,
+   "stackHeight": 1
+  }
+ ],
+ "header": {
+  "numReadonlySignedAccounts": 1,
+  "numReadonlyUnsignedAccounts": 2,
+  "numRequiredSignatures": 2
+ },
+ "loadedAddresses": {
+  "readonly": [],
+  "writable": []
+ },
+ "innerInstructions": []
+}
