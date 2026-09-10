@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens: the palette of agentrail-flow.png, and the one source of truth for colour in the
+ * app. Components use the Tailwind names below (bg-surface, text-blocked, border-hedera, ...);
+ * no component carries a hex value of its own. Colour means state or chain, never decoration.
+ */
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --ink: #0f172a;
+  --muted: #64748b;
+
+  --ens: #2563eb;
+  --graph: #9333ea;
+  --hedera: #059669;
+  --solana: #141e30;
+  --solana-accent: #00c896;
+  --agent: #e8891a;
+
+  --allowed: #16a34a;
+  --blocked: #dc2626;
+  --warn: #d97706;
+
+  --allowed-soft: #f0fdf4;
+  --blocked-soft: #fef2f2;
+  --warn-soft: #fffbeb;
+  --muted-soft: #f1f5f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+
+  --color-ens: var(--ens);
+  --color-graph: var(--graph);
+  --color-hedera: var(--hedera);
+  --color-solana: var(--solana);
+  --color-solana-accent: var(--solana-accent);
+  --color-agent: var(--agent);
+
+  --color-allowed: var(--allowed);
+  --color-blocked: var(--blocked);
+  --color-warn: var(--warn);
+  --color-allowed-soft: var(--allowed-soft);
+  --color-blocked-soft: var(--blocked-soft);
+  --color-warn-soft: var(--warn-soft);
+  --color-muted-soft: var(--muted-soft);
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Every number in the app lines up in columns. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Addresses, signatures and codes. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+/* Wide content scrolls inside its own box; the page never scrolls sideways. */
+.scroll-x {
+  overflow-x: auto;
+  max-width: 100%;
+}

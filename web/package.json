@@ -1,5 +1,41 @@
 {
   "name": "@agentrail/web",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The AgentRail dashboard: paste an agent name and see what it may do. Every key stays server-side; the browser only talks to this app's own API.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "snapshot:solana": "node scripts/snapshot-solana.ts",
+    "check:bundle": "node scripts/check-bundle.ts"
+  },
+  "dependencies": {
+    "@agentrail/query": "0.1.0",
+    "@agentrail/sdk": "0.1.0",
+    "@solana/web3.js": "^1.98.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.44.0",
+    "next": "^16.3.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.6.0",
+    "viem": "^2.48.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9",
+    "vitest": "^4"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
 }
