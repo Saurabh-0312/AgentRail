@@ -9,6 +9,8 @@ export default defineConfig({
     include: ["test/**/*.test.ts"],
     environment: "node",
   },
+  // the feed tests render components to static markup; the automatic JSX runtime is what Next uses
+  esbuild: { jsx: "automatic" },
   resolve: {
     alias: {
       "@": here,
