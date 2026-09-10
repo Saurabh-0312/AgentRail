@@ -241,21 +241,38 @@ export interface Provider {
  */
 export function messagesFromEnv(): Provider {
   const override = process.env.AGENT_TOOL_RESULT_CHARS ? Number(process.env.AGENT_TOOL_RESULT_CHARS) : undefined;
-  if (process.env.GEMINI_API_KEY) return { api: geminiMessages(process.env.GEMINI_API_KEY), model: process.env.AGENT_MODEL ?? "gemini-flash-latest", toolResultChars: override ?? 120_000 };
+  // Pin the model rather than an alias: free-tier quotas are per model, and `gemini-flash-latest`
+  // points at whichever flash is newest, so a run can fail on an exhausted model while the rest of
+  // the family still has capacity. Daily free-tier quotas reset at midnight Pacific.
+  if (process.env.GEMINI_API_KEY) return { api: geminiMessages(process.env.GEMINI_API_KEY), model: process.env.AGENT_MODEL ?? "gemini-3.6-flash", toolResultChars: override ?? 120_000 };
   if (process.env.GROQ_API_KEY) return { api: groqMessages(process.env.GROQ_API_KEY), model: process.env.AGENT_MODEL ?? "openai/gpt-oss-120b", toolResultChars: override ?? 4_000 };
   if (process.env.ANTHROPIC_API_KEY) return { api: anthropicMessages(process.env.ANTHROPIC_API_KEY), model: process.env.AGENT_MODEL ?? "claude-sonnet-5", toolResultChars: override ?? 60_000 };
   throw new Error("set GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY");
 }
 
-const toApiTool = (t: McpTool) => ({ name: t.name, description: t.description ?? "", input_schema: t.inputSchema });
+const toApiTool = (t: McpTool, descriptionChars = Infinity) => ({
+  name: t.name,
+  description: (t.description ?? "").slice(0, descriptionChars),
+  input_schema: t.inputSchema,
+});
 
-/** The tool-use loop: the model picks MCP tools until it answers. Bounded so a bad day costs little. */
+/** The three tools that answer any question; the other two only help rank candidates. */
+const CORE_TOOLS = ["search_subgraphs_by_keyword", "get_schema_by_subgraph_id", "execute_query_by_subgraph_id"];
+const RANKING_TOOLS = ["get_top_subgraph_deployments", "get_deployment_30day_query_counts"];
+
+/**
+ * The tool-use loop: the model picks MCP tools until it answers. Bounded so a bad day costs little.
+ *
+ * The Subgraph MCP's own tool descriptions are long, and a provider that meters a single request
+ * (Groq's free tier caps one call at 8k tokens) blows its budget on the tool list alone before the
+ * question is even read. So a small budget gets the three core tools with trimmed descriptions.
+ */
 export async function explore(question: string, mcp: SubgraphMcp, messages: MessagesApi, model: string, maxSteps = 8, toolResultChars = 60_000): Promise<ExploreResult> {
   const history: { role: "user" | "assistant"; content: unknown }[] = [{ role: "user", content: question }];
   const steps: ExploreStep[] = [];
-  const tools = mcp.tools
-    .filter((t) => ["search_subgraphs_by_keyword", "get_schema_by_subgraph_id", "execute_query_by_subgraph_id", "get_top_subgraph_deployments", "get_deployment_30day_query_counts"].includes(t.name))
-    .map(toApiTool);
+  const compact = toolResultChars <= 8_000;
+  const wanted = compact ? CORE_TOOLS : [...CORE_TOOLS, ...RANKING_TOOLS];
+  const tools = mcp.tools.filter((t) => wanted.includes(t.name)).map((t) => toApiTool(t, compact ? 220 : Infinity));
   for (let i = 0; i <= maxSteps; i++) {
     const res = await messages({ model, max_tokens: 1500, system: SYSTEM, tools, messages: history });
     history.push({ role: "assistant", content: res.content });
