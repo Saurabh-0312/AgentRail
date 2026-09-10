@@ -9,11 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { ServiceCard } from "@/components/service-card";
 import { getMandatePayload, solanaLifecycle, type MandatePayload } from "@/lib/agent-data";
 import { CHAINS, ENS_APP_URL, type ChainKey } from "@/lib/chains";
+import { PUBLIC } from "@/lib/env";
 import { isoDate, usdc } from "@/lib/format";
 import { history, type HistoryPayload } from "@/lib/history";
 import type { LiveMandate } from "@/lib/mandate-live";
+import { getService } from "@/lib/services";
 import { SPL_TOKEN_PROGRAM, describeInstruction, hederaAccountFromLongZero } from "@/lib/spl";
 
 export const dynamic = "force-dynamic";
@@ -175,10 +178,14 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
   const { name } = await params;
   const payload = await getMandatePayload(decodeURIComponent(name));
   if (payload.kind === "service") {
+    const entry = await getService(payload);
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold tracking-tight">{payload.name}</h1>
-        <p className="text-muted">This is a service name, not an agent. See it in the <Link className="text-ens underline" href="/services">services directory</Link>.</p>
+        <p className="text-sm text-muted">
+          A service name, not an agent: something an agent can discover and pay. All three are in the <Link className="text-ens underline" href="/services">directory</Link>.
+        </p>
+        <ServiceCard s={entry} agentName={PUBLIC.agentName} />
       </div>
     );
   }
