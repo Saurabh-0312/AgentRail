@@ -24,6 +24,20 @@ Services get ENS names too. The agent starts with a name, resolves what exists t
 
 Built with **ENS**, **Solana**, **Hedera**, and **The Graph**.
 
+## The proof layer
+
+Everything a mandate did, on every chain it exists on, under one GraphQL schema
+([`indexer/schema.graphql`](indexer/schema.graphql)), joined by the ENS namehash the owner wrote into
+each chain. Sepolia and Base Sepolia are subgraphs in Subgraph Studio; Solana devnet is a
+Substreams package streamed from a Graph provider, decoded from instruction data and transaction
+meta so that **the refused attempts are rows too** (`allowed: false`, `blockReason: OVER_BUDGET`).
+
+```graphql
+{ mandates(where: { ensNode: "0x320d…" }) { chain actions { allowed blockReason amount } } }
+```
+
+One query, one name, three chains. See [`indexer/`](indexer/).
+
 ## Limitations
 
 - **Scope of enforcement.** AgentRail enforces for funds under its delegation (SPL `approve` on Solana, ERC-20 allowance on the EVM). It does not stop an agent that independently holds its own keys to other funds — the same trust model as SPL `approve`.
