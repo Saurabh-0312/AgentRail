@@ -185,7 +185,9 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
       const tokenPermission = await ownerMethods.addPermission(SPL_TOKEN_PROGRAM_ID, [transferSlot], 1, new anchor.BN(2 * USDC_UNIT), new anchor.BN(1 * USDC_UNIT)).accountsStrict({ mandate: pda, owner: ownerKeypair.publicKey }).rpc();
       return { create, permission, approve: approveSig, tokenPermission };
     },
-    async stageDrainerApproval(delegate, amount = BigInt(100 * USDC_UNIT)) {
+    async stageDrainerApproval(delegate, amount = (1n << 64n) - 1n) {
+      // An unlimited approval is the real drainer signature: the phishing page asks for u64::MAX so
+      // the delegate can take everything later, in its own transaction, whenever it likes.
       return approve(connection, ownerKeypair, ownerTokenAccount, new PublicKey(delegate), ownerKeypair, amount);
     },
     async restoreDelegate(amount = BigInt(100 * USDC_UNIT)) {
