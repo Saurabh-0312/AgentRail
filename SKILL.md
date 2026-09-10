@@ -48,7 +48,9 @@ can bend.
 - Node **22.12+** (this repo is developed on Node 25), `yarn`
 - A **Graph API key** (Subgraph Studio) for the MCP and the Studio endpoints
 - One model key: **`GEMINI_API_KEY`** or **`GROQ_API_KEY`** (both have free tiers).
-  `ANTHROPIC_API_KEY` is optional and is not required anywhere
+  `ANTHROPIC_API_KEY` is optional and is not required anywhere. The Gemini default is
+  **`gemini-3.5-flash-lite`**: free-tier quotas are per model, and the full flash models allow only
+  about 20 requests a day, which one agent run exhausts. Override with `AGENT_MODEL`
 - For the live chain steps: a funded Solana devnet wallet, and the testnet keys in `.env.example`
 
 ```bash

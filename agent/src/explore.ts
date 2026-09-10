@@ -7,7 +7,7 @@
  *   yarn workspace @agentrail/agent explore "Which ENS names were registered most recently on mainnet?"
  *
  * Env: GRAPH_API_KEY (the MCP) and one model provider, tried in this order: GEMINI_API_KEY
- * (default gemini-flash-latest), GROQ_API_KEY (default openai/gpt-oss-120b), ANTHROPIC_API_KEY
+ * (default gemini-3.5-flash-lite), GROQ_API_KEY (default openai/gpt-oss-120b), ANTHROPIC_API_KEY
  * (default claude-sonnet-5). AGENT_MODEL overrides the model name.
  */
 import { connectSubgraphMcp, type McpTool, type SubgraphMcp } from "./mcp.ts";
@@ -241,10 +241,12 @@ export interface Provider {
  */
 export function messagesFromEnv(): Provider {
   const override = process.env.AGENT_TOOL_RESULT_CHARS ? Number(process.env.AGENT_TOOL_RESULT_CHARS) : undefined;
-  // Pin the model rather than an alias: free-tier quotas are per model, and `gemini-flash-latest`
-  // points at whichever flash is newest, so a run can fail on an exhausted model while the rest of
-  // the family still has capacity. Daily free-tier quotas reset at midnight Pacific.
-  if (process.env.GEMINI_API_KEY) return { api: geminiMessages(process.env.GEMINI_API_KEY), model: process.env.AGENT_MODEL ?? "gemini-3.6-flash", toolResultChars: override ?? 120_000 };
+  // Pin a model rather than an alias: free-tier quotas are per model, so `gemini-flash-latest`
+  // points at whichever flash is newest, which is also the first to be exhausted. The full flash
+  // models allow only ~20 requests a day and die partway through one agent run; the lite model has
+  // the volume (15 RPM) and is the one that completes a monitor pass. Daily quotas reset at
+  // midnight Pacific. Override with AGENT_MODEL when a bigger model is warranted.
+  if (process.env.GEMINI_API_KEY) return { api: geminiMessages(process.env.GEMINI_API_KEY), model: process.env.AGENT_MODEL ?? "gemini-3.5-flash-lite", toolResultChars: override ?? 120_000 };
   if (process.env.GROQ_API_KEY) return { api: groqMessages(process.env.GROQ_API_KEY), model: process.env.AGENT_MODEL ?? "openai/gpt-oss-120b", toolResultChars: override ?? 4_000 };
   if (process.env.ANTHROPIC_API_KEY) return { api: anthropicMessages(process.env.ANTHROPIC_API_KEY), model: process.env.AGENT_MODEL ?? "claude-sonnet-5", toolResultChars: override ?? 60_000 };
   throw new Error("set GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY");

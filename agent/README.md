@@ -80,9 +80,17 @@ yarn workspace @agentrail/agent demo        # the whole story: identity, monitor
 > run, and a stale one makes every attempt revert with `Expired` instead of the code being shown.
 
 Model selection is `GEMINI_API_KEY`, then `GROQ_API_KEY`, then `ANTHROPIC_API_KEY`. `AGENT_MODEL`
-overrides the model name and `AGENT_TOOL_RESULT_CHARS` the per-result budget. To force the fallback
-when a free tier is exhausted, set the earlier key to empty on the command line — environment
-variables take precedence over `--env-file`:
+overrides the model name and `AGENT_TOOL_RESULT_CHARS` the per-result budget.
+
+The Gemini default is **`gemini-3.5-flash-lite`**, and that choice matters. Free-tier quotas are per
+model, so the alias `gemini-flash-latest` always points at the newest flash, which is also the first
+to run out. The full flash models allow roughly 20 requests a day and are exhausted partway through a
+single agent run; the lite model has the request volume (15 per minute) to finish one. Their 429 says
+"retry in 15s", but the quota it names is per day, so retrying in 15 seconds always fails. Daily
+quotas reset at midnight Pacific.
+
+To force the fallback when a free tier is exhausted, set the earlier key to empty on the command
+line, since environment variables take precedence over `--env-file`:
 
 ```bash
 cd agent && GEMINI_API_KEY= node --env-file=../.env src/attack/run.ts all
