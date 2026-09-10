@@ -50,6 +50,9 @@ jobs:
         working-directory: .
       - run: yarn codegen
       - run: yarn build
+      # matchstick resolves the AssemblyScript compiler and graph-ts relative to the package, but a
+      # yarn workspace hoists them to the repo root
+      - run: ln -s ../../node_modules node_modules
       - run: yarn test
 
   substreams:
