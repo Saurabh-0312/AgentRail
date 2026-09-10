@@ -7,8 +7,8 @@ import type { StatusPayload } from "@/lib/status";
 
 /**
  * Four chains, one real dot each, loaded after the page paints so the lookup is instant. Grey while
- * checking, green when the read succeeded, red when it did not; the feed shows "waking" when
- * Render's free tier is asleep rather than pretending it is down or up.
+ * checking, green and breathing when the read succeeded, red when it did not; the feed shows
+ * "waking" when Render's free tier is asleep rather than pretending it is down or up.
  */
 export function StatusStrip() {
   const [status, setStatus] = useState<StatusPayload | null>(null);
@@ -37,8 +37,9 @@ export function StatusStrip() {
   ];
 
   return (
-    <div className="rounded-lg border border-border bg-surface px-4 py-3">
+    <div className="rounded-xl border border-border bg-surface px-4 py-3 shadow-1" aria-live="polite">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        <span className="text-xs font-semibold uppercase tracking-wide text-muted">live</span>
         {entries.map((e) => {
           const s = status ? (e as StatusPayload["feed"]) : null;
           const sleeping = s && "sleeping" in s && s.sleeping;

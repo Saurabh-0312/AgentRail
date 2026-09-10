@@ -10,11 +10,27 @@ Every key stays on the server. The browser only ever calls this app's own API.
 
 | Route | What a judge sees |
 |---|---|
-| `/` | one input, three examples, a live status strip with a real dot per chain |
-| `/agent/<name>` | identity · non-transferable / expiring / revocable with proof links · permissions per chain with live spend bars · the published rules · raw records · owner actions |
-| `/activity` | one feed across three chains; **blocked rows loud**, filterable, every tx linked |
-| `/services` | the three services resolved from ENS, the rogue one marked from its own payee |
-| `/attack` | the poisoned advisory, the model's words, four reverted signatures, the protective sequence |
+| `/` | one statement, one input, three example chips, a live status strip with a real dot per chain |
+| `/agent/<name>` | identity header with per-chain status and expiry · **owner actions** (revoke, create agent) · permissions per chain with live spend bars and the published `rail.allowed` ceiling · raw records · activity summary linking to the feed |
+| `/activity` | one feed across three chains; **blocked rows loud**, a prominent Blocked filter, sticky header, every tx linked |
+| `/services` | the three services resolved from ENS, price in USDC, the rogue one marked from its own payee |
+| `/attack` | the poisoned advisory, the model's words as a callout, four reverted signatures as a sequence, the protective action as before/after |
+
+## Amounts
+
+Chains and the index store base units; the page shows the human value first and the raw units
+second, everywhere, through one helper (`lib/units.ts`): `formatUnits(amount, decimals, symbol)`.
+USDC is 6 decimals on all three chains (Hedera HTS `0.0.429274`, Base Sepolia
+`0x036CbD53…`, the Solana devnet mint), HBAR 8, SOL 9. So `30000` reads `0.03 USDC (30,000 units)`
+and `42` reads `0.000042 USDC`. The create-agent form converts as you type.
+
+## Themes and motion
+
+Dark is the default; the toggle in the header switches to light and remembers the choice
+(`?theme=light` in the URL also works). Both palettes are CSS variables in `app/globals.css`;
+components never carry a hex value. Motion is CSS: sections rise once on first paint, spend bars
+grow to their value, headline counts climb once, healthy status dots breathe, blocked rows flash
+red once. All of it is off under `prefers-reduced-motion`.
 
 ## How it is hosted
 
@@ -36,7 +52,7 @@ yarn workspace @agentrail/web snapshot:solana
 ```bash
 yarn install                                   # repo root
 yarn workspace @agentrail/web dev              # http://localhost:3000, reads the repo's .env
-yarn workspace @agentrail/web test             # routes, feed rendering, owner gating, secret isolation
+yarn workspace @agentrail/web test             # routes, feed rendering, owner gating, unit formatter, secret isolation
 yarn workspace @agentrail/web build && yarn workspace @agentrail/web check:bundle
 ```
 
@@ -56,6 +72,7 @@ sources compiled by Next (`transpilePackages`), so the whole repo is needed at b
 
 ## Owner actions
 
-`REVOKE` and create-agent need the owner's wallet (wagmi, injected connector, Hedera testnet and
-Base Sepolia). A visitor sees both, reads what they do, and cannot press them; the gate is the
-connected address matching the owner. The wallet signs; the app never holds a key.
+`REVOKE` and create-agent sit directly under the identity header and need the owner's wallet
+(wagmi, injected connector, Hedera testnet and Base Sepolia). A visitor sees both, reads what they
+do, and cannot press them; the gate is the connected address matching the owner. The wallet signs;
+the app never holds a key.
