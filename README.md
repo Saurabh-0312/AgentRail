@@ -38,6 +38,27 @@ meta so that **the refused attempts are rows too** (`allowed: false`, `blockReas
 
 One query, one name, three chains. See [`indexer/`](indexer/).
 
+## The agent
+
+AgentRail is the infrastructure. The **theft and portfolio risk monitor** in [`agent/`](agent/) is
+its reference implementation: it asks *"is Alice about to lose money?"*, and it answers by
+discovering which protocols a wallet is exposed to across published subgraphs in natural language,
+drilling into them, buying the prices it needs through its own mandate, and correlating one verdict.
+
+Severity decides what it may attempt. MEDIUM is logged, HIGH alerts the owner, and **CRITICAL
+attempts a protective action — which the mandate governs exactly like any payment.** If the mandate
+permits it, the agent defends her. If not, it can only warn. The constraint is unconditional, not a
+filter on intent.
+
+Then it is attacked. A hidden instruction is planted inside data the agent legitimately paid for, a
+real model reads it and sincerely tries to comply, and the chain refuses — an unlisted destination,
+a forbidden instruction, and a revoked mandate, each a real reverted transaction.
+
+**We do not claim the agent cannot be tricked. It can, and that is the point.** AgentRail does not
+make the agent smarter; it makes being fooled stop mattering.
+
+Judges: [`SKILL.md`](SKILL.md) is the one-page guide to running all of it.
+
 ## Limitations
 
 - **Scope of enforcement.** AgentRail enforces for funds under its delegation (SPL `approve` on Solana, ERC-20 allowance on the EVM). It does not stop an agent that independently holds its own keys to other funds — the same trust model as SPL `approve`.
