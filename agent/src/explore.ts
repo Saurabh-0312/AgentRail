@@ -109,18 +109,26 @@ export function groqMessages(apiKey: string): MessagesApi {
         }
       }
     }
-    // the free tier meters tokens per minute; wait out a 429 instead of failing the question
+    // The free tier meters tokens per minute, so wait out a 429 rather than fail the question. The
+    // model also emits malformed tool-call arguments now and then, which the API rejects with a 400
+    // ("Failed to parse tool call arguments as JSON"); that is a bad sample, so just ask again.
     let res: Response | undefined;
     let json: { choices?: { message: OaiMessage; finish_reason: string }[]; error?: { message: string } } = {};
-    for (let attempt = 0; attempt < 4; attempt++) {
+    for (let attempt = 0; attempt < 5; attempt++) {
       res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
         body: JSON.stringify({ model: body.model, max_tokens: body.max_tokens, messages, tools, tool_choice: "auto" }),
       });
       json = (await res.json().catch(() => ({}))) as typeof json;
-      if (res.status !== 429) break;
-      const wait = Number(json.error?.message?.match(/try again in ([\d.]+)s/)?.[1] ?? 15) + 1;
+      const message = json.error?.message ?? "";
+      const badSample = res.status === 400 && /tool call|arguments/i.test(message);
+      if (res.status !== 429 && res.status < 500 && !badSample) break;
+      if (badSample || res.status >= 500) {
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+        continue;
+      }
+      const wait = Number(message.match(/try again in ([\d.]+)s/)?.[1] ?? 15) + 1;
       await new Promise((r) => setTimeout(r, wait * 1000));
     }
     if (!res || !res.ok || json.error) throw new Error(`groq: ${json.error?.message ?? res?.status}`);
