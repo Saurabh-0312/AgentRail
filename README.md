@@ -4,7 +4,7 @@
 
 Instruction-level authorization for AI agents. A permission mandate is published as a public ENS name and enforced on-chain — so an agent physically cannot do what it was not authorized to do.
 
-**ETHOnline 2026**
+**ETHOnline 2026** · **Live: https://agentrail-delta.vercel.app** · judges start at [`SKILL.md`](SKILL.md)
 
 ---
 
@@ -58,6 +58,17 @@ a forbidden instruction, and a revoked mandate, each a real reverted transaction
 make the agent smarter; it makes being fooled stop mattering.
 
 Judges: [`SKILL.md`](SKILL.md) is the one-page guide to running all of it.
+
+## The dashboard and the MCP server
+
+[`web/`](web/) is the live view, deployed at **https://agentrail-delta.vercel.app**: paste an
+agent's name, see what it may do, every action it took and every one it was refused, with every
+hash linked to its explorer. Every key stays on the server; the browser talks only to the app's own
+API.
+
+[`packages/mcp-server`](packages/mcp-server/) is how *another* agent adopts AgentRail: four read-only
+MCP tools (`get_mandate`, `check_permission`, `list_services`, `get_history`) over the SDK, with a
+config block to paste into any MCP client. It never signs.
 
 ## Limitations
 
