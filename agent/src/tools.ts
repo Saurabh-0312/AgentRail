@@ -74,8 +74,18 @@ export interface MandateView {
     active: boolean;
     expiry: string;
     permissions: PermissionView[];
-    delegation?: { account: string; delegate: string | null; delegatedAmount: string; balance: string; delegateIsMandate: boolean };
+    delegation?: {
+      account: string;
+      delegate: string | null;
+      delegatedAmount: string;
+      balance: string;
+      delegateIsMandate: boolean;
+      /** Transactions the delegate has ever signed or been part of; 0 is the drainer signature. null when unknown. */
+      delegateTxCount?: number | null;
+    };
   };
+  /** Recent action rows across chains, newest first: the outflow history R2 reads through adapt.ts. */
+  recentActions?: { chain: string; kind: string; timestamp: number; target: string; amount: string; allowed: boolean }[];
 }
 
 export interface ServicePaymentRequest {
@@ -168,8 +178,8 @@ export interface SolanaRail {
   ownerTokenAccount: string;
   /** The asset the account holds (devnet USDC mint). */
   asset: string;
-  /** Live delegation on the account, for getMyMandate. */
-  readDelegation?: () => Promise<{ delegate: string | null; delegatedAmount: bigint; balance: bigint }>;
+  /** Live delegation on the account, for getMyMandate; `delegateTxCount` is the delegate's on-chain history when known. */
+  readDelegation?: () => Promise<{ delegate: string | null; delegatedAmount: bigint; balance: bigint; delegateTxCount?: number | null }>;
 }
 
 export interface ToolsConfig {
@@ -303,6 +313,10 @@ export function createTools(cfg: ToolsConfig): AgentTools {
         };
       }),
     };
+    view.recentActions = h.mandates
+      .flatMap((m) => m.actions.map((a) => ({ chain: m.chain, kind: a.kind, timestamp: Number(a.timestamp), target: a.target, amount: a.amount, allowed: a.allowed })))
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 100);
     if (cfg.solana) {
       const rail = cfg.solana;
       const state = await rail.client.readMandate(rail.mandate);
@@ -320,6 +334,7 @@ export function createTools(cfg: ToolsConfig): AgentTools {
                 delegatedAmount: delegation.delegatedAmount.toString(),
                 balance: delegation.balance.toString(),
                 delegateIsMandate: delegation.delegate === rail.mandate,
+                delegateTxCount: delegation.delegateTxCount ?? null,
               },
             }
           : {}),
