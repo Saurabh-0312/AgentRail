@@ -33,6 +33,9 @@ jobs:
       - run: yarn workspace @agentrail/data-feed test
       - run: yarn workspace @agentrail/sdk test
       - run: yarn workspace @agentrail/query test
+      - run: yarn workspace @agentrail/agent test
+      - run: yarn workspace @agentrail/mcp-server test
+      - run: yarn workspace @agentrail/web test
 
   subgraph:
     name: matchstick
