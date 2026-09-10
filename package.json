@@ -40,5 +40,8 @@
     "ts-mocha": "^10.0.0",
     "typescript": "^4.3.5",
     "vitest": "^4"
+  },
+  "resolutions": {
+    "assemblyscript": "0.19.23"
   }
 }
