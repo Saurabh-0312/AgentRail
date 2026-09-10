@@ -187,7 +187,9 @@ export function geminiMessages(apiKey: string): MessagesApi {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${body.model}:generateContent?key=${apiKey}`;
     let res: Response | undefined;
     let json: { candidates?: { content?: { parts?: GeminiPart[] } }[]; error?: { message: string; code?: number } } = {};
-    for (let attempt = 0; attempt < 4; attempt++) {
+    // The free tier meters requests per minute (20 on the flash models) and says how long to wait;
+    // honour that hint rather than guess, or a busy minute fails the whole run.
+    for (let attempt = 0; attempt < 6; attempt++) {
       res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -195,7 +197,8 @@ export function geminiMessages(apiKey: string): MessagesApi {
       });
       json = (await res.json().catch(() => ({}))) as typeof json;
       if (res.status !== 429 && res.status !== 503) break;
-      await new Promise((r) => setTimeout(r, 8000 * (attempt + 1)));
+      const hinted = Number(json.error?.message?.match(/retry in ([\d.]+)s/i)?.[1] ?? 0);
+      await new Promise((r) => setTimeout(r, (hinted > 0 ? hinted + 1 : 8 * (attempt + 1)) * 1000));
     }
     if (!res || !res.ok || json.error) throw new Error(`gemini: ${json.error?.message ?? res?.status}`);
     const parts = json.candidates?.[0]?.content?.parts ?? [];

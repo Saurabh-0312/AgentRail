@@ -56,6 +56,8 @@ export interface SolanaRuntime extends SolanaRail {
   agentKeypair: Keypair;
   programId: PublicKey;
   usdc: PublicKey;
+  /** The shop the mandate really does allow to be paid; the `replay` attack needs a legitimate payee. */
+  shopWallet: string;
   /** Owner revokes the mandate (for the "after revocation" attack). Returns the signature. */
   revokeMandate(): Promise<string>;
   /**
@@ -158,6 +160,7 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
     agentKeypair,
     programId,
     usdc,
+    shopWallet: shopKeypair.publicKey.toBase58(),
     async readDelegation() {
       const acc = await getAccount(connection, ownerTokenAccount);
       const delegate = acc.delegate?.toBase58() ?? null;
