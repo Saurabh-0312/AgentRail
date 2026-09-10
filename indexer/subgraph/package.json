@@ -10,7 +10,7 @@
     "build:base": "graph build subgraph.base.yaml",
     "deploy:sepolia": "graph deploy --node https://api.studio.thegraph.com/deploy/ agentrail subgraph.sepolia.yaml",
     "deploy:base": "graph deploy --node https://api.studio.thegraph.com/deploy/ agentrail-base subgraph.base.yaml",
-    "test": "graph test"
+    "test": "graph test -v 0.6.0"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.97.1",
