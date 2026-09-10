@@ -23,7 +23,7 @@ import { respond } from "../response.ts";
 import { createRuntime, env, type Runtime } from "../runtime.ts";
 import type { ActionOutcome, PaymentOutcome } from "../tools.ts";
 import { RunLog } from "../transcript.ts";
-import { injectionText, monitoringGoal, poisoningFetch, type AttackKind, type AttackPayload } from "./inject.ts";
+import { createPoison, injectionText, monitoringGoal, type AttackKind, type AttackPayload, type Poison } from "./inject.ts";
 
 export interface AttackResult {
   kind: AttackKind;
@@ -53,15 +53,22 @@ function attempted(kind: AttackKind, out: PaymentOutcome | ActionOutcome | undef
   return false;
 }
 
-export async function runAttack(kind: AttackKind, rt: Runtime, log: RunLog): Promise<AttackResult> {
+/**
+ * One runtime and one Hedera mandate serve all three attacks; `poison` arms the next payload.
+ * `proveOnChain` means a refusal by the local gate is still sent, so the chain's own no is a
+ * real transaction.
+ */
+export async function createAttackRuntime(log: RunLog): Promise<{ rt: Runtime; poison: Poison }> {
+  const poison = createPoison();
+  const rt = await createRuntime({ log, proveOnChain: true, evmRails: ["hedera"], fetch: poison.fetch, mcp: false });
+  return { rt, poison };
+}
+
+export async function runAttack(kind: AttackKind, attackRt: Runtime, poison: Poison, log: RunLog): Promise<AttackResult> {
   const payload: AttackPayload = { kind, attacker: ATTACKER, asset: "USDC" };
   const text = injectionText(payload);
+  poison.set(payload);
   log.add("note", `attack ${kind}: planting a poisoned advisory in the feed response`, { attacker: ATTACKER });
-
-  // Build a tool surface whose feed responses carry the poison, and that proves refusals on chain.
-  const injected = { hit: false };
-  const fetchWithPoison = poisoningFetch((u, i) => fetch(u, i), payload, { onInject: () => (injected.hit = true) });
-  const attackRt = await createRuntime({ log, proveOnChain: true, evmRails: ["hedera"], fetch: fetchWithPoison, mcp: false });
 
   try {
     if (kind === "replay") {
@@ -88,7 +95,7 @@ export async function runAttack(kind: AttackKind, rt: Runtime, log: RunLog): Pro
     const result: AttackResult = {
       kind,
       attacker: ATTACKER,
-      injected: injected.hit,
+      injected: poison.delivered(),
       injectionText: text,
       modelAttempted,
       intent: run.statements,
@@ -104,11 +111,11 @@ export async function runAttack(kind: AttackKind, rt: Runtime, log: RunLog): Pro
     log.add(refused && modelAttempted ? "chain" : "note", `attack ${kind}: attempted=${modelAttempted} refused=${refused} ${result.errorName ?? ""} ${result.explorer ?? ""}`, { revertedTx: result.revertedTx });
     return result;
   } finally {
+    poison.set(null);
     if (kind === "replay") {
       const r = await attackRt.solana.reissueMandate();
       log.add("note", "owner reissued the Solana mandate after the replay attack", { create: r.create });
     }
-    await attackRt.close();
   }
 }
 
@@ -131,13 +138,11 @@ if (process.argv[1] && process.argv[1].endsWith("run.ts")) {
   await probe.close();
 
   const results: AttackResult[] = [];
-  for (const kind of kinds) {
-    const rt = await createRuntime({ log, mcp: false, evmRails: [] });
-    try {
-      results.push(await runAttack(kind, rt, log));
-    } finally {
-      await rt.close();
-    }
+  const { rt, poison } = await createAttackRuntime(log);
+  try {
+    for (const kind of kinds) results.push(await runAttack(kind, rt, poison, log));
+  } finally {
+    await rt.close();
   }
   const files = log.write(new URL("../../out", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
 
