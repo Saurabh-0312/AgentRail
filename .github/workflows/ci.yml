@@ -50,9 +50,15 @@ jobs:
         working-directory: .
       - run: yarn codegen
       - run: yarn build
-      # matchstick resolves the AssemblyScript compiler and graph-ts relative to the package, but a
-      # yarn workspace hoists them to the repo root
-      - run: ln -s ../../node_modules node_modules
+      # matchstick resolves the AssemblyScript compiler, graph-ts and its own library relative to the
+      # package's node_modules, but a yarn workspace hoists them to the repo root (and the package
+      # keeps a local node_modules/.bin, so the folder itself cannot be a symlink)
+      - run: |
+          mkdir -p node_modules
+          for p in assemblyscript @graphprotocol matchstick-as; do
+            [ -e "node_modules/$p" ] || ln -s "$GITHUB_WORKSPACE/node_modules/$p" "node_modules/$p"
+          done
+          ls -la node_modules/assemblyscript/bin/asc node_modules/@graphprotocol/graph-ts/global/global.ts
       - run: yarn test
 
   substreams:
