@@ -64,6 +64,16 @@ export interface SolanaRuntime extends SolanaRail {
    * healthy after the revocation attack.
    */
   reissueMandate(): Promise<{ create: string; permission: string; approve: string; tokenPermission: string }>;
+  /**
+   * Alice signs a malicious delegation on her own token account: the phishing event itself, staged
+   * on chain so the monitor detects a real drainer approval and not a fixture. The delegate is a key
+   * nobody holds, so nothing can actually move; it replaces the mandate PDA until `restoreDelegate`.
+   */
+  stageDrainerApproval(delegate: string, amount?: bigint): Promise<string>;
+  /** Alice re-approves the mandate PDA as delegate, undoing the staged phishing. */
+  restoreDelegate(amount?: bigint): Promise<string>;
+  /** Alice widens or narrows which SPL Token instructions the mandate permits (remove, then re-add). */
+  setTokenInstructions(tags: number[]): Promise<{ removed: string; added: string }>;
 }
 
 export interface Runtime {
@@ -171,6 +181,18 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
       const approveSig = await approve(connection, ownerKeypair, ownerTokenAccount, pda, ownerKeypair, 100 * USDC_UNIT);
       const tokenPermission = await ownerMethods.addPermission(SPL_TOKEN_PROGRAM_ID, [transferSlot], 1, new anchor.BN(2 * USDC_UNIT), new anchor.BN(1 * USDC_UNIT)).accountsStrict({ mandate: pda, owner: ownerKeypair.publicKey }).rpc();
       return { create, permission, approve: approveSig, tokenPermission };
+    },
+    async stageDrainerApproval(delegate, amount = BigInt(100 * USDC_UNIT)) {
+      return approve(connection, ownerKeypair, ownerTokenAccount, new PublicKey(delegate), ownerKeypair, amount);
+    },
+    async restoreDelegate(amount = BigInt(100 * USDC_UNIT)) {
+      return approve(connection, ownerKeypair, ownerTokenAccount, pda, ownerKeypair, amount);
+    },
+    async setTokenInstructions(tags) {
+      const slots = tags.map((t) => Array.from(Buffer.alloc(8).fill(0).map((_, i) => (i === 0 ? t : 0))));
+      const removed = await ownerMethods.removePermission(SPL_TOKEN_PROGRAM_ID).accountsStrict({ mandate: pda, owner: ownerKeypair.publicKey }).rpc();
+      const added = await ownerMethods.addPermission(SPL_TOKEN_PROGRAM_ID, slots, 1, new anchor.BN(2 * USDC_UNIT), new anchor.BN(1 * USDC_UNIT)).accountsStrict({ mandate: pda, owner: ownerKeypair.publicKey }).rpc();
+      return { removed, added };
     },
   };
   const mandates: Partial<Record<string, MandateRef>> = { [CHAINS.SOLANA_DEVNET]: { chain: CHAINS.SOLANA_DEVNET, id: solana.mandate } };
