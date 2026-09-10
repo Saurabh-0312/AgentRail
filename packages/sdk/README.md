@@ -86,3 +86,34 @@ The only address in the package is ENS's own UniversalResolver.
 
 `yarn test`: every tail satisfies the same contract; every refusal reason on every tail is thrown
 before a transaction is built, a payment is signed, or a paid request is sent.
+
+## The instruction gate, mirrored (Phase 5)
+
+`verify` is the novel half of the program (SPEC §8.1.1): it answers *which instruction*, not *how
+much*. The SDK mirrors it the way it already mirrored `execute_payment`:
+
+- `solanaLocalVerifyGate(state, now, agent, sibling, declaredAmount)` — the same order as
+  `verify.rs`: live → agent → program → discriminator → caps. A forbidden instruction never leaves
+  the process; the chain runs the same checks again, atomically
+- `discriminatorAllowed` compares only the permission's width (1 / 4 / 8), like `checks.rs`;
+  `splTokenAmount` parses the amount out of `[tag, u64 LE, …]` like `verify.rs`
+- `buildVerifiedInstruction(mandate, sibling, declaredAmount)` — `[verify(1, declared), sibling]`
+  in one transaction, signed by the agent and the fee payer
+- `land(signed)` — submits and **reports** the chain's verdict (`{ signature, failed, errorCode,
+  errorName }`) instead of throwing, so a refusal is recorded with its signature. `send` is `land`
+  plus a throw
+- `SPL_TOKEN_TAG`: the 1-byte discriminators a mandate can list
+
+`readMandate` now also returns each permission's `discriminators` and `discriminatorSize`, and the
+EVM ABI carries `getDestinations`.
+
+## Who uses the SDK
+
+| Consumer | How |
+|---|---|
+| [`agent/`](../../agent) | the reference agent: `discoverService`, `assertAllowed`, the adapters, the verify mirror |
+| [`web/`](../../web) | the dashboard's route handlers: `sepoliaEnsReader`, `discoverService`, `parseAllowed`, the ABI, the Anchor client (read-only) |
+| [`packages/mcp-server`](../mcp-server) | four read-only MCP tools over the same functions, so any agent can ask "what am I allowed to do?" |
+
+Deep imports are allowed (`@agentrail/sdk/src/ens.ts`, `…/evm/clients.ts`, `…/solana/anchorClient.ts`)
+so a consumer can take the light piece it needs without the chain SDKs behind the rest.

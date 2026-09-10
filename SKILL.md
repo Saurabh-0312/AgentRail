@@ -97,6 +97,31 @@ yarn workspace @agentrail/agent attack          # the three injections
 Each run writes a structured transcript to `agent/out/<run>.md` and `.json`: every tool call, every
 decision, every refusal, and every chain verdict with its explorer link.
 
+### The dashboard
+
+**Live: https://agentrail-delta.vercel.app** (no wallet or key needed to read it)
+
+```bash
+yarn workspace @agentrail/web dev        # http://localhost:3000
+yarn workspace @agentrail/web test
+```
+
+Paste any ENS name. `/agent/<name>` shows identity, permissions and live caps; `/activity` is the
+feed with every refusal loud and filterable; `/services` is the ENS-resolved directory; `/attack`
+is the walkthrough of the poisoned run with the four reverted signatures. Every key is server-side;
+`yarn workspace @agentrail/web check:bundle` proves none reached the browser.
+
+### The MCP server (for any other agent)
+
+```bash
+yarn workspace @agentrail/mcp-server test    # tool contracts + a real client over stdio
+yarn workspace @agentrail/mcp-server start   # stdio server
+```
+
+Four read-only tools: `get_mandate`, `check_permission`, `list_services`, `get_history`. The config
+block to paste into Claude Desktop, Claude Code or Cursor is in
+[`packages/mcp-server/README.md`](packages/mcp-server/README.md). It never signs.
+
 ### The demos from earlier phases
 
 ```bash
@@ -186,6 +211,7 @@ published as an ENS name, enforced across three chains under one mandate.
 | Subgraphs | `…/120234/agentrail/v0.1.0` (Sepolia) · `…/120234/agentrail-base/v0.1.0` (Base Sepolia) |
 | Substreams | [agentrail-mandates](https://substreams.dev/packages/agentrail-mandates/v0.1.0) · [agentrail-token-activity](https://substreams.dev/packages/agentrail-token-activity/v0.1.0) |
 | Live x402 service | https://agentrail-data-feed.onrender.com (free tier: wake it before a demo) |
+| Live dashboard | https://agentrail-delta.vercel.app |
 | HCS audit topic | `0.0.10440940` |
 
 License: MIT.
