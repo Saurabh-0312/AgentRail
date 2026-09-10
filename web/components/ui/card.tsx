@@ -2,10 +2,38 @@ import type { HTMLAttributes } from "react";
 
 import { cn } from "@/lib/cn";
 
-/** A white surface with a thin border; `accent` adds the chain-coloured top rule of the flow diagram. */
-export function Card({ className, accent, ...props }: HTMLAttributes<HTMLDivElement> & { accent?: "ens" | "graph" | "hedera" | "solana" | "allowed" | "blocked" | "warn" | "agent" }) {
-  const top = accent ? { ens: "border-t-ens", graph: "border-t-graph", hedera: "border-t-hedera", solana: "border-t-solana", allowed: "border-t-allowed", blocked: "border-t-blocked", warn: "border-t-warn", agent: "border-t-agent" }[accent] : "";
-  return <div className={cn("rounded-lg border border-border bg-surface", accent && "border-t-4", top, className)} {...props} />;
+export type Accent = "ens" | "graph" | "hedera" | "solana" | "allowed" | "blocked" | "warn" | "agent";
+
+const LEFT: Record<Accent, string> = {
+  ens: "border-l-ens",
+  graph: "border-l-graph",
+  hedera: "border-l-hedera",
+  solana: "border-l-solana",
+  allowed: "border-l-allowed",
+  blocked: "border-l-blocked",
+  warn: "border-l-warn",
+  agent: "border-l-agent",
+};
+
+/**
+ * A raised surface: one elevation level above the page wash, two for things that float (menus,
+ * the header). `accent` is a coloured left rule, the only way a chain or a state colours a card;
+ * never the whole card.
+ */
+export function Card({ className, accent, elevation = 1, interactive = false, ...props }: HTMLAttributes<HTMLDivElement> & { accent?: Accent; elevation?: 1 | 2; interactive?: boolean }) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border border-border bg-surface shadow-1",
+        elevation === 2 && "bg-surface-2 shadow-2",
+        accent && "border-l-4",
+        accent && LEFT[accent],
+        interactive && "transition-[box-shadow,border-color,transform] duration-200 hover:border-border-strong hover:shadow-2",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

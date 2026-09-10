@@ -38,11 +38,11 @@ export function ActivityFeed({ rows, initialMode = "all" }: { rows: FeedRow[]; i
             onClick={() => setMode(m.key)}
             className={cn(
               "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm tnum",
-              mode === m.key ? (m.key === "blocked" ? "border-blocked bg-blocked text-white" : "border-ink bg-ink text-white") : "border-border bg-surface text-ink hover:bg-muted-soft",
+              mode === m.key ? (m.key === "blocked" ? "border-blocked bg-blocked text-ink-inverse" : "border-ink bg-ink text-ink-inverse") : "border-border bg-surface text-ink hover:bg-muted-soft",
             )}
           >
             {m.label}
-            <span className={cn("rounded px-1.5 text-xs", mode === m.key ? "bg-white/20" : m.key === "blocked" ? "bg-blocked-soft text-blocked" : "bg-muted-soft text-muted")}>{counts[m.key]}</span>
+            <span className={cn("rounded px-1.5 text-xs", mode === m.key ? "bg-ink-inverse/20" : m.key === "blocked" ? "bg-blocked-soft text-blocked" : "bg-muted-soft text-muted")}>{counts[m.key]}</span>
           </button>
         ))}
       </div>

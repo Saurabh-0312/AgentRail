@@ -4,13 +4,59 @@
  * Design tokens: the palette of agentrail-flow.png, and the one source of truth for colour in the
  * app. Components use the Tailwind names below (bg-surface, text-blocked, border-hedera, ...);
  * no component carries a hex value of its own. Colour means state or chain, never decoration.
+ *
+ * Two themes, both defined here. Dark is the default (this is infrastructure, it reads better
+ * dark): a pure black page with neutral dark-grey cards raised above it; light is one toggle away,
+ * a soft slate wash with white cards. Three elevation levels in both: the page (background), cards
+ * (surface, shadow-1), and raised elements such as the header and menus (surface-2, shadow-2).
+ * Sunken areas (table heads, inset panels, inputs) sit slightly below a card.
  */
 :root {
-  --background: #f8fafc;
+  color-scheme: dark;
+
+  --background: #000000;
+  --surface: #121212;
+  --surface-2: #1b1b1b;
+  --surface-sunken: #0a0a0a;
+  --border: #262626;
+  --border-strong: #3d3d3d;
+  --ink: #ededed;
+  --ink-inverse: #000000;
+  --muted: #9a9a9a;
+
+  --ens: #60a5fa;
+  --graph: #c084fc;
+  --hedera: #34d399;
+  --solana: #00c896;
+  --solana-accent: #00c896;
+  --agent: #f5a34a;
+
+  --allowed: #4ade80;
+  --blocked: #f87171;
+  --warn: #fbbf24;
+
+  --allowed-soft: rgba(74, 222, 128, 0.12);
+  --blocked-soft: rgba(248, 113, 113, 0.16);
+  --warn-soft: rgba(251, 191, 36, 0.12);
+  --muted-soft: rgba(255, 255, 255, 0.07);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --glow-blocked: rgba(248, 113, 113, 0.45);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --background: #eef2f7;
   --surface: #ffffff;
-  --border: #e2e8f0;
+  --surface-2: #ffffff;
+  --surface-sunken: #f3f6fa;
+  --border: #dde4ee;
+  --border-strong: #c5cfdd;
   --ink: #0f172a;
-  --muted: #64748b;
+  --ink-inverse: #ffffff;
+  --muted: #5b6b82;
 
   --ens: #2563eb;
   --graph: #9333ea;
@@ -27,13 +73,21 @@
   --blocked-soft: #fef2f2;
   --warn-soft: #fffbeb;
   --muted-soft: #f1f5f9;
+
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-2: 0 8px 24px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --glow-blocked: rgba(220, 38, 38, 0.35);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-sunken: var(--surface-sunken);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-ink: var(--ink);
+  --color-ink-inverse: var(--ink-inverse);
   --color-muted: var(--muted);
 
   --color-ens: var(--ens);
@@ -51,12 +105,15 @@
   --color-warn-soft: var(--warn-soft);
   --color-muted-soft: var(--muted-soft);
 
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 html {
-  color-scheme: light;
+  background: var(--background);
 }
 
 body {
@@ -65,6 +122,11 @@ body {
   font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--ens) 35%, transparent);
 }
 
 /* Every number in the app lines up in columns. */
@@ -78,8 +140,112 @@ body {
   font-size: 0.8125rem;
 }
 
-/* Wide content scrolls inside its own box; the page never scrolls sideways. */
-.scroll-x {
-  overflow-x: auto;
-  max-width: 100%;
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: 0.3rem;
+  padding: 0.05rem 0.3rem;
+}
+
+/*
+ * Wide content scrolls inside its own box; the page never scrolls sideways. Layered as a
+ * component so a responsive utility (xl:overflow-visible) can still open the box.
+ */
+@layer components {
+  .scroll-x {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
+
+/* Elevation. */
+.shadow-1 {
+  box-shadow: var(--shadow-1);
+}
+.shadow-2 {
+  box-shadow: var(--shadow-2);
+}
+
+/* Every interactive element changes colour smoothly; nothing snaps. */
+a,
+button,
+input,
+select,
+[role="tab"] {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+/*
+ * Motion with meaning. Each animation runs once on first paint, none loops except the health
+ * pulse, and all of it is off when the user asks (see the media query at the end). Everything is
+ * CSS so that content is visible before any script loads.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* A section rises into place once; the stagger is its animation-delay, set inline per section. */
+.reveal {
+  animation: rise 180ms ease-out both;
+}
+
+/* A spend bar grows to its value instead of appearing full. */
+@keyframes grow-x {
+  from {
+    width: 0;
+  }
+}
+.grow-bar {
+  animation: grow-x 600ms ease-out 120ms both;
+}
+
+/*
+ * A blocked row announces itself once: a red flush that settles into the resting red tint. No
+ * fill mode, so the class background takes over when it ends; a table row cannot carry a shadow
+ * with collapsed borders, so the cue is the background itself.
+ */
+@keyframes blocked-cue {
+  0% {
+    background-color: color-mix(in oklab, var(--blocked) 45%, var(--surface));
+  }
+  100% {
+    background-color: var(--blocked-soft);
+  }
+}
+[data-verdict="blocked"] {
+  animation: blocked-cue 1.6s ease-out 1;
+}
+
+/* A healthy live dot breathes; a dead one does not. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in oklab, currentColor 0%, transparent);
+  }
+}
+.dot-live {
+  animation: pulse-ring 2.2s ease-out infinite;
+}
+
+/* Nothing moves for a reader who asked for no motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
