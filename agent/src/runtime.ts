@@ -256,7 +256,9 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
   }
   const exploreFn = async (question: string): Promise<ExploreResult> => {
     if (!mcp || !provider) throw new Error("the MCP is not connected in this runtime");
-    return explore(question, mcp, provider.api, provider.model, 8, provider.toolResultChars);
+    // The discovery pass often needs several searches and a schema read before it can answer, so the
+    // step budget has to leave room for the answer itself; at 8 it spends them all on tool calls.
+    return explore(question, mcp, provider.api, provider.model, 12, provider.toolResultChars);
   };
 
   // ---- the fixed query --------------------------------------------------------------------------

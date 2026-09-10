@@ -68,7 +68,7 @@ export interface MonitorReport {
 const iso = (t: number) => new Date(t * 1000).toISOString();
 
 export function discoveryQuestion(wallet: string, chain: string): string {
-  return `Which DeFi protocols does the wallet ${wallet.toLowerCase()} (${chain}) currently hold positions in: lending (Aave v2/v3, Compound, Spark, Morpho), DEX liquidity (Uniswap v2/v3, Curve, Balancer), staking (Lido, Rocket Pool) or others? Search published subgraphs and query each candidate for this exact account id (lower-case). Check at least two different protocol families before answering. Answer ONLY with JSON of this shape: {"protocols":[{"name":"Aave V3","kind":"lending|dex|staking|other","chain":"${chain}","subgraphId":"<id you queried>","evidence":"one line: what the query returned"}]}. Use an empty list when nothing was found, and add "tried":["<subgraph ids>"] listing what you checked.`;
+  return `Which DeFi protocols does the wallet ${wallet.toLowerCase()} (${chain}) currently hold positions in: lending (Aave, Compound, Spark, Morpho), DEX liquidity (Uniswap, Curve, Balancer), staking (Lido, Rocket Pool) or others? Search published subgraphs and query each candidate for this exact account id (lower-case). Search by BROAD protocol family name ("aave", "uniswap", "compound"), never a specific version like "Aave V3": older versions hold most positions and a version-specific search misses them. Check at least two different protocol families before answering. Answer ONLY with JSON of this shape: {"protocols":[{"name":"Aave V3","kind":"lending|dex|staking|other","chain":"${chain}","subgraphId":"<id you queried>","evidence":"one line: what the query returned"}]}. Use an empty list when nothing was found, and add "tried":["<subgraph ids>"] listing what you checked.`;
 }
 
 export function positionsQuestion(wallet: string, p: DiscoveredProtocol): string {
@@ -130,7 +130,9 @@ export async function runMonitor(cfg: MonitorConfig): Promise<MonitorReport> {
   let purchase: PaymentOutcome | undefined;
   let prices: Record<string, number> | undefined;
   if (cfg.feedService) {
-    const symbols = cfg.priceSymbols ?? ["ETH", "BTC", "SOL", "HBAR"];
+    // The feed meters per symbol, so the basket has to fit the mandate's per-transaction cap:
+    // rail.allowed permits 30000 on Hedera and the feed charges 10000 each, so three is the ceiling.
+    const symbols = cfg.priceSymbols ?? ["ETH", "SOL", "HBAR"];
     purchase = await tools.requestPayment({ service: cfg.feedService, symbols, reason: "USD valuation for the risk verdict" });
     if (purchase.status === "paid" && Array.isArray(purchase.data)) {
       prices = Object.fromEntries((purchase.data as { symbol: string; price: number }[]).filter((q) => q && typeof q.price === "number").map((q) => [q.symbol.toUpperCase(), q.price]));
