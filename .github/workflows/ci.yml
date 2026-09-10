@@ -32,3 +32,35 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn workspace @agentrail/data-feed test
       - run: yarn workspace @agentrail/sdk test
+      - run: yarn workspace @agentrail/query test
+
+  subgraph:
+    name: matchstick
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: indexer/subgraph
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+        working-directory: .
+      - run: yarn codegen
+      - run: yarn build
+      - run: yarn test
+
+  substreams:
+    name: substreams decoder
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: indexer/substreams
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test
+      - run: cargo test
+        working-directory: indexer/substreams-token-activity
