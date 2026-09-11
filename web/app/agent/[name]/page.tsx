@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ActivateAgent, type BudgetLine } from "@/components/activate-agent";
 import { Addr } from "@/components/addr";
 import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
@@ -16,6 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { getMandatePayload, solanaLifecycle, type MandatePayload } from "@/lib/agent-data";
 import { CHAINS, ENS_APP_URL, type ChainKey } from "@/lib/chains";
+import { requiredAllowance } from "@/lib/delegation";
 import { cn } from "@/lib/cn";
 import { PUBLIC } from "@/lib/env";
 import { isoDate } from "@/lib/format";
@@ -30,12 +32,13 @@ export const dynamic = "force-dynamic";
 /** The chains a mandate is enforced on; Sepolia holds the name, not a spend gate. */
 const LIVE_CHAINS = ["solana", "hedera", "base"] as const;
 
-function Section({ title, hint, tone, id, children }: { title: string; hint?: string; tone?: "blocked"; id?: string; children: React.ReactNode }) {
+function Section({ title, hint, tone, id, children }: { title: string; hint?: string; tone?: "blocked" | "agent"; id?: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3 scroll-mt-20" id={id}>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h2 className={cn("inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide", tone === "blocked" ? "text-blocked" : "text-muted")}>
+        <h2 className={cn("inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide", tone === "blocked" ? "text-blocked" : tone === "agent" ? "text-agent" : "text-muted")}>
           {tone === "blocked" && <i className="inline-block size-2 rounded-full bg-blocked" aria-hidden />}
+          {tone === "agent" && <i className="inline-block size-2 rounded-full bg-agent" aria-hidden />}
           {title}
         </h2>
         {hint && <span className="text-xs text-muted">{hint}</span>}
@@ -202,7 +205,14 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
   const lifecycle = payload.ensNode ? solanaLifecycle(payload.ensNode) : [];
   const revokes = lifecycle.filter((l) => l.kind === "revoke_mandate");
   const overall = [live.solana, live.hedera, live.base].filter(Boolean).map((m) => statusOf(m));
-  const erc = r["rail.erc8004"]?.split(":"); // eip155:11155111:0x8004…:10190
+  const erc = r["rail.erc8004"]?.split(":");
+  /** What each chain's caps still permit, before the run spends any of it. */
+  const budget: BudgetLine[] = LIVE_CHAINS.flatMap((c) => {
+    const m = live[c];
+    if (!m) return [];
+    const perTx = m.permissions.map((p) => p.perTx).filter((x) => x !== "0").sort((a, b) => Number(a) - Number(b))[0] ?? null;
+    return [{ chain: c, active: statusOf(m) === "active", remaining: m.exists ? requiredAllowance(m.permissions) : "0", perTx }];
+  }); // eip155:11155111:0x8004…:10190
   const owner = ensMandate?.owner ?? PUBLIC.owner;
 
   return (
@@ -272,6 +282,13 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
             </CardContent>
           </Card>
         </div>
+      </Reveal>
+
+      {/* 1b. run it: one click, one monitor pass, streamed live; not owner-gated, spends the owner's budget */}
+      <Reveal index={1}>
+        <Section id="run" title="Run it" tone="agent" hint="one click, one monitor pass, every step live; anyone may press it, the owner's budget pays">
+          <ActivateAgent name={payload.name} wallet={PUBLIC.aliceWallet} feedService={PUBLIC.serviceNames.find((n) => n.startsWith("feed.")) ?? PUBLIC.serviceNames[0]} budget={budget} />
+        </Section>
       </Reveal>
 
       {/* 2. the kill switch, before the detail: instant revocation is the claim */}

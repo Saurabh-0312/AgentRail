@@ -70,6 +70,28 @@ Server environment (Vercel project settings, or the repo `.env` locally): `GRAPH
 Vercel, root directory `web`, framework Next.js, Node 22. The workspace packages are TypeScript
 sources compiled by Next (`transpilePackages`), so the whole repo is needed at build time.
 
+## Activate Agent
+
+One click on `/agent/<name>` runs one monitor pass on the server and streams every step to the
+page as it happens (Server-Sent Events from `app/api/agent/run/route.ts`): reading its own mandate,
+the discovery pass over published subgraphs, the drills, buying price data through the mandate,
+the three rules, the verdict. The route calls `runMonitor` and nothing else; there is no path to
+the attack or defend stages and no mode parameter. The runtime is the agent-only one
+(`agent/src/runtime-agent.ts`): the agent's keys from the server environment, the mandates the
+owner already issued, Solana read-only, so a click can never make the owner sign.
+
+The button is not owner-gated, because a judge must be able to press it, so the remaining budget
+per chain is shown first and the copy says whose USDC it spends. One run at a time globally, a
+short cooldown per client. A refusal renders red with its code and the run continues; when the
+mandate's caps are the reason, the page says so: the agent asked, the gate said no, no money
+moved. `maxDuration` is set to the plan maximum; if the connection ends before the run does, the
+entries already delivered stay on screen with an "ended early" note.
+
+Server variables for it (Vercel, in addition to the seven above): `GEMINI_API_KEY` or
+`GROQ_API_KEY`, `HEDERA_ACCOUNT_ID`, `HEDERA_PRIVATE_KEY` (the agent's x402 payer), optionally
+`AGENT_EVM_PRIVATE_KEY` for Base, `ALICE_WALLET` (the watched wallet, public). Never the deployer
+key.
+
 ## Owner actions
 
 `REVOKE`, `Delegate funds` and create-agent sit directly under the identity header and need the
