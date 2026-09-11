@@ -117,14 +117,20 @@ export async function readSolanaMandate(pda: string, agent: string | null): Prom
       delegation = undefined;
     }
     if (!state) return { ...base, delegation };
+    const permissions = state.permissions.map((p) => ({ target: p.key, perTx: p.perTxLimit.toString(), total: p.spendLimit.toString(), spent: p.spendTotal.toString(), callCount: null, instructions: p.discriminators ?? [] }));
+    // the SPL delegation is Solana's allowance: what the PDA may move from the owner's account
+    const funding: Funding | undefined = delegation
+      ? { token: PUBLIC.devnetUsdc, symbol: "USDC", decimals: 6, allowance: delegation.delegateIsMandate ? delegation.delegatedAmount : "0", balance: delegation.balance, required: requiredAllowance(permissions) }
+      : undefined;
     return {
       ...base,
       exists: true,
       active: state.active,
       expiry: Number(state.expiry),
       agent: state.agent,
-      permissions: state.permissions.map((p) => ({ target: p.key, perTx: p.perTxLimit.toString(), total: p.spendLimit.toString(), spent: p.spendTotal.toString(), callCount: null, instructions: p.discriminators ?? [] })),
+      permissions,
       delegation,
+      funding,
     };
   } catch (e) {
     return { ...base, error: e instanceof Error ? e.message : String(e) };
