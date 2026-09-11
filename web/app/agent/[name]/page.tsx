@@ -5,6 +5,7 @@ import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
 import { CountUp } from "@/components/count-up";
 import { Countdown } from "@/components/countdown";
+import { FundingPanel } from "@/components/funding";
 import { Reveal } from "@/components/motion";
 import { OwnerActions } from "@/components/owner-actions";
 import { ServiceCard } from "@/components/service-card";
@@ -128,6 +129,7 @@ function PermissionCard({ chain, m }: { chain: ChainKey; m: (LiveMandate & { del
           );
         })}
         {chain === "solana" && m.delegation && <DelegationRow d={m.delegation} />}
+        {chain !== "solana" && m.exists && <FundingPanel chain={chain} funding={m.funding} active={m.active} error={m.fundingError} />}
         <p className="text-[11px] text-muted">read {isoDate(Math.floor(Date.parse(m.readAt) / 1000))}</p>
       </CardContent>
     </Card>
@@ -147,7 +149,7 @@ function DelegationRow({ d }: { d: SolanaDelegation }) {
         {d.delegate ? <Addr value={d.delegate} href={CHAINS.solana.address(d.delegate)} /> : <span>none</span>}
         {d.delegate && (d.delegateIsMandate ? <Badge variant="allowed">the mandate PDA</Badge> : <Badge variant="blocked">NOT the mandate</Badge>)}
       </div>
-      <p className="text-xs text-muted">The tokens never leave this account. The mandate PDA is its SPL delegate, and only the program can make the PDA sign.</p>
+      <p className="text-xs text-muted">Tokens stay here; only the program can make the PDA sign.</p>
     </div>
   );
 }
@@ -279,8 +281,8 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
             owner={owner}
             agentName={payload.name}
             mandates={{
-              ...(live.hedera && live.hedera.exists ? { hedera: { id: live.hedera.id, active: live.hedera.active, agent: live.hedera.agent } } : {}),
-              ...(live.base && live.base.exists ? { base: { id: live.base.id, active: live.base.active, agent: live.base.agent } } : {}),
+              ...(live.hedera && live.hedera.exists ? { hedera: { id: live.hedera.id, active: live.hedera.active, agent: live.hedera.agent, funding: live.hedera.funding } } : {}),
+              ...(live.base && live.base.exists ? { base: { id: live.base.id, active: live.base.active, agent: live.base.agent, funding: live.base.funding } } : {}),
             }}
           />
         </Section>

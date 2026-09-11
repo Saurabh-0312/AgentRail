@@ -11,11 +11,13 @@ import { hederaTestnet } from "@agentrail/sdk/src/evm/clients.ts";
 import { createAnchorGateClient } from "@agentrail/sdk/src/solana/anchorClient.ts";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import { createPublicClient, http, type Address, type Hex } from "viem";
+import { createPublicClient, erc20Abi, http, type Address, type Hex } from "viem";
 import { baseSepolia } from "viem/chains";
 
 import { CHAINS, type ChainKey } from "./chains";
+import { requiredAllowance, type Funding } from "./delegation";
 import { PUBLIC, serverEnv } from "./env";
+import { tokenFor } from "./tokens";
 
 export interface LivePermission {
   target: string;
@@ -41,6 +43,9 @@ export interface LiveMandate {
   readAt: string;
   explorer: string;
   error?: string;
+  /** EVM only: the owner's allowance to the contract in the chain's token, next to what the caps need. */
+  funding?: Funding;
+  fundingError?: string;
 }
 
 export interface SolanaDelegation {
@@ -67,7 +72,23 @@ export async function readEvmMandate(chain: "hedera" | "base", agent: Address): 
       const p = await client.readContract({ address: contract, abi: EVM_MANDATE_ABI, functionName: "getPermission", args: [id, d] });
       if (p.exists) permissions.push({ target: d, perTx: p.perTxLimit.toString(), total: p.spendLimit.toString(), spent: p.spendTotal.toString(), callCount: Number(p.callCount), instructions: [] });
     }
-    return { ...base, id, exists, active: exists && active, expiry: Number(expiry), owner: exists ? owner : null, agent: exists ? mandateAgent : agent, permissions };
+    // executePayment pulls with transferFrom, so the allowance the owner granted the contract is
+    // what the mandate can actually pay; read it next to the caps so an unfunded mandate is visible
+    let funding: Funding | undefined;
+    let fundingError: string | undefined;
+    const token = tokenFor(chain);
+    if (exists && token) {
+      try {
+        const [allowance, balance] = await Promise.all([
+          client.readContract({ address: token.address, abi: erc20Abi, functionName: "allowance", args: [owner, contract] }),
+          client.readContract({ address: token.address, abi: erc20Abi, functionName: "balanceOf", args: [owner] }),
+        ]);
+        funding = { token: token.address, symbol: token.asset.symbol, decimals: token.asset.decimals, allowance: allowance.toString(), balance: balance.toString(), required: requiredAllowance(permissions) };
+      } catch (e) {
+        fundingError = e instanceof Error ? e.message.split("\n")[0].slice(0, 160) : String(e);
+      }
+    }
+    return { ...base, id, exists, active: exists && active, expiry: Number(expiry), owner: exists ? owner : null, agent: exists ? mandateAgent : agent, permissions, funding, fundingError };
   } catch (e) {
     return { ...base, error: e instanceof Error ? e.message : String(e) };
   }
