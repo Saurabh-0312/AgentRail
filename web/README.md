@@ -72,7 +72,18 @@ sources compiled by Next (`transpilePackages`), so the whole repo is needed at b
 
 ## Owner actions
 
-`REVOKE` and create-agent sit directly under the identity header and need the owner's wallet
-(wagmi, injected connector, Hedera testnet and Base Sepolia). A visitor sees both, reads what they
-do, and cannot press them; the gate is the connected address matching the owner. The wallet signs;
-the app never holds a key.
+`REVOKE`, `Delegate funds` and create-agent sit directly under the identity header and need the
+owner's wallet (wagmi, injected connector, Hedera testnet and Base Sepolia). A visitor sees them
+all, reads what they do, and cannot press them; the gate is the connected address matching the
+owner. The wallet signs; the app never holds a key.
+
+Create agent is three signatures: `createMandate`, `addPermission`, then the token's
+`approve(EvmMandate, amount)`. The third is the non-custodial mechanism itself: `executePayment`
+pulls with `transferFrom`, so a mandate without an allowance looks active and cannot pay. The token
+defaults per chain from `lib/units.ts` (USDC on Base Sepolia, HTS USDC `0.0.429274` on Hedera as
+its long-zero address) and can be overridden; the amount pre-fills from the lifetime cap; the
+current allowance is read first and the step is skipped when it already covers the cap. Every EVM
+mandate on the agent page shows its allowance next to what its caps still permit, and an
+under-funded one is flagged with a button that opens the delegate card. The allowance is per owner
+and per contract, shared by every mandate that owner issued on the chain. Solana's delegation
+(`spl-token approve` on the owner's token account) is still set from the owner's CLI.
