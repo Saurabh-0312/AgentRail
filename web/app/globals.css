@@ -249,3 +249,19 @@ select,
     scroll-behavior: auto !important;
   }
 }
+
+/* A row the Refresh button just brought in: a green flush that settles, once. */
+@keyframes row-new {
+  0% {
+    background-color: color-mix(in oklab, var(--allowed) 35%, var(--surface));
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+[data-new="1"] {
+  animation: row-new 2.4s ease-out 1;
+}
+[data-new="1"][data-verdict="blocked"] {
+  animation: blocked-cue 2.4s ease-out 1;
+}
