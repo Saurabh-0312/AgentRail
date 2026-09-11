@@ -9,6 +9,9 @@ import { CHAINS, chainFromCaip, errorName, errorReason } from "../lib/chains";
 import { classify, looksLikeName, normalizeName, payeeInEndpoint } from "../lib/ens";
 import { amountFor, headroom, truncate, untilExpiry, usdc } from "../lib/format";
 
+// the live Solana tail reads the public RPC; the route test must not touch the network
+vi.mock("../lib/solana-live", () => ({ solanaTail: async () => ({ fromSlot: 496178133, throughSlot: 496178133, fetchedAt: "2026-09-12T00:00:00.000Z", signatures: 0, rows: [], error: "not read in tests" }) }));
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const NODE = "0x320d329cfd5eb36600e8a276ddaa5dd31e6ff7aad7637c8dfb3504725076d4ae";
 const SHOP = "6rz86HueaUgA7ejoBTEKvR4JB9ef6LbGwXwN3DKmjZ3a";
@@ -69,7 +72,9 @@ describe("the shared-schema history on the server", () => {
     // newest first, across chains
     expect(out.feed.map((r) => [r.chain, r.txHash])).toEqual([["base", "0xtx"], ["solana", "sigB"], ["solana", "sigA"]]);
     expect(out.summary).toEqual({ actions: 3, allowed: 2, blocked: 1, chains: 3, blockedByCode: { "6007": 1 } });
-    expect(out.solana).toEqual({ syncedAt: "2026-09-10T14:01:11.356Z", endpoint: "devnet.sol.streamingfast.io:443", nextBlock: 496178133, rowCount: 3 });
+    expect(out.solana).toMatchObject({ syncedAt: "2026-09-10T14:01:11.356Z", endpoint: "devnet.sol.streamingfast.io:443", nextBlock: 496178133, rowCount: 3 });
+    // an injected snapshot means no live tail was read; the payload says so instead of pretending
+    expect(out.solana.tail).toMatchObject({ rows: 0, error: "live tail not read" });
   });
 
   it("serves the shape through the route handler and refuses a malformed node", async () => {
@@ -133,6 +138,10 @@ describe("explorer links and error codes", () => {
     expect(errorName(3007)).toBe("AccountOwnedByWrongProgram");
     expect(errorReason(6007)).toMatch(/per-transaction/);
     expect(errorName(null)).toBeNull();
+    // a code below 6000 is the token program's, reached through execute_payment's CPI
+    expect(errorName(4)).toBe("OwnerMismatch (SPL Token 4)");
+    expect(errorReason(4)).toMatch(/not this account.s delegate/);
+    expect(errorName(99)).toBe("error 99");
   });
 });
 

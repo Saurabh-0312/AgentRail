@@ -81,7 +81,7 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
                 {payload.sources.map((s) => (
                   <span key={s.chain}>
                     <span className="font-medium text-ink">{s.chain}</span> {s.error ? <span className="text-blocked">error: {s.error.slice(0, 80)}</span> : `${s.actions} action${s.actions === 1 ? "" : "s"}`}
-                    {s.chain === "solana" ? ` · snapshot of the Substreams stream, synced ${isoDate(Math.floor(Date.parse(payload.solana.syncedAt) / 1000))}, next block ${payload.solana.nextBlock}` : " · live from Subgraph Studio"}
+                    {s.chain === "solana" ? ` · history from the Substreams snapshot to slot ${payload.solana.nextBlock - 1}, plus a live RPC tail (${payload.solana.tail.rows} row${payload.solana.tail.rows === 1 ? "" : "s"}${payload.solana.tail.error ? ", unavailable right now" : ` through slot ${payload.solana.tail.throughSlot}`})` : " · live from Subgraph Studio"}
                   </span>
                 ))}
               </CardContent>
@@ -89,7 +89,7 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
           </Reveal>
 
           <Reveal index={2}>
-            <ActivityFeed rows={payload.feed} initialMode={initialMode} dense sticky />
+            <ActivityFeed rows={payload.feed} initialMode={initialMode} live={{ ensNode, historySyncedAt: payload.solana.syncedAt, historyThroughSlot: payload.solana.nextBlock - 1, tail: { throughSlot: payload.solana.tail.throughSlot, fetchedAt: payload.solana.tail.fetchedAt, error: payload.solana.tail.error, stale: payload.solana.tail.stale, loading: payload.solana.tail.loading } }} dense sticky />
           </Reveal>
         </>
       )}

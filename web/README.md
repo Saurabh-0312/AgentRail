@@ -38,7 +38,15 @@ red once. All of it is off under `prefers-reduced-motion`.
 |---|---|
 | ENS records, live mandates, status | route handlers under `app/api/`, reading the chains with server-side RPC URLs |
 | Sepolia + Base history | the two Subgraph Studio endpoints, queried server-side with `GRAPH_API_KEY` |
-| Solana history | `data/solana-activity.json`, a **committed snapshot** of the Substreams stream; its `syncedAt` is shown in the UI |
+| Solana history | `data/solana-activity.json`, a **committed snapshot** of the Substreams stream for deep history, plus a **live RPC tail** (`lib/solana-tail.ts`) of everything the program did since the snapshot's slot, decoded to the same row shape, failed transactions kept; both timestamps are shown and Refresh refetches the tail only |
+
+The tail reads `getSignaturesForAddress` + `getTransaction` from `SOLANA_RPC_URL` (no binary, no
+key) and mirrors the Substreams decoder (`indexer/substreams/src/decode.rs`) for the recent window:
+6006/6016 → NOT_PERMITTED, 6007/6008 → OVER_BUDGET, 6001 → EXPIRED, 6000 → REVOKED. The public
+devnet endpoint refuses batched reads and rate-limits singles, so the reader spaces its calls,
+caches the last good read per instance, extends it incrementally, and degrades to history-only
+with an honest message when the RPC is down. A keyed RPC (Helius, QuickNode) makes a cold read a
+few seconds instead of a minute.
 
 The snapshot exists because a deployed app cannot read the reader's local sink (`indexer/query/out`,
 gitignored). Refresh it after `yarn sink:solana`:
