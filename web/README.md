@@ -70,6 +70,26 @@ Server environment (Vercel project settings, or the repo `.env` locally): `GRAPH
 Vercel, root directory `web`, framework Next.js, Node 22. The workspace packages are TypeScript
 sources compiled by Next (`transpilePackages`), so the whole repo is needed at build time.
 
+## Create agent on Solana
+
+The Solana form is its own component (`components/solana-create.tsx`), because the permission
+model is a different shape: the EVM gates on destination and amount, Solana on program, which
+instructions, discriminator width and amount. The owner connects a Solana wallet (Phantom or any
+Wallet Standard wallet; a separate connection from the EVM one) and composes permissions of two
+kinds: a payee (`execute_payment` to a token account, with caps) or a program (`verify`: pick the
+instructions from the catalogue in `packages/sdk/src/solana/catalogue.ts`, dangerous ones flagged,
+or paste a program id, a width and raw discriminators under Advanced). The form derives and shows
+the mandate PDA and the ENS namehash before anything is signed, refuses more than 16 permissions or
+8 discriminators per program, and shows the human value beside every base-unit cap.
+
+Three kinds of transaction, shown as steps with linked signatures: `create_mandate`,
+`add_permission` once per entry, then `spl-token approve` from the owner's token account to the PDA
+for the lifetime caps (skipped when the PDA is already the delegate for enough). Program errors
+(`6002 PermissionsFull`, `6004 DuplicatePermission`, `6011`, `6012`, `6013`) are named on the step.
+The mandate is read back from the chain and shown with its allowed instructions and, next to them,
+the known instructions it does not allow. The SPL delegation is Solana's allowance, so the same
+"not funded" panel serves all three chains.
+
 ## Activate Agent
 
 One click on `/agent/<name>` runs one monitor pass on the server and streams every step to the

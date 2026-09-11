@@ -9,6 +9,7 @@ import { Countdown } from "@/components/countdown";
 import { FundingPanel } from "@/components/funding";
 import { Reveal } from "@/components/motion";
 import { OwnerActions } from "@/components/owner-actions";
+import { SolanaCreate } from "@/components/solana-create";
 import { ServiceCard } from "@/components/service-card";
 import { SpendBar } from "@/components/spend-bar";
 import { StatusPill, statusOf } from "@/components/status-pill";
@@ -25,6 +26,7 @@ import { history, type HistoryPayload } from "@/lib/history";
 import type { LiveMandate, SolanaDelegation } from "@/lib/mandate-live";
 import { getService } from "@/lib/services";
 import { SPL_TOKEN_PROGRAM, describeInstruction, hederaAccountFromLongZero } from "@/lib/spl";
+import { notPermitted } from "@agentrail/sdk/src/solana/catalogue.ts";
 import { chainKeyFromCaip } from "@/lib/units";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +102,12 @@ function PermissionCard({ chain, m }: { chain: ChainKey; m: (LiveMandate & { del
                   <>
                     <Badge variant="solana">verify</Badge>
                     <span>SPL Token program, instructions:</span>
-                    {p.instructions.length ? p.instructions.map((i) => <Badge key={i} variant="neutral">{describeInstruction(i)}</Badge>) : <Badge variant="blocked">none</Badge>}
+                    {p.instructions.length ? p.instructions.map((i) => <Badge key={i} variant="allowed">{describeInstruction(i)}</Badge>) : <Badge variant="blocked">none</Badge>}
+                    {notPermitted(p.target, p.instructions, 1).length > 0 && (
+                      <span className="inline-flex flex-wrap items-center gap-1 text-xs text-muted" data-testid="not-permitted">
+                        · not allowed: {notPermitted(p.target, p.instructions, 1).map((i) => <Badge key={i.name} variant="blocked">{i.name} ({i.tag})</Badge>)}
+                      </span>
+                    )}
                   </>
                 ) : (
                   <>
@@ -132,7 +139,7 @@ function PermissionCard({ chain, m }: { chain: ChainKey; m: (LiveMandate & { del
           );
         })}
         {chain === "solana" && m.delegation && <DelegationRow d={m.delegation} />}
-        {chain !== "solana" && m.exists && <FundingPanel chain={chain} funding={m.funding} active={m.active} error={m.fundingError} />}
+        {m.exists && <FundingPanel chain={chain} funding={m.funding} active={m.active} error={m.fundingError} delegateHref={chain === "solana" ? "#solana-delegate" : "#delegate"} />}
         <p className="text-[11px] text-muted">read {isoDate(Math.floor(Date.parse(m.readAt) / 1000))}</p>
       </CardContent>
     </Card>
@@ -302,6 +309,7 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
               ...(live.base && live.base.exists ? { base: { id: live.base.id, active: live.base.active, agent: live.base.agent, funding: live.base.funding } } : {}),
             }}
           />
+          <SolanaCreate owner={PUBLIC.solanaOwner} defaultEnsName={payload.name} mint={PUBLIC.devnetUsdc} existing={live.solana && live.solana.exists ? { pda: live.solana.id, active: live.solana.active, funding: live.solana.funding } : undefined} />
         </Section>
       </Reveal>
 
