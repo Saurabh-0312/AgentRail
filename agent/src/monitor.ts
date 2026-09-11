@@ -41,6 +41,12 @@ export interface MonitorConfig {
   /** Alice's Solana wallet, the owner of the delegated account. */
   ownerWallet?: string;
   windowSec?: number;
+  /**
+   * Run the positions, approvals and outflow drills concurrently. Each is an independent explore
+   * loop of a minute or more; a browser-triggered run on a serverless function has a hard ceiling
+   * and the log keeps every entry in order either way. Off by default: the CLI stays sequential.
+   */
+  parallelDrills?: boolean;
 }
 
 export interface Drill {
@@ -107,24 +113,34 @@ export async function runMonitor(cfg: MonitorConfig): Promise<MonitorReport> {
   // 3. drills follow the discovery: positions for each lending protocol, then approvals and outflows
   const data: RiskData = { wallet: cfg.wallet, approvals: [], transfers: [], balances: [], positions: [] };
   const lending = protocols.filter((p) => p.kind === "lending").slice(0, cfg.maxLendingDrills ?? 2);
-  for (const p of lending) {
-    const a = await tools.querySubgraph(positionsQuestion(cfg.wallet, p));
-    const positions = parsePositions(a.answer, `mcp:${p.subgraphId ?? p.name}`);
-    data.positions.push(...positions);
-    drills.push({ name: `positions:${p.name}`, question: a.question, answer: a.answer, parsed: positions.length });
-  }
-  const ap = await tools.querySubgraph(approvalsQuestion(cfg.wallet, chain, t0, windowSec));
-  const approvals = parseApprovals(ap.answer, cfg.wallet, chain, "mcp:approvals");
-  data.approvals.push(...approvals.approvals);
-  drills.push({ name: "approvals", question: ap.question, answer: ap.answer, parsed: approvals.approvals.length, tried: approvals.tried });
-  if (approvals.approvals.length === 0) notes.push(`Approvals: none found in the window${approvals.tried.length ? ` (subgraphs tried: ${approvals.tried.join(", ")})` : ""}.`);
-
-  const tr = await tools.querySubgraph(transfersQuestion(cfg.wallet, chain, t0, windowSec));
-  const transfers = parseTransfers(tr.answer, cfg.wallet, chain, "mcp:transfers");
-  data.transfers.push(...transfers.transfers);
-  data.balances.push(...transfers.balances);
-  drills.push({ name: "transfers", question: tr.question, answer: tr.answer, parsed: transfers.transfers.length + transfers.balances.length, tried: transfers.tried });
-  if (transfers.transfers.length === 0) notes.push(`Outflows: none found in the window${transfers.tried.length ? ` (subgraphs tried: ${transfers.tried.join(", ")})` : ""}.`);
+  const positionsDrill = async () => {
+    const out: Drill[] = [];
+    for (const p of lending) {
+      const a = await tools.querySubgraph(positionsQuestion(cfg.wallet, p));
+      const positions = parsePositions(a.answer, `mcp:${p.subgraphId ?? p.name}`);
+      data.positions.push(...positions);
+      out.push({ name: `positions:${p.name}`, question: a.question, answer: a.answer, parsed: positions.length });
+    }
+    return out;
+  };
+  const approvalsDrill = async () => {
+    const ap = await tools.querySubgraph(approvalsQuestion(cfg.wallet, chain, t0, windowSec));
+    const approvals = parseApprovals(ap.answer, cfg.wallet, chain, "mcp:approvals");
+    data.approvals.push(...approvals.approvals);
+    if (approvals.approvals.length === 0) notes.push(`Approvals: none found in the window${approvals.tried.length ? ` (subgraphs tried: ${approvals.tried.join(", ")})` : ""}.`);
+    return [{ name: "approvals", question: ap.question, answer: ap.answer, parsed: approvals.approvals.length, tried: approvals.tried }];
+  };
+  const transfersDrill = async () => {
+    const tr = await tools.querySubgraph(transfersQuestion(cfg.wallet, chain, t0, windowSec));
+    const transfers = parseTransfers(tr.answer, cfg.wallet, chain, "mcp:transfers");
+    data.transfers.push(...transfers.transfers);
+    data.balances.push(...transfers.balances);
+    if (transfers.transfers.length === 0) notes.push(`Outflows: none found in the window${transfers.tried.length ? ` (subgraphs tried: ${transfers.tried.join(", ")})` : ""}.`);
+    return [{ name: "transfers", question: tr.question, answer: tr.answer, parsed: transfers.transfers.length + transfers.balances.length, tried: transfers.tried }];
+  };
+  // the three drills are independent; the order of the report is fixed either way
+  const drillResults = cfg.parallelDrills ? await Promise.all([positionsDrill(), approvalsDrill(), transfersDrill()]) : [await positionsDrill(), await approvalsDrill(), await transfersDrill()];
+  for (const d of drillResults) drills.push(...d);
 
   // 4. prices, bought through the mandate from the discovered feed
   let purchase: PaymentOutcome | undefined;
