@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { SiteNav } from "@/components/site-nav";
 import { THEME_INIT_SCRIPT, ThemeToggle } from "@/components/theme-toggle";
 import { WalletProvider } from "@/components/wallet/provider";
+import { SolanaWalletProvider } from "@/components/wallet/solana-provider";
 
 import "./globals.css";
 
@@ -48,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
         <main className="mx-auto w-full max-w-6xl px-4 py-8 flex-1">
-          <WalletProvider>{children}</WalletProvider>
+          <WalletProvider><SolanaWalletProvider>{children}</SolanaWalletProvider></WalletProvider>
         </main>
         <footer className="border-t border-border bg-surface/60">
           <div className="mx-auto max-w-6xl px-4 py-4 text-xs text-muted flex flex-wrap gap-x-5 gap-y-2 items-center">

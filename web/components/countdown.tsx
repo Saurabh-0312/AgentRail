@@ -12,5 +12,5 @@ export function Countdown({ expiry }: { expiry: number }) {
     return () => clearInterval(t);
   }, []);
   const e = untilExpiry(expiry, now);
-  return <span className={e.expired ? "text-blocked" : "text-ink"}>{e.text}</span>;
+  return <span className={e.expired ? "text-blocked" : "text-ink"} suppressHydrationWarning>{e.text}</span>;
 }
