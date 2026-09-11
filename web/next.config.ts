@@ -23,9 +23,9 @@ loadRootEnv();
 
 const nextConfig: NextConfig = {
   // The workspace packages are shipped as TypeScript sources; Next compiles them like app code.
-  transpilePackages: ["@agentrail/query", "@agentrail/sdk"],
+  transpilePackages: ["@agentrail/query", "@agentrail/sdk", "@agentrail/agent"],
   // Chain SDKs stay as ordinary Node requires on the server instead of being bundled.
-  serverExternalPackages: ["@coral-xyz/anchor", "@solana/web3.js", "@solana/spl-token", "@x402/hedera", "@x402/evm", "@hiero-ledger/sdk", "viem"],
+  serverExternalPackages: ["@coral-xyz/anchor", "@solana/web3.js", "@solana/spl-token", "@x402/hedera", "@x402/evm", "@hiero-ledger/sdk", "@modelcontextprotocol/sdk", "viem"],
   typescript: { ignoreBuildErrors: false },
   // Next 16 writes AGENTS.md / CLAUDE.md into the app on first run; nothing generated belongs in this repo.
   agentRules: false,

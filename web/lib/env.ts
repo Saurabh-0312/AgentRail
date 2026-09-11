@@ -39,4 +39,6 @@ export const PUBLIC = {
   devnetUsdc: process.env.DEVNET_USDC_MINT || "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   hcsTopic: process.env.HCS_AUDIT_TOPIC_ID || "0.0.10440940",
   feedUrl: process.env.FEED_PUBLIC_URL || "https://agentrail-data-feed.onrender.com",
+  /** The wallet the monitor watches by default: Alice's EVM mainnet address (a public address). */
+  aliceWallet: process.env.ALICE_WALLET || "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
 };
