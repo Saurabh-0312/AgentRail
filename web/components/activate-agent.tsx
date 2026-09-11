@@ -59,6 +59,8 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
   const scroller = useRef<HTMLDivElement | null>(null);
   const stick = useRef(true);
   const downloadUrl = useRef<string | null>(null);
+  /** Entries received so far, readable from inside the stream loop without a stale closure. */
+  const received = useRef(0);
 
   useEffect(() => () => abort.current?.abort(), []);
 
@@ -79,6 +81,7 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
     const ac = new AbortController();
     abort.current = ac;
     setEntries([]);
+    received.current = 0;
     setSummary(null);
     setError(null);
     setRails([]);
@@ -111,7 +114,10 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
           } catch {
             continue;
           }
-          if (f.event === "entry") setEntries((es) => [...es, data as LiveEntry]);
+          if (f.event === "entry") {
+            received.current += 1;
+            setEntries((es) => [...es, data as LiveEntry]);
+          }
           else if (f.event === "ready") setRails((data as { rails: { chain: string; state: string; detail: string }[] }).rails ?? []);
           else if (f.event === "done") {
             setSummary(data as RunSummary);
@@ -127,7 +133,8 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
       if (!finished) setStatus("ended-early");
     } catch (e) {
       if (ac.signal.aborted) return;
-      if (!finished) setStatus(entries.length ? "ended-early" : "failed");
+      // a connection that dies mid-run is "ended early" when anything arrived: what arrived is real and stays
+      if (!finished) setStatus(received.current > 0 ? "ended-early" : "failed");
       if (!finished) setError(e instanceof Error ? e.message : String(e));
     }
   };
@@ -147,7 +154,7 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
       <CardHeader className="flex flex-wrap items-center gap-2">
         <CardTitle>Activate Agent</CardTitle>
         <CardDescription className="basis-full">
-          One click runs one monitor pass for <span className="mono">{name}</span> and streams every step as it happens. It buys price data from <span className="mono">{feedService}</span> through the mandate, so it spends the owner&apos;s real testnet USDC; a refusal by the gate is the system working, not a failure.
+          One monitor pass, streamed live. Spends the owner&apos;s testnet USDC via <span className="mono">{feedService}</span>.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
