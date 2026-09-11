@@ -44,6 +44,18 @@ export function FundingPanel({ chain, funding, active, delegateHref = "#delegate
           <div className="font-medium text-sm"><Amount chain={asset.chain} units={funding.balance} secondary="below" /></div>
         </div>
       </div>
+      {short && (
+        <div className="space-y-1.5" data-testid="funding-warning">
+          <p className="font-semibold text-blocked">
+            {status.state === "unfunded" ? "Not funded" : "Under-funded"} — this mandate cannot pull funds from the owner&apos;s wallet.
+            {status.state === "under-funded" && (<> It is short by <Amount chain={asset.chain} units={status.shortfall} secondary="tooltip" />.</>)}
+          </p>
+          <p className="text-xs text-muted">{DELEGATION_COPY}</p>
+          <a href={delegateHref} className="inline-flex h-8 items-center rounded-md bg-blocked px-3 text-xs font-semibold text-ink-inverse shadow-1 hover:bg-blocked/90 hover:shadow-2">
+            Delegate funds
+          </a>
+        </div>
+      )}
       {!short && status.state === "funded" && <p className="text-xs text-muted">{DELEGATION_COPY}</p>}
     </div>
   );
