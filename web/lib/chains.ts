@@ -106,5 +106,17 @@ export const ERROR_REASONS: Record<number, string> = {
   3012: "the mandate account was never initialised",
 };
 
-export const errorName = (code: number | null | undefined) => (code ? (ERROR_NAMES[code] ?? `error ${code}`) : null);
-export const errorReason = (code: number | null | undefined) => (code ? (ERROR_REASONS[code] ?? "refused by the program") : null);
+/**
+ * Codes below 6000 on a Solana row are not the mandate's: they come from the program the gate called
+ * into (SPL Token, through `execute_payment`'s CPI) and mean the transfer itself failed after the gate
+ * passed, or would have. The ones a mandate can plausibly hit are named; the rest show their number.
+ */
+export const SPL_TOKEN_ERROR_NAMES: Record<number, string> = { 0: "NotRentExempt", 1: "InsufficientFunds", 2: "InvalidMint", 3: "MintMismatch", 4: "OwnerMismatch", 6: "AlreadyInUse", 10: "InvalidState", 12: "Overflow", 17: "AccountFrozen", 19: "InvalidInstruction" };
+export const SPL_TOKEN_ERROR_REASONS: Record<number, string> = {
+  1: "the owner's token account holds less than the amount",
+  4: "the token program refused: the mandate PDA is not this account's delegate (a later approve replaced it)",
+  17: "the token account is frozen",
+};
+
+export const errorName = (code: number | null | undefined) => (code === null || code === undefined ? null : (ERROR_NAMES[code] ?? (code < 6000 && SPL_TOKEN_ERROR_NAMES[code] ? `${SPL_TOKEN_ERROR_NAMES[code]} (SPL Token ${code})` : `error ${code}`)));
+export const errorReason = (code: number | null | undefined) => (code === null || code === undefined ? null : (ERROR_REASONS[code] ?? SPL_TOKEN_ERROR_REASONS[code] ?? "refused by the program"));
