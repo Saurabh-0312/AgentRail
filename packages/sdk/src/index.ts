@@ -25,3 +25,4 @@ export { fetchQuote, payAndFetch, encodePaymentHeader } from "./x402.ts";
 export { directQuote, type DirectQuoteInput } from "./quote.ts";
 export * from "./discovery.ts";
 export * from "./allowlist.ts";
+export { PROGRAM_CATALOGUE, SYSTEM_PROGRAM, ANCHOR_DISCRIMINATOR_WIDTH, catalogueProgram, discriminatorBytes, discriminatorSlot, describeDiscriminator, notPermitted, toHex, type CatalogueInstruction, type CatalogueProgram, type DiscriminatorWidth } from "./solana/catalogue.ts";
