@@ -145,7 +145,8 @@ describe("discoverService and querySubgraph", () => {
   it("answers questions through the MCP loop and never through the fixed query", async () => {
     const { tools, explore, history, log } = setup();
     const a = await tools.querySubgraph("Which protocols does 0xalice hold positions in?");
-    expect(explore).toHaveBeenCalledWith("Which protocols does 0xalice hold positions in?");
+    // the question, plus the hook that lets a live log see each MCP step as it completes
+    expect(explore).toHaveBeenCalledWith("Which protocols does 0xalice hold positions in?", expect.objectContaining({ onStep: expect.any(Function) }));
     expect(history).not.toHaveBeenCalled();
     expect(a.answer).toContain("Aave V2");
     expect(log.entries.map((e) => e.title)).toEqual(["querySubgraph", "  mcp:search_subgraphs_by_keyword", "querySubgraph answer (fake)"]);

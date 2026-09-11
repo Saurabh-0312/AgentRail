@@ -36,7 +36,7 @@ import {
 import { AuthorityType, createApproveInstruction, createCloseAccountInstruction, createRevokeInstruction, createSetAuthorityInstruction } from "@solana/spl-token";
 import { PublicKey, type TransactionInstruction } from "@solana/web3.js";
 
-import type { ExploreResult } from "./explore.ts";
+import type { ExploreResult, ExploreStep } from "./explore.ts";
 import type { RunLog } from "./transcript.ts";
 
 export const solanaExplorer = (sig: string) => `https://explorer.solana.com/tx/${sig}?cluster=devnet`;
@@ -187,7 +187,7 @@ export interface ToolsConfig {
   ensNode: string;
   readText: EnsTextReader;
   /** The model-driven MCP loop (explore.ts). Third-party subgraphs only. */
-  explore: (question: string) => Promise<ExploreResult>;
+  explore: (question: string, hooks?: { onStep?: (step: ExploreStep) => void }) => Promise<ExploreResult>;
   /** The fixed query (fetchHistory bound to its endpoints). */
   history: (ensNode: string) => Promise<HistoryResult>;
   registry: AdapterRegistry;
@@ -280,8 +280,14 @@ export function createTools(cfg: ToolsConfig): AgentTools {
 
   async function querySubgraph(question: string): Promise<SubgraphAnswer> {
     log.add("tool", "querySubgraph", { question });
-    const r = await cfg.explore(question);
-    for (const s of r.steps) log.add("tool", `  mcp:${s.tool}`, { input: s.input, output: s.output.replace(/\s+/g, " ").slice(0, 400) });
+    // each MCP step is logged the moment it completes; a runtime that does not stream steps still gets them all afterwards
+    let logged = 0;
+    const logStep = (s: ExploreStep) => {
+      logged++;
+      log.add("tool", `  mcp:${s.tool}`, { input: s.input, output: s.output.replace(/\s+/g, " ").slice(0, 400) });
+    };
+    const r = await cfg.explore(question, { onStep: logStep });
+    for (const s of r.steps.slice(logged)) logStep(s);
     log.add("model", `querySubgraph answer (${r.model})`, { answer: r.answer.slice(0, 1200) });
     return { question, answer: r.answer, model: r.model, steps: r.steps.map((s) => ({ tool: s.tool, input: s.input, output: s.output.slice(0, 2000) })) };
   }

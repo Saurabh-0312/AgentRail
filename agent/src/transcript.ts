@@ -24,6 +24,11 @@ export class RunLog {
   readonly entries: Entry[] = [];
   /** Print each entry as it is added. */
   echo: boolean;
+  /**
+   * Called with each entry the moment it is added: the live stream hooks here (GAP 3). A listener
+   * that throws never reaches the run; the entry is already recorded.
+   */
+  onEntry?: (entry: Entry) => void;
 
   constructor(id?: string, echo = true) {
     this.id = id ?? new Date().toISOString().replace(/[:.]/g, "-").replace("T", "_").slice(0, 19);
@@ -33,6 +38,13 @@ export class RunLog {
   add(kind: EntryKind, title: string, data?: Record<string, unknown>): Entry {
     const entry: Entry = { seq: this.entries.length + 1, at: new Date().toISOString(), kind, title, data };
     this.entries.push(entry);
+    if (this.onEntry) {
+      try {
+        this.onEntry(entry);
+      } catch {
+        /* the stream is a spectator; the run does not depend on it */
+      }
+    }
     if (this.echo) {
       const detail = data ? " " + JSON.stringify(data, jsonSafe).slice(0, 320) : "";
       console.log(`  [${String(entry.seq).padStart(3)}] ${kind.padEnd(8)} ${title}${detail}`);

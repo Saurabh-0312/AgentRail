@@ -269,7 +269,8 @@ const RANKING_TOOLS = ["get_top_subgraph_deployments", "get_deployment_30day_que
  * (Groq's free tier caps one call at 8k tokens) blows its budget on the tool list alone before the
  * question is even read. So a small budget gets the three core tools with trimmed descriptions.
  */
-export async function explore(question: string, mcp: SubgraphMcp, messages: MessagesApi, model: string, maxSteps = 8, toolResultChars = 60_000): Promise<ExploreResult> {
+/** `onStep` fires the moment a tool step completes, so a live log can show the loop thinking instead of a burst at the end. */
+export async function explore(question: string, mcp: SubgraphMcp, messages: MessagesApi, model: string, maxSteps = 8, toolResultChars = 60_000, onStep?: (step: ExploreStep) => void): Promise<ExploreResult> {
   const history: { role: "user" | "assistant"; content: unknown }[] = [{ role: "user", content: question }];
   const steps: ExploreStep[] = [];
   const compact = toolResultChars <= 8_000;
@@ -286,7 +287,9 @@ export async function explore(question: string, mcp: SubgraphMcp, messages: Mess
     const results: ToolResult[] = [];
     for (const u of uses) {
       const output = await mcp.call(u.name, u.input);
-      steps.push({ tool: u.name, input: u.input, output });
+      const step: ExploreStep = { tool: u.name, input: u.input, output };
+      steps.push(step);
+      onStep?.(step);
       results.push({ type: "tool_result", tool_use_id: u.id, content: output.slice(0, toolResultChars) });
     }
     history.push({ role: "user", content: results });

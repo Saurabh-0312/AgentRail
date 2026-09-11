@@ -32,7 +32,7 @@ import { ExactHederaScheme } from "@x402/hedera/exact/client";
 import type { Address, Hex } from "viem";
 
 import { hcsAlert } from "./alert.ts";
-import { explore, messagesFromEnv, type ExploreResult, type Provider } from "./explore.ts";
+import { explore, messagesFromEnv, type Provider } from "./explore.ts";
 import { connectSubgraphMcp, type SubgraphMcp } from "./mcp.ts";
 import type { AlertFn } from "./response.ts";
 import { createTools, type AgentTools, type SolanaRail, type ToolsConfig } from "./tools.ts";
@@ -138,10 +138,11 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
   const ownerTokenAccount = getAssociatedTokenAddressSync(usdc, ownerKeypair.publicKey);
   const [pda] = PublicKey.findProgramAddressSync([Buffer.from("mandate"), ownerKeypair.publicKey.toBuffer(), agentKeypair.publicKey.toBuffer()], programId);
   if (self["rail.agent.solana"] && self["rail.agent.solana"] !== agentKeypair.publicKey.toBase58()) throw new Error(`agent keypair ${agentKeypair.publicKey.toBase58()} is not rail.agent.solana ${self["rail.agent.solana"]}`);
-  const solanaClient = createAnchorGateClient({ connection, agent: agentKeypair, feePayer: ownerKeypair, ownerTokenAccount });
+  // Anchor pins its own copy of @solana/web3.js, so TypeScript sees two declarations of the same classes
+  const solanaClient = createAnchorGateClient({ connection: connection as never, agent: agentKeypair as never, feePayer: ownerKeypair as never, ownerTokenAccount });
 
   // Owner-signed program handle, for the revoke/reissue the attack demo needs (Alice acts, not the agent).
-  const ownerProgram = new anchor.Program(idl as anchor.Idl, new anchor.AnchorProvider(connection, new anchor.Wallet(ownerKeypair), { commitment: "confirmed" }));
+  const ownerProgram = new anchor.Program(idl as anchor.Idl, new anchor.AnchorProvider(connection as never, new anchor.Wallet(ownerKeypair as never), { commitment: "confirmed" }));
   const ownerMethods = ownerProgram.methods as any;
   const USDC_UNIT = 1_000_000;
   const shopKeypair = loadKeypair(path.join(ROOT, "scripts/keys/shop-keypair.json"));
@@ -254,11 +255,11 @@ export async function createRuntime(opts: RuntimeOptions = {}): Promise<Runtime>
     provider = messagesFromEnv();
     log.add("note", `subgraph-mcp connected: ${mcp.tools.length} tools; model ${provider.model}`);
   }
-  const exploreFn = async (question: string): Promise<ExploreResult> => {
+  const exploreFn: ToolsConfig["explore"] = async (question, hooks) => {
     if (!mcp || !provider) throw new Error("the MCP is not connected in this runtime");
     // The discovery pass often needs several searches and a schema read before it can answer, so the
     // step budget has to leave room for the answer itself; at 8 it spends them all on tool calls.
-    return explore(question, mcp, provider.api, provider.model, 12, provider.toolResultChars);
+    return explore(question, mcp, provider.api, provider.model, 12, provider.toolResultChars, hooks?.onStep);
   };
 
   // ---- the fixed query --------------------------------------------------------------------------
