@@ -120,7 +120,7 @@ export function OwnerControls({
       <Card accent="blocked">
         <CardHeader>
           <CardTitle>Revoke</CardTitle>
-          <CardDescription>Kills the mandate on this chain instantly.</CardDescription>
+          <CardDescription>Kills the mandate on this chain instantly: <code>revokeMandate</code>.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           {(["hedera", "base"] as EvmChain[]).map((chain) => {
