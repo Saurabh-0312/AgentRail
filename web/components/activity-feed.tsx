@@ -88,7 +88,7 @@ export function ActivityFeed({
             const ts = Number(r.timestamp);
             const blocked = !r.allowed;
             return (
-              <TR key={r.id} data-verdict={blocked ? "blocked" : "allowed"} className={cn(blocked && "border-l-4 border-l-blocked bg-blocked-soft/50 hover:bg-blocked-soft/70")}>
+              <TR key={r.id} data-verdict={blocked ? "blocked" : "allowed"} className={cn(blocked && "border-l-4 border-l-blocked bg-[linear-gradient(90deg,var(--blocked-soft)_0%,transparent_45%)] hover:bg-[linear-gradient(90deg,var(--blocked-soft)_0%,transparent_70%)]")}>
                 <TD className="whitespace-nowrap tnum">
                   <div>{timeAgo(ts)}</div>
                   <div className="text-[11px] text-muted">{isoDate(ts)}</div>
@@ -100,7 +100,7 @@ export function ActivityFeed({
                 <TD>
                   {blocked ? (
                     <div className="space-y-0.5">
-                      <Badge variant="blocked" className="font-semibold">{`BLOCKED${r.errorCode ? ` ${r.errorCode}` : ""}`}</Badge>
+                      <Badge variant="blocked-solid" className="font-semibold tracking-wide">{`BLOCKED${r.errorCode ? ` ${r.errorCode}` : ""}`}</Badge>
                       <div className="text-xs text-blocked">
                         {errorName(r.errorCode) ?? r.blockReason ?? "refused"}
                         {errorReason(r.errorCode) ? <span className="text-muted"> · {errorReason(r.errorCode)}</span> : null}

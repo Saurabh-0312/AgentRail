@@ -13,9 +13,9 @@ import { PUBLIC } from "@/lib/env";
 export default function Home() {
   return (
     <div className="space-y-8">
-      <Reveal index={0} className="max-w-3xl space-y-3">
+      <Reveal index={0} className="mx-auto max-w-3xl space-y-3 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Instruction-level authorization for AI agents</p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">AgentRail</h1>
+        <h1 className="text-[2.75rem] font-semibold tracking-tight sm:text-[3.3rem]">AgentRail</h1>
         <p className="text-lg text-ink sm:text-xl">
           An AI agent&apos;s permissions, published as an ENS name and enforced on chain, so the agent cannot do what it was not authorized to do, even when it is tricked.
         </p>

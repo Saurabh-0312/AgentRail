@@ -47,22 +47,22 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
           <dd className="mono text-xs">{r["rail.scheme"]}</dd>
         </dl>
         <div className="mt-auto rounded-lg border border-border bg-surface-sunken/70 p-3 text-xs space-y-1">
-          <div className="text-muted">Resolved from ENS, not configured: the agent reads these five records and knows where to pay, on what chain, how much.</div>
+          <div className="text-muted">Five ENS records; nothing configured.</div>
           {s.payee && (
             <div>
-              This endpoint names its payee itself: <Addr value={s.payee} href={meta ? meta.address(s.payee) : undefined} />{" "}
+              Payee <Addr value={s.payee} href={meta ? meta.address(s.payee) : undefined} />{" "}
               {rogue ? (
                 <span className="text-blocked">
-                  which <Link className="underline" href={`/agent/${agentName}`}>{agentName}</Link>&apos;s allow-list does not permit — every purchase is refused <code>NotOnAllowList</code> before a request is sent. See it in the <Link className="underline" href="/activity?show=blocked">blocked feed</Link>.
+                  is not on <Link className="underline" href={`/agent/${agentName}`}>{agentName}</Link>&apos;s allow-list: refused <code>NotOnAllowList</code> before any request. <Link className="underline" href="/activity?show=blocked">Blocked feed</Link>.
                 </span>
               ) : (
-                <span className="text-allowed">which is on the allow-list.</span>
+                <span className="text-allowed">is on the allow-list.</span>
               )}
             </div>
           )}
           {!s.payee && (
             <div>
-              The payee arrives in the 402 challenge; {agentName} permits {s.allowedOnChain.length} payee{s.allowedOnChain.length === 1 ? "" : "s"} on {chainKey ? CHAINS[chainKey].short : r["rail.chain"]}
+              Payee comes in the 402; {agentName} permits {s.allowedOnChain.length} on {chainKey ? CHAINS[chainKey].short : r["rail.chain"]}
               {s.allowedOnChain.length > 0 && (
                 <>
                   : {s.allowedOnChain.map((a) => (
@@ -77,7 +77,7 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
                   ))}
                 </>
               )}
-              . Anything else is refused before a request is sent.
+              . Others refused before any request.
             </div>
           )}
         </div>

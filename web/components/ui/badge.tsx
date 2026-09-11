@@ -10,6 +10,7 @@ const badgeVariants = cva("inline-flex items-center rounded-md border px-2 py-0.
       neutral: "border-border bg-muted-soft text-ink",
       allowed: "border-allowed/30 bg-allowed-soft text-allowed",
       blocked: "border-blocked/40 bg-blocked-soft text-blocked",
+      "blocked-solid": "border-blocked bg-blocked text-ink-inverse shadow-[0_0_12px_var(--glow-blocked)]",
       warn: "border-warn/30 bg-warn-soft text-warn",
       ens: "border-ens/30 bg-ens/10 text-ens",
       graph: "border-graph/30 bg-graph/10 text-graph",
