@@ -306,7 +306,7 @@ export function AttackLive({ replay }: { replay: ReplayData }) {
           <div ref={scroller} onScroll={onScroll} className="max-h-[36rem] space-y-3 overflow-y-auto rounded-lg border border-border bg-surface-sunken/60 p-2" data-testid="attack-log">
             <section data-testid="replay-section">
               <div className="mb-1.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-muted">
-                <span aria-hidden>📼</span> recorded {replay.recordedAt} · {replay.model} · transcript <span className="mono normal-case">{replay.transcript}</span>
+                <span aria-hidden>📼</span> recorded {replay.recordedAt}
               </div>
               <RunLogView entries={played} status={phase === "replaying" ? "running" : "idle"} thesis={false} phase={phase === "replaying" ? "replaying the recorded transcript…" : null} />
             </section>

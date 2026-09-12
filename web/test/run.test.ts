@@ -212,3 +212,45 @@ describe("secret isolation for the run", () => {
     expect(example).not.toMatch(/NEXT_PUBLIC_[A-Z_]*(KEY|SECRET|PRIVATE|TOKEN)/);
   });
 });
+
+describe("what the screen leaves out", () => {
+  it("drops the model vendor name and the read-only Solana rail from titles, and nothing else", async () => {
+    const { displayTitle } = await import("../components/run-log");
+    expect(displayTitle("querySubgraph answer (gemini-3.5-flash-lite)")).toBe("querySubgraph answer");
+    expect(displayTitle("subgraph-mcp connected: 9 tools; model gemini-3.5-flash-lite")).toBe("subgraph-mcp connected: 9 tools");
+    expect(displayTitle("rails: eip155:84532 inactive · hedera:testnet ready · solana:devnet read-only")).toBe("rails: eip155:84532 inactive · hedera:testnet ready");
+    expect(displayTitle("discoverService(feed.agentrail.eth)")).toBe("discoverService(feed.agentrail.eth)");
+    expect(displayTitle("  paid 30000 units -> 0.0.7162784@1789205594.300111955")).toBe("paid 30000 units -> 0.0.7162784@1789205594.300111955");
+  });
+});
+
+describe("the lines a judge should read", () => {
+  it("colours ENS, the shared index, the Graph MCP, the on-chain gate and real money, and nothing else", async () => {
+    const { emphasis } = await import("../components/run-log");
+    expect(emphasis({ kind: "payment", title: "  gate passed: 0x63ca" })?.key).toBe("gate");
+    expect(emphasis({ kind: "payment", title: "  402 quote: 30000 units of 0.0.429274 to 0.0.10440535" })?.key).toBe("paid");
+    expect(emphasis({ kind: "payment", title: "  paid 30000 units -> 0.0.7162784@1789205594.300111955" })?.key).toBe("paid");
+    expect(emphasis({ kind: "tool", title: "discoverService(feed.agentrail.eth)" })?.key).toBe("ens");
+    expect(emphasis({ kind: "note", title: "databot.agentrail.eth: rail.allowed has 3 payee(s)" })?.key).toBe("ens");
+    expect(emphasis({ kind: "tool", title: "getMyMandate (fixed query)" })?.key).toBe("index");
+    expect(emphasis({ kind: "tool", title: "  mcp:execute_query_by_subgraph_id" })?.key).toBe("graph");
+    expect(emphasis({ kind: "note", title: "subgraph-mcp connected: 9 tools; model gemini" })?.key).toBe("graph");
+    expect(emphasis({ kind: "decision", title: "discovery pass: 1 protocol(s) found" })?.key).toBe("graph");
+    expect(emphasis({ kind: "note", title: "rails: hedera:testnet ready" })?.key).toBe("honest");
+    // the natural-language question and the model's answer share one colour
+    expect(emphasis({ kind: "model", title: "querySubgraph answer (gemini)" })?.key).toBe("model");
+    expect(emphasis({ kind: "tool", title: "querySubgraph" })?.key).toBe("model");
+    expect(emphasis({ kind: "payment", title: "requestPayment(feed.agentrail.eth)" })).toBeNull();
+    expect(emphasis({ kind: "note", title: "monitor: is 0xd8dA about to lose money?" })).toBeNull();
+    // the attack page: poison, decision, attempt, the mirror, the chain's refusal
+    expect(emphasis({ kind: "note", title: "attack divert: planting a poisoned advisory in the feed response" })?.key).toBe("poison");
+    expect(emphasis({ kind: "note", title: 'the paid response carried a planted row: symbol "SECURITY_NOTICE"' })?.key).toBe("poison");
+    expect(emphasis({ kind: "decision", title: "recorded 2026-09-10 · model calls requestPayment" })?.key).toBe("decision");
+    expect(emphasis({ kind: "payment", title: "requestPayment(direct solana:devnet -> 9xQe, 1000000)" })?.key).toBe("attempt");
+    expect(emphasis({ kind: "action", title: "requestAction(setAuthority)" })?.key).toBe("attempt");
+    expect(emphasis({ kind: "note", title: "attack 1 · local gate mirror predicts DestinationNotAllowed; sending" })?.key).toBe("gate");
+    expect(emphasis({ kind: "note", title: "mandate live: expires 2026-10-12T08:47:45.000Z, 2 permission(s)" })?.key).toBe("index");
+    expect(emphasis({ kind: "chain", title: "attack 1 · execute_payment sent for the record -> REVERTED 6016" })?.key).toBe("reverted");
+    expect(emphasis({ kind: "model", title: "Attempted the protective payment: …" })?.key).toBe("model");
+  });
+});

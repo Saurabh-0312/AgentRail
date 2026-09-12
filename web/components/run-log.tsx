@@ -33,6 +33,36 @@ export function isBudgetRefusal(e: LiveEntry): boolean {
   return /SpendLimitExceeded|PerTxLimitExceeded|Expired|NotActive|no mandate|no-mandate|OVER_BUDGET|evm-check|local-gate/i.test(text);
 }
 
+/**
+ * The lines a judge should read: where a value came from ENS or the shared index, where the model
+ * used the Graph MCP, where the on-chain mandate authorised a spend, and where money moved. Each
+ * gets a colour and a word; everything else stays quiet.
+ */
+export type Emphasis = { key: "ens" | "index" | "graph" | "gate" | "paid" | "honest" | "model" | "poison" | "decision" | "attempt" | "reverted"; label: string; variant: "ens" | "graph" | "hedera" | "allowed" | "neutral" | "agent" | "warn" | "blocked"; border: string };
+export function emphasis(e: Pick<LiveEntry, "kind" | "title">): Emphasis | null {
+  const t = e.title.trim();
+  if (e.kind === "payment" && /^gate passed/.test(t)) return { key: "gate", label: "mandate authorised on chain", variant: "hedera", border: "border-l-hedera" };
+  if (e.kind === "payment" && /^(402 quote|paid )/.test(t)) return { key: "paid", label: "real money", variant: "allowed", border: "border-l-allowed" };
+  if (e.kind === "tool" && /^discoverService\(/.test(t)) return { key: "ens", label: "from ENS", variant: "ens", border: "border-l-ens" };
+  if (e.kind === "note" && /rail\.allowed has/.test(t)) return { key: "ens", label: "from ENS", variant: "ens", border: "border-l-ens" };
+  if (e.kind === "tool" && /^getMyMandate/.test(t)) return { key: "index", label: "own mandate, shared index", variant: "ens", border: "border-l-ens" };
+  if (e.kind === "tool" && /^mcp:/.test(t)) return { key: "graph", label: "Graph MCP, live", variant: "graph", border: "border-l-graph" };
+  if (e.kind === "note" && /^subgraph-mcp connected/.test(t)) return { key: "graph", label: "Graph MCP, live", variant: "graph", border: "border-l-graph" };
+  if (e.kind === "decision" && /^discovery pass/.test(t)) return { key: "graph", label: "found by querying", variant: "graph", border: "border-l-graph" };
+  if (e.kind === "note" && /^rails:/.test(t)) return { key: "honest", label: "what this server can pay on", variant: "neutral", border: "border-l-border-strong" };
+  // the natural-language loop: a question put to the model in plain words, and its answer
+  if (e.kind === "tool" && /^querySubgraph$/.test(t)) return { key: "model", label: "question to the agent", variant: "agent", border: "border-l-agent" };
+  if (e.kind === "model") return { key: "model", label: "the agent's answer", variant: "agent", border: "border-l-agent" };
+  // the attack: poisoned data in, the agent's decision, the attempt, the mirror's prediction, the chain's refusal
+  if (e.kind === "note" && /planting a poisoned advisory|carried a planted row/.test(t)) return { key: "poison", label: "poisoned data", variant: "warn", border: "border-l-warn" };
+  if (e.kind === "decision" && /model calls /.test(t)) return { key: "decision", label: "the agent decides", variant: "agent", border: "border-l-agent" };
+  if ((e.kind === "payment" && /^requestPayment\(direct /.test(t)) || (e.kind === "action" && /^requestAction\(/.test(t))) return { key: "attempt", label: "the attempt", variant: "warn", border: "border-l-warn" };
+  if (e.kind === "note" && /local gate mirror predicts/.test(t)) return { key: "gate", label: "the mandate's gate", variant: "hedera", border: "border-l-hedera" };
+  if (e.kind === "note" && /^mandate live: expires/.test(t)) return { key: "index", label: "own mandate, read live", variant: "ens", border: "border-l-ens" };
+  if (e.kind === "chain" && /REVERTED/.test(t)) return { key: "reverted", label: "on chain, reverted", variant: "blocked", border: "border-l-blocked" };
+  return null;
+}
+
 /** What the agent is most likely doing after the last entry it emitted. */
 export function phaseAfter(last: LiveEntry | undefined, status: StreamStatus): string | null {
   if (status !== "running" && status !== "connecting") return null;
@@ -58,6 +88,15 @@ const explorerFor = (data: Record<string, unknown> | undefined): string | null =
   return typeof ex === "string" && ex.startsWith("http") ? ex : null;
 };
 
+/** Titles as shown: the model's vendor name and the read-only Solana rail are transcript detail, not for the screen. */
+export function displayTitle(title: string): string {
+  return title
+    .replace(/\s*\((?:gemini|groq|openai|gpt|llama|claude)[^)]*\)/gi, "")
+    .replace(/;\s*model\s+\S+/i, "")
+    .replace(/\s*·\s*solana:devnet read-only/i, "")
+    .trim();
+}
+
 const short = (v: unknown, n = 220): string => {
   const s = typeof v === "string" ? v : JSON.stringify(v);
   return s.length > n ? `${s.slice(0, n)}…` : s;
@@ -66,7 +105,9 @@ const short = (v: unknown, n = 220): string => {
 function Detail({ e }: { e: LiveEntry }) {
   const d = e.data;
   if (!d) return null;
-  if (e.kind === "model" && typeof d.answer === "string") return <div className="mono mt-0.5 text-[11px] text-muted whitespace-pre-wrap break-words">{short(d.answer, 400)}</div>;
+  // the two lines a judge must read whole: the poison that went in, and what the agent said it did
+  if (typeof d.advisory === "string") return <blockquote className="mt-1 rounded-md border-l-2 border-warn bg-warn-soft/50 px-3 py-2 text-xs leading-relaxed text-ink whitespace-pre-wrap break-words" data-testid="advisory-full">{d.advisory}</blockquote>;
+  if (e.kind === "model" && typeof d.answer === "string") return <div className="mono mt-1 text-[11px] leading-relaxed text-ink whitespace-pre-wrap break-words" data-testid="answer-full">{d.answer}</div>;
   if (e.kind === "tool" && typeof d.question === "string") return <div className="mt-0.5 text-[11px] text-muted">{short(d.question, 240)}</div>;
   if (e.kind === "tool" && typeof d.input !== "undefined") return <div className="mono mt-0.5 text-[11px] text-muted break-words">{short(d.input, 160)}</div>;
   if (e.kind === "refusal") {
@@ -104,7 +145,9 @@ export function RunLogView({ entries, status, summary, error, phase, thesis = tr
       <ol className="space-y-1 text-sm" data-testid="run-entries">
         {entries.map((e) => {
           const refusal = e.kind === "refusal";
-          const green = e.kind === "payment" || e.kind === "chain" || e.kind === "action";
+          const em = !refusal && e.kind !== "verdict" ? emphasis(e) : null;
+          // a reverted transaction or an attempt at the attacker is not a green row
+          const green = (e.kind === "payment" || e.kind === "chain" || e.kind === "action") && em?.key !== "reverted" && em?.key !== "attempt";
           const quiet = e.kind === "tool" || e.kind === "model" || e.kind === "note";
           return (
             <li
@@ -119,7 +162,10 @@ export function RunLogView({ entries, status, summary, error, phase, thesis = tr
                 e.kind === "alert" && "border-hedera/50 bg-hedera/10",
                 quiet && "border-border/60 bg-transparent text-muted",
                 !refusal && !green && !quiet && e.kind !== "verdict" && e.kind !== "alert" && "border-border bg-surface",
+                em && cn("border-l-4", em.border, quiet && "text-ink"),
+                em?.key === "reverted" && "border-blocked/40 bg-blocked-soft/40 text-ink",
               )}
+              data-emphasis={em?.key}
             >
               <div className="flex items-start gap-2">
                 <span className={cn("mono w-5 shrink-0 text-center text-xs", refusal ? "text-blocked" : green ? "text-allowed" : "text-muted")}>{ICON[e.kind]}</span>
@@ -128,8 +174,9 @@ export function RunLogView({ entries, status, summary, error, phase, thesis = tr
                   <div className="flex flex-wrap items-center gap-2">
                     {refusal && <Badge variant="blocked-solid" className="font-semibold">REFUSED</Badge>}
                     {e.kind === "verdict" && <Badge variant={/CRITICAL|HIGH/.test(e.title) ? "blocked-solid" : /MEDIUM/.test(e.title) ? "warn" : "allowed"}>verdict</Badge>}
-                    {green && <Badge variant="allowed">{e.kind}</Badge>}
-                    <span className={cn("break-words", refusal && "text-blocked")}>{e.title.trim()}</span>
+                    {green && !em && <Badge variant="allowed">{e.kind}</Badge>}
+                    {em && <Badge variant={em.variant}>{em.label}</Badge>}
+                    <span className={cn("break-words", refusal && "text-blocked")}>{displayTitle(e.title)}</span>
                   </div>
                   <Detail e={e} />
                 </div>

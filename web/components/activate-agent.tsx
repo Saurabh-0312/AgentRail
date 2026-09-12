@@ -179,7 +179,7 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
         </div>
         {rails.length > 0 && (
           <div className="flex flex-wrap gap-1.5 text-xs" data-testid="rails">
-            {rails.map((r) => (
+            {rails.filter((r) => r.state !== "read-only").map((r) => (
               <span key={r.chain} title={r.detail}>
                 <Badge variant={r.state === "ready" ? "allowed" : r.state === "read-only" ? "neutral" : "warn"}>{r.chain} · {r.state}</Badge>
               </span>
