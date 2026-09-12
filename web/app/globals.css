@@ -114,6 +114,8 @@
 
 html {
   background: var(--background);
+  /* every size on the site is in rem: one root step scales all text by 10 % */
+  font-size: 110%;
 }
 
 body {

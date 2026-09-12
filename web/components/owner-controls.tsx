@@ -228,12 +228,12 @@ export function OwnerControls({
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="text-xs text-muted">
-                  token to delegate (defaults to {asset.label}; paste another ERC-20 to override)
+                  token to delegate
                   <Input className={cn("mt-1 mono", !tokenOk && "border-blocked")} value={form.token} onChange={(e) => set("token", e.target.value)} disabled={disabled} spellCheck={false} data-testid="token" />
                   {!tokenOk && <span className="mt-1 block text-xs text-blocked">not an address</span>}
                 </label>
                 <label className="text-xs text-muted">
-                  amount to approve, in base units (pre-filled from the lifetime cap; you may raise it)
+                  amount to approve, in base units
                   <Input
                     className="mt-1 tnum"
                     value={form.approveAmount}
