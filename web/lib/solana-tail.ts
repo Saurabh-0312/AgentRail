@@ -12,6 +12,7 @@ import type { Connection, VersionedTransactionResponse } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 
 import { ERROR_NAMES } from "./chains";
+import { firstLine } from "./redact";
 
 export const AGENTRAIL_PROGRAM = (idl as { address: string }).address;
 const CHAIN = "solana";
@@ -355,7 +356,7 @@ export async function fetchTail(connection: Connection, opts: TailOptions): Prom
     const rows = decodeTail(txs, (pda) => opts.ensNodeOfPda(pda) ?? asked.get(pda) ?? null, program.toBase58());
     return { fromSlot: opts.sinceSlot, throughSlot, fetchedAt, signatures: wanted.length, rows, ...(truncated ? { truncated: true } : {}), ...(wanted[0] ? { newestSignature: wanted[0].signature } : {}) };
   } catch (e) {
-    return { fromSlot: opts.sinceSlot, throughSlot: opts.sinceSlot, fetchedAt, signatures: 0, rows: [], error: e instanceof Error ? e.message.split("\n")[0].slice(0, 200) : String(e) };
+    return { fromSlot: opts.sinceSlot, throughSlot: opts.sinceSlot, fetchedAt, signatures: 0, rows: [], error: firstLine(e, 200) };
   }
 }
 

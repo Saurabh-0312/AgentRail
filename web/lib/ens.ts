@@ -8,6 +8,8 @@
 import { parseAllowed, type AllowedEntry } from "@agentrail/sdk/src/allowlist.ts";
 import { discoverService, type DiscoveredService, type EnsTextReader } from "@agentrail/sdk/src/discovery.ts";
 
+import { firstLine } from "./redact";
+
 export const AGENT_KEYS = ["rail.version", "rail.agent.solana", "rail.agent.hedera", "rail.agent.base", "rail.erc8004", "rail.mandate.pda", "rail.allowed", "rail.status"] as const;
 export const SERVICE_KEYS = ["rail.endpoint", "rail.chain", "rail.price", "rail.token", "rail.scheme", "description"] as const;
 
@@ -54,14 +56,14 @@ export async function resolveName(rawName: string, readText: EnsTextReader): Pro
       if (v) records[key] = v;
     });
   } catch (e) {
-    return { name, kind: "unknown", records, error: e instanceof Error ? e.message : String(e) };
+    return { name, kind: "unknown", records, error: firstLine(e) };
   }
   const resolved = classify(name, records);
   if (resolved.kind === "agent" && records["rail.allowed"]) {
     try {
       resolved.allowed = parseAllowed(records["rail.allowed"], name);
     } catch (e) {
-      resolved.error = e instanceof Error ? e.message : String(e);
+      resolved.error = firstLine(e);
     }
   }
   if (resolved.kind === "service") {
@@ -69,7 +71,7 @@ export async function resolveName(rawName: string, readText: EnsTextReader): Pro
       const s = await discoverService(name, async (n, k) => records[k] ?? null);
       resolved.service = { ...s, price: s.price.toString() };
     } catch (e) {
-      resolved.error = e instanceof Error ? e.message : String(e);
+      resolved.error = firstLine(e);
     }
   }
   return resolved;

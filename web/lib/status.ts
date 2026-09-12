@@ -13,6 +13,7 @@ import { createPublicClient, http, type Address } from "viem";
 import { baseSepolia, sepolia } from "viem/chains";
 
 import { PUBLIC, serverEnv } from "./env";
+import { redact } from "./redact";
 
 export interface StatusEntry {
   key: string;
@@ -35,7 +36,7 @@ async function timed(key: string, label: string, fn: () => Promise<string>, time
     const detail = await Promise.race([fn(), new Promise<string>((_, rej) => setTimeout(() => rej(new Error("timeout")), timeoutMs))]);
     return { key, label, ok: true, latencyMs: Date.now() - t0, detail };
   } catch (e) {
-    return { key, label, ok: false, latencyMs: Date.now() - t0, detail: e instanceof Error ? e.message : String(e) };
+    return { key, label, ok: false, latencyMs: Date.now() - t0, detail: redact(e instanceof Error ? e.message.split("\n")[0] : String(e)).slice(0, 200) };
   }
 }
 

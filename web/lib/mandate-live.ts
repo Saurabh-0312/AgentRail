@@ -17,6 +17,7 @@ import { baseSepolia } from "viem/chains";
 import { CHAINS, type ChainKey } from "./chains";
 import { requiredAllowance, type Funding } from "./delegation";
 import { PUBLIC, serverEnv } from "./env";
+import { firstLine } from "./redact";
 import { tokenFor } from "./tokens";
 
 export interface LivePermission {
@@ -85,12 +86,12 @@ export async function readEvmMandate(chain: "hedera" | "base", agent: Address): 
         ]);
         funding = { token: token.address, symbol: token.asset.symbol, decimals: token.asset.decimals, allowance: allowance.toString(), balance: balance.toString(), required: requiredAllowance(permissions) };
       } catch (e) {
-        fundingError = e instanceof Error ? e.message.split("\n")[0].slice(0, 160) : String(e);
+        fundingError = firstLine(e, 160);
       }
     }
     return { ...base, id, exists, active: exists && active, expiry: Number(expiry), owner: exists ? owner : null, agent: exists ? mandateAgent : agent, permissions, funding, fundingError };
   } catch (e) {
-    return { ...base, error: e instanceof Error ? e.message : String(e) };
+    return { ...base, error: firstLine(e) };
   }
 }
 
@@ -133,6 +134,6 @@ export async function readSolanaMandate(pda: string, agent: string | null): Prom
       funding,
     };
   } catch (e) {
-    return { ...base, error: e instanceof Error ? e.message : String(e) };
+    return { ...base, error: firstLine(e) };
   }
 }
