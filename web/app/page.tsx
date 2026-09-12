@@ -19,7 +19,7 @@ export default function Home() {
         <p className="text-lg text-ink sm:text-xl">
           An AI agent&apos;s permissions, published as an ENS name and enforced on chain, so the agent cannot do what it was not authorized to do, even when it is tricked.
         </p>
-        <p className="text-sm text-muted">Paste an agent&apos;s name to see who it works for, what it may buy, from whom, with what caps, and every time it was refused.</p>
+        <p className="text-sm text-muted">Paste an agent&apos;s name: who it works for, what it may buy, and every refusal.</p>
       </Reveal>
 
       <Reveal index={1}>

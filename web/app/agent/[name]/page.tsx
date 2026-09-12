@@ -160,7 +160,6 @@ function DelegationRow({ d }: { d: SolanaDelegation }) {
         {d.delegate ? <Addr value={d.delegate} href={CHAINS.solana.address(d.delegate)} /> : <span>none</span>}
         {d.delegate && (d.delegateIsMandate ? <Badge variant="allowed">the mandate PDA</Badge> : <Badge variant="blocked">NOT the mandate</Badge>)}
       </div>
-      <p className="text-xs text-muted">Tokens stay here; only the program can make the PDA sign.</p>
     </div>
   );
 }
@@ -269,22 +268,21 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
           <Card accent="ens">
             <CardHeader>
               <CardTitle>Properties</CardTitle>
-              <CardDescription>Each one is ENS machinery, not a field we made up.</CardDescription>
+              <CardDescription>All ENS machinery, nothing invented.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div>
                 <div className="font-medium">Non-transferable</div>
-                <div className="text-xs text-muted">AgentRailRegistry reverts every transfer (<code>TransferDisallowed</code>). <a className="underline" href={CHAINS.sepolia.address(payload.contracts.registry)} target="_blank" rel="noreferrer">registry</a></div>
+                <div className="text-xs text-muted">Every transfer reverts. <a className="underline" href={CHAINS.sepolia.address(payload.contracts.registry)} target="_blank" rel="noreferrer">registry</a></div>
               </div>
               <div>
                 <div className="font-medium">Expiring</div>
-                <div className="text-xs text-muted">The subname itself expires{ensMandate ? `, ${isoDate(Number(ensMandate.expiry))}` : ""}; each chain&apos;s mandate has its own expiry too.</div>
+                <div className="text-xs text-muted">Subname expires{ensMandate ? ` ${isoDate(Number(ensMandate.expiry))}` : ""}; each mandate has its own.</div>
               </div>
               <div>
                 <div className="font-medium">Revocable</div>
                 <div className="text-xs text-muted">
-                  Independently on every chain, by the owner, below. On Solana, revoked {revokes.length} time{revokes.length === 1 ? "" : "s"} so far
-                  {revokes[0] && (<>, latest <Addr value={revokes[0].txHash} href={CHAINS.solana.tx(revokes[0].txHash)} /></>)}.
+                  By the owner, per chain. Solana: {revokes.length}×{revokes[0] && (<>, latest <Addr value={revokes[0].txHash} href={CHAINS.solana.tx(revokes[0].txHash)} /></>)}.
                 </div>
               </div>
             </CardContent>

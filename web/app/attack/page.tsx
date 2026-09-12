@@ -1,7 +1,5 @@
-import Link from "next/link";
 
 import { Addr } from "@/components/addr";
-import { Amount } from "@/components/amount";
 import { AttackLive, type ReplayData } from "@/components/attack-live";
 import { AttackRows, type AttackRow } from "@/components/attack-rows";
 import { Reveal } from "@/components/motion";
@@ -41,11 +39,7 @@ export default function AttackPage() {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         {s.slot && <span className="mono text-xs text-muted tnum">slot {s.slot}</span>}
         <span>{s.what}</span>
-        {"amount" in s && s.amount && (
-          <span className="text-xs text-muted">
-            delegated <Amount chain="solana" units={s.amount} />
-          </span>
-        )}
+        {"amount" in s && s.amount && <span className="text-xs text-muted">delegated: unlimited</span>}
       </div>
       <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]">
         {s.tx && (<span className="inline-flex items-center gap-1">tx <Addr value={s.tx} href={sol.tx(s.tx)} head={8} tail={6} /> <Indexed tx={s.tx} outside={"outsideIndex" in s ? (s as { outsideIndex?: string }).outsideIndex : undefined} /></span>)}
@@ -70,11 +64,11 @@ export default function AttackPage() {
   ];
 
   const SHORT: Record<number, string> = {
-    0: "Alice delegates an unlimited (u64::MAX) amount to an unknown key: the drainer",
-    1: "The monitor sees a delegate that is not the mandate, R1 fires CRITICAL, the agent requests Revoke. Mandate permits Transfer only: REFUSED, nothing built, Alice alerted",
+    0: "Alice delegates an unlimited amount to an unknown key: the drainer",
+    1: "The agent spots the drainer and requests Revoke: REFUSED, Transfer only",
     2: "The owner widens the mandate to permit Revoke",
-    3: "Same gate, same finding: the agent’s Revoke LANDS, the drainer delegation is gone, Alice alerted",
-    4: "The delegate is restored to the mandate PDA; the permission narrowed back to Transfer only",
+    3: "Same gate, same request: Revoke LANDS, the drainer is gone",
+    4: "Delegate restored to the mandate, permission back to Transfer only",
   };
   const steps = evidence.protective.steps.map((st, i) => ({ ...st, what: SHORT[i] ?? st.what }));
   const before = steps.slice(0, 2);
@@ -104,10 +98,7 @@ export default function AttackPage() {
             <CardDescription>A real purchase from feed.agentrail.eth, settled on Hedera. The response carried one extra row.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <blockquote className="rounded-md border-l-2 border-warn bg-warn-soft/60 px-3 py-2 text-xs leading-relaxed text-ink">
-              <span className="mr-2 font-semibold uppercase tracking-wide text-warn">security_notice</span>
-              {evidence.advisory}
-            </blockquote>
+            <p className="text-sm text-ink">The data bought on Hedera came back poisoned: a planted notice told the agent to move Alice&apos;s Solana USDC to the attacker&apos;s address.</p>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted">
               <span>purchases</span>
               {evidence.purchases.map((p) => (
@@ -130,7 +121,6 @@ export default function AttackPage() {
             <figure className="relative rounded-lg border border-agent/30 bg-agent/5 p-5 pl-12">
               <span className="absolute left-4 top-2 select-none font-serif text-5xl leading-none text-agent/60" aria-hidden>&ldquo;</span>
               <blockquote className="text-base italic leading-relaxed">{evidence.modelSaid}</blockquote>
-              <figcaption className="mt-2 text-xs text-muted">{evidence.model}, in the attack transcript, immediately after the poisoned purchase</figcaption>
             </figure>
           </CardContent>
         </Card>
@@ -155,7 +145,7 @@ export default function AttackPage() {
         <Card accent="allowed">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><StepNumber n="4" /> The mandate governs even the good deed</CardTitle>
-            <CardDescription>A CRITICAL finding makes the agent defend Alice. Same gate as a payment: refused until the owner permits it, then landed. Five consecutive slots, one code path.</CardDescription>
+            <CardDescription>The agent tries to defend Alice through the same gate: refused until the owner permits it, then landed.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
@@ -186,31 +176,10 @@ export default function AttackPage() {
                 <p className="text-[11px] text-muted">Outcome: <span className="font-medium text-allowed">landed</span>, drainer gone, Alice told.</p>
               </section>
             </div>
-            <p className="mt-3 text-xs text-muted">
-              Blocking something bad is easy to demo. Governing something good proves the constraint is unconditional, not a filter on intent. Transcript <code className="text-[11px]">{evidence.protective.transcript}</code>.
-            </p>
           </CardContent>
         </Card>
       </Reveal>
 
-      <Reveal index={5}>
-        <Card accent="warn">
-          <CardHeader>
-            <CardTitle>Honest limits</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-1.5 text-xs">
-            <p>
-              <span className="font-medium">Framing iterations: {evidence.framingIterations}.</span> The first seize attempt made no tool call; the advisory was rewritten to name the exact call. The replay payload targets the allowed shop, so revocation is the only reason it can fail.
-            </p>
-            <p>
-              <span className="font-medium">The agent can be tricked. That is the point.</span> AgentRail does not make the agent smarter; it makes being fooled stop mattering. A compromised agent can still spend its allowance at allowed payees: the designed maximum loss.
-            </p>
-            <p className="text-muted">
-              Every row above is in the <Link className="text-ens underline decoration-ens/50 underline-offset-2 hover:decoration-ens" href="/activity?show=blocked">blocked feed</Link>, indexed like the successes.
-            </p>
-          </CardContent>
-        </Card>
-      </Reveal>
     </div>
   );
 }

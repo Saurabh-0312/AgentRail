@@ -8,7 +8,7 @@ import { ChainBadge } from "@/components/chain-badge";
 import { RunLogView, phaseAfter, type LiveEntry, type RunSummary, type StreamStatus } from "@/components/run-log";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ChainKey } from "@/lib/chains";
 
 export interface BudgetLine {
@@ -151,30 +151,28 @@ export function ActivateAgent({ name, wallet, budget, feedService }: { name: str
 
   return (
     <Card accent="agent" id="activate" className="scroll-mt-20">
-      <CardHeader className="flex flex-wrap items-center gap-2">
-        <CardTitle>Activate Agent</CardTitle>
-        <CardDescription className="basis-full">
-          One monitor pass, streamed live. Spends the owner&apos;s testnet USDC via <span className="mono">{feedService}</span>.
-        </CardDescription>
+      <CardHeader className="text-center">
+        <CardTitle className="text-[1.3125rem]">Activate Agent</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm" data-testid="budget">
+      <CardContent className="space-y-4">
+        <div className="flex flex-col items-center gap-2 text-sm" data-testid="budget">
           <span className="text-xs font-semibold uppercase tracking-wide text-muted">budget before this run</span>
-          {budget.map((b) => (
-            <span key={b.chain} className="inline-flex items-center gap-1.5 tnum">
-              <ChainBadge chain={b.chain} />
-              {!b.active ? <Badge variant="blocked">no active mandate</Badge> : b.remaining === null ? <span>unlimited</span> : <Amount chain={b.chain} units={b.remaining} secondary="tooltip" />}
-              {b.active && b.perTx && <span className="text-xs text-muted">(max <Amount chain={b.chain} units={b.perTx} secondary="none" /> per tx)</span>}
-            </span>
-          ))}
+          <div className="flex flex-wrap justify-center gap-2">
+            {budget.map((b) => (
+              <span key={b.chain} className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface-sunken/70 px-2.5 py-1.5 tnum">
+                <ChainBadge chain={b.chain} />
+                {!b.active ? <Badge variant="blocked">no active mandate</Badge> : b.remaining === null ? <span>unlimited</span> : <Amount chain={b.chain} units={b.remaining} secondary="tooltip" />}
+                {b.active && b.perTx && <span className="text-xs text-muted">(max <Amount chain={b.chain} units={b.perTx} secondary="none" /> per tx)</span>}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Button onClick={run} disabled={running} data-testid="activate" size="lg">
             <Play className="size-4" /> {running ? "running…" : status === "idle" ? "Activate Agent" : "Run again"}
           </Button>
-          <span className="text-xs text-muted">watching wallet <span className="mono">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> · one run at a time · no loop, no schedule</span>
           {(status === "done" || status === "ended-early" || status === "failed") && entries.length > 0 && (
-            <a className="ml-auto text-xs underline" href={transcriptHref()} download={`${name}-${(startedAt ?? "run").replace(/[:.]/g, "-")}.json`} data-testid="transcript">
+            <a className="text-xs underline" href={transcriptHref()} download={`${name}-${(startedAt ?? "run").replace(/[:.]/g, "-")}.json`} data-testid="transcript">
               download the transcript ({entries.length} entries)
             </a>
           )}

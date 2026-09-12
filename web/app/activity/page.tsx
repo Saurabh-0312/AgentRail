@@ -38,7 +38,6 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
         <p className="mt-1 text-sm text-muted">
           One query, three chains, for mandate <Addr value={ensNode} head={10} tail={6} />
           {ensNode === PUBLIC.ensNode && (<> (<Link className="text-ens underline decoration-ens/50 underline-offset-2 hover:decoration-ens" href={`/agent/${PUBLIC.agentName}`}>{PUBLIC.agentName}</Link>)</>)}.
-          A refusal on Solana is a landed, failed transaction, so it is a row like any other.
         </p>
       </Reveal>
 
@@ -67,12 +66,14 @@ export default async function ActivityPage({ searchParams }: { searchParams: Pro
                   <span className="block text-3xl font-semibold leading-none">{payload.summary.chains}</span>
                   <div className="mt-1 text-xs uppercase tracking-wide text-muted">chains</div>
                 </div>
-                <div className="flex flex-wrap gap-1.5 sm:justify-end">
+                <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
                   {Object.entries(payload.summary.blockedByCode)
                     .sort((a, b) => b[1] - a[1])
                     .map(([code, n]) => (
-                      <Link key={code} href={`/activity?ensNode=${ensNode}&show=blocked`} className="rounded-md border border-blocked/40 bg-blocked-soft px-2 py-1 text-xs text-blocked tnum hover:border-blocked">
-                        <span className="font-semibold">{code}</span> {errorName(Number(code)) ?? ""} <span className="text-muted">×{n}</span>
+                      <Link key={code} href={`/activity?ensNode=${ensNode}&show=blocked`} className="flex items-center gap-2 rounded-md border border-blocked/40 bg-blocked-soft px-2.5 py-1.5 text-xs text-blocked tnum hover:border-blocked">
+                        <span className="mono font-semibold">{code}</span>
+                        <span className="min-w-0 flex-1 truncate">{errorName(Number(code)) ?? ""}</span>
+                        <span className="shrink-0 text-muted">×{n}</span>
                       </Link>
                     ))}
                 </div>

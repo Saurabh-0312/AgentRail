@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { CHAINS } from "@/lib/chains";
 import { cn } from "@/lib/cn";
 import { DELEGATION_COPY, fundingStatus, stepSatisfied, type Funding, type StepProgress } from "@/lib/delegation";
-import { AGENTRAIL_PROGRAM, MAX_DISCRIMINATORS, MAX_PERMISSIONS, PROGRAM_CHOICES, defaultDraft, derivePda, ensNodeBytes, ensNodeOf, isPubkey, paymentPermission, permissionDiscriminators, programPermission, solanaErrorText, toAddPermissionArgs, totalLifetime, validateDraft, type PermissionDraft, type SolanaCreateDraft } from "@/lib/solana-form";
+import { AGENTRAIL_PROGRAM, MAX_DISCRIMINATORS, MAX_PERMISSIONS, PROGRAM_CHOICES, defaultDraft, derivePda, ensNodeBytes, isPubkey, paymentPermission, permissionDiscriminators, programPermission, solanaErrorText, toAddPermissionArgs, totalLifetime, validateDraft, type PermissionDraft, type SolanaCreateDraft } from "@/lib/solana-form";
 import { SPL_TOKEN_PROGRAM } from "@/lib/spl";
 import { tryFormatUnits } from "@/lib/units";
 
@@ -83,7 +83,7 @@ function StepBadge({ state }: { state: StepProgress["state"] }) {
 /** Owner gate on Solana: the connected wallet must be the owner the page belongs to. */
 export function solanaOwnerGate(connected: string | null | undefined, owner: string): { enabled: boolean; state: "disconnected" | "wrong-account" | "owner"; reason: string } {
   const short = (a: string) => `${a.slice(0, 4)}…${a.slice(-4)}`;
-  if (!connected) return { enabled: false, state: "disconnected", reason: `Needs the owner's Solana wallet (${short(owner)}). Connect Phantom or any Solana wallet; a visitor can see the form but not sign.` };
+  if (!connected) return { enabled: false, state: "disconnected", reason: `Needs the owner's Solana wallet (${short(owner)}).` };
   if (connected !== owner) return { enabled: false, state: "wrong-account", reason: `Connected as ${short(connected)}, which is not the owner ${short(owner)}. Only the owner's key can issue a mandate for this name.` };
   return { enabled: true, state: "owner", reason: `Connected as the owner ${short(owner)}.` };
 }
@@ -108,13 +108,6 @@ export function SolanaCreate({ owner, defaultEnsName, mint, existing }: { owner:
   const disabled = !gate.enabled || busy;
   const validation = validateDraft(draft);
   const pda = useMemo(() => (isPubkey(draft.agent) ? derivePda(owner, draft.agent.trim()) : null), [owner, draft.agent]);
-  const ensNode = useMemo(() => {
-    try {
-      return ensNodeOf(draft.ensName);
-    } catch {
-      return null;
-    }
-  }, [draft.ensName]);
 
   useEffect(() => {
     if (!approveTouched) setDraft((d) => ({ ...d, approveAmount: totalLifetime(d.permissions) }));
@@ -271,26 +264,20 @@ export function SolanaCreate({ owner, defaultEnsName, mint, existing }: { owner:
         <CardContent className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-xs text-muted">
-              agent address (base58; holds nothing, signs only requests)
+              agent address
               <Input className="mt-1 mono" value={draft.agent} onChange={(e) => setDraft((d) => ({ ...d, agent: e.target.value }))} placeholder="base58 public key" disabled={disabled} spellCheck={false} data-testid="sol-agent" />
             </label>
             <label className="text-xs text-muted">
-              ENS name (its namehash is written as ens_node, the join key of the proof layer)
+              ENS name
               <Input className="mt-1" value={draft.ensName} onChange={(e) => setDraft((d) => ({ ...d, ensName: e.target.value }))} disabled={disabled} spellCheck={false} data-testid="sol-ens" />
             </label>
             <label className="text-xs text-muted">
-              expires in (days)
+              expires in days
               <Input className="mt-1 tnum" type="number" min={1} max={365} value={draft.days} onChange={(e) => setDraft((d) => ({ ...d, days: Number(e.target.value) }))} disabled={disabled} data-testid="sol-days" />
             </label>
-            <div className="text-xs text-muted space-y-1">
-              <div>
-                mandate PDA <span className="text-[10px]">[b&quot;mandate&quot;, owner, agent]</span>
-                <div className="mt-1 mono text-ink" data-testid="sol-pda">{pda ? <Addr value={pda} href={CHAINS.solana.address(pda)} head={10} tail={8} /> : <span className="text-muted">enter an agent address</span>}</div>
-              </div>
-              <div>
-                ens_node
-                <div className="mono text-ink break-all" data-testid="sol-node">{ensNode ?? "—"}</div>
-              </div>
+            <div className="text-xs text-muted">
+              mandate PDA
+              <div className="mt-1 mono text-ink" data-testid="sol-pda">{pda ? <Addr value={pda} href={CHAINS.solana.address(pda)} head={10} tail={8} /> : <span className="text-muted">enter an agent address</span>}</div>
             </div>
           </div>
 
@@ -312,10 +299,9 @@ export function SolanaCreate({ owner, defaultEnsName, mint, existing }: { owner:
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <Badge variant="solana">step 3 of 3</Badge>
               <span className="font-medium">Delegate funds</span>
-              <span className="text-xs text-muted">{DELEGATION_COPY} spl-token approve, your token account → the mandate PDA.</span>
             </div>
             <label className="block text-xs text-muted sm:w-1/2">
-              amount to delegate, in base units of USDC (pre-filled from the lifetime caps; you may raise it)
+              amount to delegate, in base units of USDC
               <Input className="mt-1 tnum" value={draft.approveAmount} onChange={(e) => { setApproveTouched(true); setDraft((d) => ({ ...d, approveAmount: e.target.value })); }} inputMode="numeric" disabled={disabled} data-testid="sol-approve-amount" />
               <Conversion units={draft.approveAmount} />
             </label>
@@ -344,7 +330,6 @@ export function SolanaCreate({ owner, defaultEnsName, mint, existing }: { owner:
                     <span className="font-medium">{s.title}</span>
                     <StepBadge state={st.state} />
                   </div>
-                  <div className="mono mt-1 text-[11px] text-muted break-all">{s.call}</div>
                   {st.note && <div className="mt-1 text-xs text-muted">{st.note}</div>}
                   {st.hash && <div className="mt-1 text-xs">tx <Addr value={st.hash} href={CHAINS.solana.tx(st.hash)} head={8} tail={6} /></div>}
                 </li>
@@ -398,7 +383,6 @@ function PermissionEditor({ index, p, disabled, onChange, onRemove }: { index: n
         <div className="flex flex-wrap items-center gap-2 text-sm">
           <Badge variant="solana">payee</Badge>
           <span className="font-medium">execute_payment to a token account</span>
-          <span className="text-xs text-muted">no instruction list: a payment permission is a destination plus caps</span>
           <Button variant="ghost" size="sm" className="ml-auto" disabled={disabled} onClick={onRemove} aria-label="remove"><Trash2 className="size-3.5" /></Button>
         </div>
         <label className="block text-xs text-muted">

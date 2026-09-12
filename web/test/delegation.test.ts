@@ -88,8 +88,8 @@ describe("the create form", () => {
   it("shows three numbered steps, and a visitor can press none of them", () => {
     const html = renderToStaticMarkup(createElement(OwnerControls, { gate: ownerGate(undefined, OWNER), owner: OWNER, mandates, defaultEnsName: "databot.agentrail.eth" }));
     for (const n of [1, 2, 3]) expect(html).toContain(`${n} of 3`);
-    expect(html).toContain("createMandate(agent, ensNode, expiry)");
-    expect(html).toContain("approve(EvmMandate, amount)");
+    expect(html).toContain("Create mandate");
+    expect(html).toContain("Delegate funds");
     for (const id of ["create", "delegate-base", "delegate-hedera", "revoke-base", "revoke-hedera"]) {
       const b = control(html, id);
       expect(b, id).not.toBeNull();

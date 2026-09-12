@@ -266,7 +266,6 @@ export function OwnerControls({
                     <span className="font-medium">{s.title}</span>
                     <StepBadge state={p.state} />
                   </div>
-                  <div className="mono mt-1 text-[11px] text-muted break-all">{s.call}</div>
                   {p.note && <div className="mt-1 text-xs text-muted">{p.note}</div>}
                   {p.hash && (
                     <div className="mt-1 text-xs">

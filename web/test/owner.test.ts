@@ -56,8 +56,8 @@ describe("OwnerControls", () => {
     }
     // the visitor still learns what the buttons do
     expect(html).toContain("revokeMandate");
-    expect(html).toContain("createMandate");
-    expect(html).toContain("addPermission");
+    expect(html).toContain("Create mandate");
+    expect(html).toContain("Add permission");
   });
 
   it("wrong account: still disabled, and says whose key is missing", () => {
