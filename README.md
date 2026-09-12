@@ -66,6 +66,19 @@ agent's name, see what it may do, every action it took and every one it was refu
 hash linked to its explorer. Every key stays on the server; the browser talks only to the app's own
 API.
 
+**Run the attack** on `/attack` is the thesis as a button. It replays the recorded deception (a real
+model was fooled on 10 Sept; nothing is thinking now), then sends three attack instructions to
+Solana devnet live, one per gate: a payment to the attacker's account (`6016 DestinationNotAllowed`),
+an SPL `SetAuthority` under `verify` (`6006 InstructionNotAllowed`) and a 3 USDC payment to an allowed
+payee over its 2 USDC per-transaction cap (`6007 PerTxLimitExceeded`). Three fresh reverted
+signatures every click; a refusal costs the agent a fee and consumes no budget. The attacks are
+constants in server code (`web/lib/attack-plan.ts`), the request carries nothing that reaches a
+transaction, and the SDK's local mirror of the gate runs before each send and refuses to send
+anything it predicts would succeed. The route signs as the agent (`AGENT_SOLANA_SECRET_KEY`, server
+only): that key holds no tokens and is a delegate on nothing, so a stolen copy could do no more than
+the mandate allows. The owner key is never on the server, which is why the fourth recorded attack
+(act after the owner revokes) stays recorded.
+
 [`packages/mcp-server`](packages/mcp-server/) is how *another* agent adopts AgentRail: four read-only
 MCP tools (`get_mandate`, `check_permission`, `list_services`, `get_history`) over the SDK, with a
 config block to paste into any MCP client. It never signs.

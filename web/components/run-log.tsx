@@ -89,8 +89,9 @@ function Detail({ e }: { e: LiveEntry }) {
 const ICON: Record<LiveEntry["kind"], string> = { tool: "›", model: "≈", note: "·", decision: "→", finding: "!", payment: "$", chain: "⛓", action: "⚙", alert: "🔔", refusal: "✕", verdict: "★" };
 
 /** The rows of a run, colour-coded by kind. Presentational, so it renders to static markup in tests. */
-export function RunLogView({ entries, status, summary, error, phase }: { entries: LiveEntry[]; status: StreamStatus; summary?: RunSummary | null; error?: string | null; phase?: string | null }) {
-  const budgetRefusal = entries.find(isBudgetRefusal);
+/** `thesis` shows the budget banner when a refusal is the mandate's own doing; a run whose refusals are the point (the live attack) turns it off. */
+export function RunLogView({ entries, status, summary, error, phase, thesis = true }: { entries: LiveEntry[]; status: StreamStatus; summary?: RunSummary | null; error?: string | null; phase?: string | null; thesis?: boolean }) {
+  const budgetRefusal = thesis ? entries.find(isBudgetRefusal) : undefined;
   return (
     <div className="space-y-2" data-status={status}>
       {budgetRefusal && (
