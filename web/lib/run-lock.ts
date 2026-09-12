@@ -21,20 +21,22 @@ export interface RunLock {
   status(now?: number): { running: string | null; runningFor: number | null };
 }
 
-export function createRunLock(opts: { cooldownMs?: number } = {}): RunLock {
+export function createRunLock(opts: { cooldownMs?: number; cost?: string } = {}): RunLock {
   const cooldownMs = opts.cooldownMs ?? 20_000;
+  /** Why one at a time: said in both refusals. */
+  const cost = opts.cost ?? "it spends the owner's budget";
   let running: { id: string; client: string; since: number } | null = null;
   const lastByClient = new Map<string, number>();
   let seq = 0;
   return {
     acquire(client, now = Date.now()) {
       if (running) {
-        return { ok: false, status: 429, reason: `A run is already in progress (started ${Math.round((now - running.since) / 1000)} s ago). One run at a time: it spends the owner's budget.`, retryAfterMs: 5_000 };
+        return { ok: false, status: 429, reason: `A run is already in progress (started ${Math.round((now - running.since) / 1000)} s ago). One run at a time: ${cost}.`, retryAfterMs: 5_000 };
       }
       const last = lastByClient.get(client);
       if (last !== undefined && now - last < cooldownMs) {
         const wait = cooldownMs - (now - last);
-        return { ok: false, status: 429, reason: `You just ran the agent. Wait ${Math.ceil(wait / 1000)} s before the next run; each one spends real testnet USDC.`, retryAfterMs: wait };
+        return { ok: false, status: 429, reason: `You just ran this. Wait ${Math.ceil(wait / 1000)} s before the next run: ${cost}.`, retryAfterMs: wait };
       }
       const id = `run-${++seq}`;
       running = { id, client, since: now };
