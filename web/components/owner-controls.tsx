@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { Addr } from "@/components/addr";
 import { Amount } from "@/components/amount";
@@ -63,6 +63,7 @@ export function OwnerControls({
   mandates,
   defaultEnsName,
   onRevoke,
+  solanaRevoke,
   onCreate,
   onDelegate,
   busy,
@@ -75,6 +76,8 @@ export function OwnerControls({
   mandates: Partial<Record<EvmChain, MandateSummary>>;
   defaultEnsName: string;
   onRevoke?: (chain: EvmChain, mandateId: string) => void;
+  /** The Solana revoke row, rendered in the same card; it signs with the Solana wallet, not wagmi. */
+  solanaRevoke?: ReactNode;
   onCreate?: (form: CreateForm) => void;
   onDelegate?: (chain: EvmChain, token: string, amount: string) => void;
   busy?: boolean;
@@ -155,6 +158,7 @@ export function OwnerControls({
               </div>
             );
           })}
+          {solanaRevoke}
         </CardContent>
       </Card>
 

@@ -3,7 +3,7 @@
 import { EVM_MANDATE_ABI } from "@agentrail/sdk/src/evm/abi.ts";
 import { readContract, waitForTransactionReceipt } from "@wagmi/core";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { erc20Abi, type Address, type Hex } from "viem";
 import { namehash } from "viem/ens";
 import { useAccount, useConnect, useDisconnect, useSwitchChain, useWriteContract } from "wagmi";
@@ -52,7 +52,7 @@ const firstLine = (e: unknown) => (e instanceof Error ? e.message.split("\n")[0]
  * owner; nothing is signed or shipped from this app, the wallet signs. Creating an agent is three
  * signatures: the mandate, its permission, and the token approval that lets the contract pull.
  */
-export function OwnerActions({ owner, mandates, agentName }: { owner: string; mandates: Partial<Record<EvmChain, MandateSummary>>; agentName: string }) {
+export function OwnerActions({ owner, mandates, agentName, solanaRevoke }: { owner: string; mandates: Partial<Record<EvmChain, MandateSummary>>; agentName: string; solanaRevoke?: ReactNode }) {
   const router = useRouter();
   const { address } = useAccount();
   const { switchChainAsync } = useSwitchChain();
@@ -168,5 +168,5 @@ export function OwnerActions({ owner, mandates, agentName }: { owner: string; ma
     }
   };
 
-  return <OwnerControls gate={gate} owner={owner} mandates={mandates} defaultEnsName={agentName} onRevoke={onRevoke} onCreate={onCreate} onDelegate={onDelegate} busy={busy} results={results} progress={progress} connect={<ConnectButton />} />;
+  return <OwnerControls gate={gate} owner={owner} mandates={mandates} defaultEnsName={agentName} onRevoke={onRevoke} solanaRevoke={solanaRevoke} onCreate={onCreate} onDelegate={onDelegate} busy={busy} results={results} progress={progress} connect={<ConnectButton />} />;
 }

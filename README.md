@@ -76,8 +76,11 @@ constants in server code (`web/lib/attack-plan.ts`), the request carries nothing
 transaction, and the SDK's local mirror of the gate runs before each send and refuses to send
 anything it predicts would succeed. The route signs as the agent (`AGENT_SOLANA_SECRET_KEY`, server
 only): that key holds no tokens and is a delegate on nothing, so a stolen copy could do no more than
-the mandate allows. The owner key is never on the server, which is why the fourth recorded attack
-(act after the owner revokes) stays recorded.
+the mandate allows. The owner key is never on the server: the fourth recorded attack (act after the
+owner revokes) is reproduced by the owner, not the server. **Revoke Solana** on the agent page, beside
+the Hedera and Base revoke rows, sends `revoke_mandate` signed in the browser after an explicit
+confirm. It closes the account (not a flag: the bytes are zeroed and the lamports returned), so the
+next attack run returns `3007` on every row until the owner recreates the mandate with the form.
 
 [`packages/mcp-server`](packages/mcp-server/) is how *another* agent adopts AgentRail: four read-only
 MCP tools (`get_mandate`, `check_permission`, `list_services`, `get_history`) over the SDK, with a

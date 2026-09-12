@@ -10,6 +10,7 @@ import { FundingPanel } from "@/components/funding";
 import { Reveal } from "@/components/motion";
 import { OwnerActions } from "@/components/owner-actions";
 import { SolanaCreate } from "@/components/solana-create";
+import { SolanaRevoke } from "@/components/solana-revoke";
 import { ServiceCard } from "@/components/service-card";
 import { SpendBar } from "@/components/spend-bar";
 import { StatusPill, statusOf } from "@/components/status-pill";
@@ -308,6 +309,7 @@ export default async function AgentPage({ params }: { params: Promise<{ name: st
               ...(live.hedera && live.hedera.exists ? { hedera: { id: live.hedera.id, active: live.hedera.active, agent: live.hedera.agent, funding: live.hedera.funding } } : {}),
               ...(live.base && live.base.exists ? { base: { id: live.base.id, active: live.base.active, agent: live.base.agent, funding: live.base.funding } } : {}),
             }}
+            solanaRevoke={live.solana ? <SolanaRevoke owner={PUBLIC.solanaOwner} pda={live.solana.id} initial={live.solana.exists ? { active: live.solana.active, expiry: live.solana.expiry, permissions: live.solana.permissions.length } : null} /> : undefined}
           />
           <SolanaCreate owner={PUBLIC.solanaOwner} defaultEnsName={payload.name} mint={PUBLIC.devnetUsdc} existing={live.solana && live.solana.exists ? { pda: live.solana.id, active: live.solana.active, funding: live.solana.funding } : undefined} />
         </Section>
