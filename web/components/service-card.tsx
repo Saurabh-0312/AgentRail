@@ -5,6 +5,8 @@ import { Amount } from "@/components/amount";
 import { ChainBadge } from "@/components/chain-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { hederaLongZeroAddress } from "@agentrail/sdk/src/tails/hedera.ts";
+
 import { CHAINS, ENS_APP_URL, chainFromCaip } from "@/lib/chains";
 import type { ServiceEntry } from "@/lib/services";
 
@@ -14,6 +16,10 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
   const chainKey = r["rail.chain"] ? chainFromCaip(r["rail.chain"]) : null;
   const meta = chainKey ? CHAINS[chainKey] : null;
   const rogue = s.onAllowList === false;
+  // the account the payment actually lands in: what the endpoint names, else the payee this chain permits
+  const payee = s.payee ?? s.allowedOnChain[0]?.target ?? null;
+  // Hedera names accounts 0.0.x; the mandate stores the EVM long-zero form, which is what an owner pastes
+  const payeeEvm = chainKey === "hedera" && payee && /^\d+\.\d+\.\d+$/.test(payee) ? hederaLongZeroAddress(payee) : null;
   return (
     <Card accent={rogue ? "blocked" : (meta?.color ?? "ens")} interactive className="flex h-full flex-col">
       <CardHeader className="space-y-2">
@@ -45,6 +51,19 @@ export function ServiceCard({ s, agentName }: { s: ServiceEntry; agentName: stri
           <dd>{meta && r["rail.token"] ? <Addr value={r["rail.token"]} href={chainKey === "hedera" ? `https://hashscan.io/testnet/token/${r["rail.token"]}` : meta.address(r["rail.token"])} /> : <span className="mono text-xs">{r["rail.token"]}</span>}</dd>
           <dt className="text-muted">rail.scheme</dt>
           <dd className="mono text-xs">{r["rail.scheme"]}</dd>
+          {payee && (
+            <>
+              <dt className="text-muted">payee</dt>
+              <dd>
+                <Addr
+                  value={payeeEvm ?? payee}
+                  href={chainKey === "hedera" ? `https://hashscan.io/testnet/account/${payee}` : (meta?.address(payee) ?? undefined)}
+                  full
+                  className="break-all text-xs"
+                />
+              </dd>
+            </>
+          )}
         </dl>
         <div className="mt-auto rounded-lg border border-border bg-surface-sunken/70 p-3 text-xs space-y-1">
           <div className="text-muted">Five ENS records; nothing configured.</div>
